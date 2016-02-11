@@ -67,12 +67,16 @@ export class GameServer {
     }
 
     stop(): Promise<void> {
+        winston.info("Initiating game server shutdown!");
         return this._db.clearOnlineUsers().then(_ => {
             this._gameClients.forEach(client => client.disconnect());
 
             return new Promise((done, _) => {
                 this._server.close(() => done())
             });
+        }).then(_ => {
+            winston.info("Shutdown complete!");
+            return null;
         });
     }
 }

@@ -9,7 +9,5 @@ let gameServer = new GameServer();
 gameServer.start();
 
 process.on('SIGINT', () => {
-    console.log("\nGracefully shutting down from SIGINT (Ctrl-C)");
-
     gameServer.stop().then(() => process.exit());
 });
