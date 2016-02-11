@@ -44,6 +44,5 @@ node_modules
 # build files
 src/**/*.js
 src/**/*.map
-!src/js/*.js
 
 typings

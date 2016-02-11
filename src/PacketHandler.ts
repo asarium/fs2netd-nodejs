@@ -4,8 +4,8 @@ import {GetPilotMessage} from "./Messages";
 import {Message} from "./Messages";
 
 import {Socket} from "net";
-import PacketParser = require("./js/parser");
-import ids = require("./js/identifiers");
+import {PacketParser} from "./packets/PacketParser";
+import {Identifiers} from "./packets/PacketIdentifiers";
 
 import winston = require("winston");
 import {LiteEvent} from "./Events";
@@ -15,11 +15,11 @@ import {ValidSessionIDRequest} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
-        case ids.PCKT_LOGIN_AUTH:
+        case Identifiers.PCKT_LOGIN_AUTH:
             return new LoginMessage(data.id, data.username, data.password, data.port);
-        case ids.PCKT_PILOT_GET:
+        case Identifiers.PCKT_PILOT_GET:
             return new GetPilotMessage(data.sid, data.pilotname, data.create != 0);
-        case ids.PCKT_VALID_SID_RQST:
+        case Identifiers.PCKT_VALID_SID_RQST:
             return new ValidSessionIDRequest(data.sid);
         default:
             winston.error("Unknown packet type 0x%s encountered!", data.id.toString(16));

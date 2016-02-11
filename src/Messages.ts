@@ -1,6 +1,5 @@
+import {Identifiers} from "./packets/PacketIdentifiers";
 'use strict';
-
-import * as ident from "./js/identifiers";
 
 export abstract class Message {
     private _id: number;
@@ -45,7 +44,7 @@ export class GetPilotMessage extends Message {
     private _create: boolean;
 
     constructor(sessionId: number, pilotname: string, create: boolean) {
-        super(ident.PCKT_PILOT_GET);
+        super(Identifiers.PCKT_PILOT_GET);
         this._sessionId = sessionId;
         this._pilotname = pilotname;
         this._create = create;
@@ -69,7 +68,7 @@ export class ValidSessionIDRequest extends Message {
     private _sessionId: number;
 
     constructor(sessionId: number) {
-        super(ident.PCKT_VALID_SID_RQST);
+        super(Identifiers.PCKT_VALID_SID_RQST);
         this._sessionId = sessionId;
     }
 
@@ -140,7 +139,7 @@ export class LoginReply extends ClientMessage {
 
 
     constructor(login_status: boolean, session_id: number, num_pilots: number) {
-        super(ident.PCKT_LOGIN_REPLY);
+        super(Identifiers.PCKT_LOGIN_REPLY);
         this._login_status = login_status;
         this._session_id = session_id;
         this._num_pilots = num_pilots;
@@ -162,7 +161,7 @@ export class PilotReply extends ClientMessage {
     private _replytype: number;
 
     constructor(replytype: number) {
-        super(ident.PCKT_PILOT_REPLY);
+        super(Identifiers.PCKT_PILOT_REPLY);
         this._replytype = replytype;
     }
 
@@ -178,7 +177,7 @@ export class ValidSidReply extends ClientMessage {
     private _valid: boolean;
 
     constructor(valid: boolean) {
-        super(ident.PCKT_VALID_SID_REPLY);
+        super(Identifiers.PCKT_VALID_SID_REPLY);
         this._valid = valid;
     }
 

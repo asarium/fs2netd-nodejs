@@ -1,21 +1,21 @@
-var Dissolve = require("dissolve");
-var util = require("util");
+import * as Dissolve from "dissolve";
+import * as util from "util";
 
-var ids = require("./identifiers");
+import {Identifiers} from "./PacketIdentifiers";
 
-function PacketParser() {
+export function PacketParser() {
     Dissolve.call(this);
 
     this.loop(function (end) {
         this.uint8le("id").int32le("length").tap(function () {
             switch (this.vars.id) {
-                case ids.PCKT_LOGIN_AUTH:
+                case Identifiers.PCKT_LOGIN_AUTH:
                     this.string("username").string("password").uint16le("port");
                     break;
-                case ids.PCKT_PILOT_GET:
+                case Identifiers.PCKT_PILOT_GET:
                     this.int32le("sid").string("pilotname").uint8("create");
                     break;
-                case ids.PCKT_VALID_SID_RQST:
+                case Identifiers.PCKT_VALID_SID_RQST:
                     this.int32le("sid");
                     break;
                 default:
@@ -42,5 +42,3 @@ PacketParser.prototype.string = function (name) {
         });
     });
 };
-
-module.exports = PacketParser;
