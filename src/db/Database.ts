@@ -4,6 +4,7 @@ import * as mysql from "mysql";
 import * as config from "config";
 import * as Promise from "bluebird";
 import * as sequelize from "sequelize";
+import * as winston from "winston";
 import {LoginMessage} from "./../Messages";
 import {Options} from "sequelize";
 import {defineModels} from "./sequelize-types";
@@ -21,6 +22,9 @@ let seqOptions: Options = {
     host: config.get<string>("db.host"),
     pool: {
         maxConnections: config.get<number>("db.connectionLimit")
+    },
+    logging: (msg) => {
+        winston.info(msg);
     }
 };
 
