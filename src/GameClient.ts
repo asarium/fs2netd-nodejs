@@ -149,7 +149,7 @@ export class GameClient {
             }
         }).then(session => {
             this._session = session;
-            return this._server.Database.updateLastLogin(this._user)
+            return this._server.Database.updateLastLogin(this._user);
         }).then(() => {
             this._onlineUser = this._server.Database.createOnlineUser(this.createOnlineUserData());
             return this._onlineUser.save();
