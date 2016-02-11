@@ -1,0 +1,6 @@
+db:
+  host: 'localhost'
+  user: 'root'
+  pass: ''
+  database: 'fs2netd-sequelize'
+  connectionLimit: 100

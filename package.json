@@ -1,0 +1,14 @@
+{
+  "name": "fs2netd-nodejs",
+  "version": "0.0.1",
+  "dependencies": {
+    "winston": "~2.1.1",
+    "dissolve": "~0.3.3",
+    "bluebird": "~3.2.2",
+    "sequelize": "~3.19.2",
+    "mysql": "~2.10.2",
+    "config": "~1.19.0",
+    "bcryptjs": "~2.3.0",
+    "js-yaml": "~3.5.3"
+  }
+}
