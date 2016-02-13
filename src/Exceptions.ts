@@ -14,3 +14,6 @@ export class NoSuchUserError extends Error {
         this._name = name;
     }
 }
+
+export class UnknownMessageError extends Error {
+}

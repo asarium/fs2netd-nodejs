@@ -23,6 +23,8 @@ import {UserInstance} from "./db/sequelize-types";
 import {OnlineUserInstance} from "./db/sequelize-types";
 import {Authentication} from "./Authentication";
 import {OnlineUserPojo} from "./db/sequelize-types";
+import {handleMessage} from "./handlers/Handlers";
+import {UnknownMessageError} from "./Exceptions";
 
 /**
  * A game instance that is connected to this server. Handles communication, authentication and user session.
@@ -53,8 +55,32 @@ export class GameClient {
         return this._user;
     }
 
+    set User(value: UserInstance) {
+        this._user = value;
+    }
+
     get Session(): Session {
         return this._session;
+    }
+
+    set Session(value: Session) {
+        this._session = value;
+    }
+
+    get Authenticated(): boolean {
+        return this._authenticated;
+    }
+
+    set Authenticated(value: boolean) {
+        this._authenticated = value;
+    }
+
+    get OnlineUser(): OnlineUserInstance {
+        return this._onlineUser;
+    }
+
+    set OnlineUser(value: OnlineUserInstance) {
+        this._onlineUser = value;
     }
 
     /**
@@ -85,7 +111,7 @@ export class GameClient {
      * Sends a message packet to the client
      * @param msg The message to send
      */
-    private sendToClient(msg: ClientMessage): Promise<void> {
+    public sendToClient(msg: ClientMessage): Promise<void> {
         return new Promise<void>((done, _) => {
             this._socket.write(msg.serialize(), () => {
                 done();
@@ -93,7 +119,7 @@ export class GameClient {
         });
     }
 
-    private createOnlineUserData(): OnlineUserPojo {
+    public getOnlineUserData(): OnlineUserPojo {
         return {
             ClientIp: this._remoteAddress,
             ClientPort: this._remotePort,
@@ -103,140 +129,22 @@ export class GameClient {
     }
 
     /**
-     * Handles a login message. Checks the database if the user and password is valid and initializes the user instance
-     * @param msg The login message from the client
-     */
-    private handleLogin(msg: LoginMessage) {
-        if (this._authenticated) {
-            winston.warn("User %s is already logged in! Tried to log in again.", msg.Username);
-            return;
-        }
-
-        // This code handles authentication and setup of this client instance based on the data sent to us.
-        // This is done in the following steps:
-        // 1. Retrieve data for the user name from the DB
-        // 2. If user is present, check login
-        // 3. If login is valid, create a session
-        // 4. Set session data for this instance and send successful reply so client
-
-        winston.info("Authenticating user %s...", msg.Username);
-        let userP = this._server.Database.getUserByName(msg.Username);
-
-        let numPilotsP = userP.then(user => {
-            if (user == null) {
-                // If there is no such user then reject the login
-                throw new NoSuchUserError(msg.Username);
-            } else {
-                // Check the password we got against the database data
-                return Authentication.verifyPassword(user, msg.Password);
-            }
-        }).then(valid => {
-            this._authenticated = valid;
-            if (!valid) {
-                // If not valid then throw an error
-                throw new AuthenticationError();
-            }
-
-            this._user = userP.value();
-            winston.info("Client %s successfully authenticated", this.toString());
-
-            if (this._session != null) {
-                // Client re-authenticated itself
-                return Promise.resolve(this._session);
-            } else {
-                // Create a session and send the generated id
-                return Session.createSession();
-            }
-        }).then(session => {
-            this._session = session;
-            return this._server.Database.updateLastLogin(this._user);
-        }).then(() => {
-            this._onlineUser = this._server.Database.createOnlineUser(this.createOnlineUserData());
-            return this._onlineUser.save();
-        }).then(_ => {
-            return this._onlineUser.setUser(this._user);
-        }).then(_ => {
-            return this._user.countPilots();
-        });
-
-        numPilotsP.then(() => {
-            // Send a message telling the client that the login was successful
-            return this.sendToClient(new LoginReply(true, this._session.Id, numPilotsP.value()));
-        }).catch(NoSuchUserError, () => {
-            // User isn't known
-            this.sendToClient(new LoginReply(false, -1, -1));
-            return null;
-        }).catch(AuthenticationError, () => {
-            // Wrong password
-            this.sendToClient(new LoginReply(false, -1, -1));
-            return null;
-        }).catch(err => {
-            winston.error("Error while authenticating User!", err);
-            this.sendToClient(new LoginReply(false, -1, -1));
-            return null;
-        });
-    }
-
-    private handleGetPilot(msg: GetPilotMessage) {
-        let client: GameClient = this;
-        let sessId = msg.SessionId;
-
-        if (sessId == -2) {
-            client = this._server.getClientFromPilot(msg.Pilotname);
-
-            if (client != null) {
-                sessId = client.Session.Id;
-            }
-        }
-
-        if (client == null) {
-            this.sendToClient(new PilotReply(2));
-            return;
-        }
-
-        if (!client.Session.isValid(sessId)) {
-            this.sendToClient(new PilotReply(3));
-            return;
-        }
-
-        if (msg.CreatePilot) {
-            client._session.ActivePilot = msg.Pilotname;
-        }
-
-        this._server.Database.pilotExists(client.User, msg.Pilotname).then(exists => {
-            if (exists) {
-                // TODO: Implement sending old data
-                return this.sendToClient(new PilotReply(2));
-            } else {
-                let pilot = this._server.Database.createPilot({
-                    PilotName: msg.Pilotname
-                });
-
-                return pilot.save().then(_ => {
-                    return pilot.setUser(this._user);
-                }).then(_ => {
-                    return this.sendToClient(new PilotReply(1));
-                });
-            }
-        });
-    }
-
-    /**
      * Handles all messages received from the client
      * @param message The message to handle
      */
     private messageHandler(message: Message) {
-        if (message instanceof LoginMessage) {
-            this.handleLogin(message);
-        } else if (!this._authenticated) {
-            // Ignore messages when not authenticated
-            return;
-        } else if (message instanceof GetPilotMessage) {
-            this.handleGetPilot(message);
-        } else if (message instanceof ValidSessionIDRequest) {
-            this.sendToClient(new ValidSidReply(this._session.isValid(message.SessionId)));
-        } else {
-            winston.info("Unknown message typ received: %s", typeof message);
+        if (this.Authenticated || message instanceof LoginMessage) {
+            // Only handle messages when authenticated or if it's a login message
+            let context = {
+                Server: this._server,
+                Database: this._server.Database,
+                Client: this,
+            };
+            handleMessage(message, context).catch(UnknownMessageError, () => {
+                winston.info("Unknown message typ received: %s", typeof(message));
+            }).catch(err => {
+                winston.error("Uncaught error while handling message!", err);
+            });
         }
     }
 

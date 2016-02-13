@@ -47,6 +47,30 @@ function defineUser(sequ: Sequelize): UserModel {
 
 export interface PilotPojo {
     PilotName?: string;
+
+    Score?: number;
+    MissionsFlown?: number;
+    FlightTime?: number;
+    LastFlown?: Date;
+    KillCount?: number;
+    KillCountOk?: number;
+    Assists?: number;
+
+    PrimaryShotsFired?: number;
+    PrimaryShotsHits?: number;
+    PrimaryBoneheadHits?: number;
+
+    SecondaryShotsFired?: number;
+    SecondaryShotsHits?: number;
+    SecondaryBoneheadHits?: number;
+
+    Rank?: number;
+
+    NumShipKills?: number;
+    ShipKillsPacked?: string;
+
+    NumMedals?: number;
+    MedalsPacked?: string;
 }
 export interface PilotInstance extends sequelize.Instance<PilotPojo>, PilotPojo {
     getUser:() => Promise<UserInstance>
@@ -56,7 +80,31 @@ export interface PilotModel extends sequelize.Model<PilotInstance, PilotPojo> {
 }
 function definePilot(sequ: Sequelize): PilotModel {
     return sequ.define<PilotInstance, PilotPojo>("Pilot", {
-        "PilotName": sequelize.STRING
+        "PilotName": sequelize.STRING,
+
+        "Score": sequelize.INTEGER,
+        "MissionsFlown": sequelize.INTEGER,
+        "FlightTime": sequelize.INTEGER,
+        "LastFlown": sequelize.INTEGER,
+        "KillCount": sequelize.INTEGER,
+        "KillCountOk": sequelize.INTEGER,
+        "Assists": sequelize.INTEGER,
+
+        "PrimaryShotsFired": sequelize.INTEGER,
+        "PrimaryShotsHits": sequelize.INTEGER,
+        "PrimaryBoneheadHits": sequelize.INTEGER,
+
+        "SecondaryShotsFired": sequelize.INTEGER,
+        "SecondaryShotsHits": sequelize.INTEGER,
+        "SecondaryBoneheadHits": sequelize.INTEGER,
+
+        "Rank": sequelize.INTEGER,
+
+        "NumShipKills": sequelize.INTEGER,
+        "ShipKillsPacked": sequelize.TEXT,
+
+        "NumMedals": sequelize.INTEGER,
+        "MedalsPacked": sequelize.TEXT
     });
 }
 
@@ -73,11 +121,11 @@ export function defineModels(sequ: Sequelize): Models {
         Pilot: definePilot(sequ),
     };
 
-    models.User.hasMany(models.OnlineUser, { foreignKey: "UserId" });
-    models.OnlineUser.belongsTo(models.User, { foreignKey: "UserId" });
+    models.User.hasMany(models.OnlineUser, {foreignKey: "UserId"});
+    models.OnlineUser.belongsTo(models.User, {foreignKey: "UserId"});
 
-    models.User.hasMany(models.Pilot, { foreignKey: "UserId" });
-    models.Pilot.belongsTo(models.User, { foreignKey: "UserId" });
+    models.User.hasMany(models.Pilot, {foreignKey: "UserId"});
+    models.Pilot.belongsTo(models.User, {foreignKey: "UserId"});
 
     return models;
 }
