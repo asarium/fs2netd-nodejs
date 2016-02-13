@@ -32,8 +32,10 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
 
     return context.Database.pilotExists(client.User, msg.Pilotname).then(exists => {
         if (exists) {
-            // TODO: Implement sending old data
-            return context.Client.sendToClient(new PilotReply(2));
+            return context.Database.getPilot(client.User, msg.Pilotname).then(pilot => {
+                // pilot could be null if there is no such pilot but then exists would be false
+                return context.Client.sendToClient(new PilotReply(0, pilot));
+            });
         } else {
             let pilot = context.Database.createPilot({
                 PilotName: msg.Pilotname

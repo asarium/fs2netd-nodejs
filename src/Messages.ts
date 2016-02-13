@@ -1,4 +1,6 @@
 import {Identifiers} from "./packets/PacketIdentifiers";
+import {PilotInstance} from "./db/sequelize-types";
+import {parsePackedString} from "./Utils";
 'use strict';
 
 export abstract class Message {
@@ -98,22 +100,32 @@ class BufferWriter {
         return this._buffer.slice(0, this._offset);
     }
 
-    writeUInt8(x: number) {
+    writeUInt8(x: number): void {
         this._buffer.writeUInt8(x, this._offset);
         this._offset += 1;
     }
 
-    writeInt16(x: number) {
+    writeInt16(x: number): void {
         this._buffer.writeInt16LE(x, this._offset);
         this._offset += 2;
     }
 
-    writeInt32(x: number) {
+    writeUInt16(x: number): void {
+        this._buffer.writeUInt16LE(x, this._offset);
+        this._offset += 2;
+    }
+
+    writeInt32(x: number): void {
         this._buffer.writeInt32LE(x, this._offset);
         this._offset += 4;
     }
 
-    writeString(x: string) {
+    writeUInt32(x: number): void {
+        this._buffer.writeUInt32LE(x, this._offset);
+        this._offset += 4;
+    }
+
+    writeString(x: string): void {
         // write length
         this.writeInt32(x.length);
         this._offset += this._buffer.write(x, this._offset, x.length, "utf-8");
@@ -159,15 +171,55 @@ export class LoginReply extends ClientMessage {
 
 export class PilotReply extends ClientMessage {
     private _replytype: number;
+    private _pilot: PilotInstance;
 
-    constructor(replytype: number) {
+    constructor(replytype: number, pilot?: PilotInstance) {
         super(Identifiers.PCKT_PILOT_REPLY);
         this._replytype = replytype;
+        this._pilot = pilot;
     }
 
     serialize(): Buffer {
         var buffer = this.createBuffer();
         buffer.writeUInt8(this._replytype);
+
+        if (this._pilot != null) {
+            let lastFlown = 0;
+            if (this._pilot.LastFlown != null) {
+                lastFlown = this._pilot.LastFlown.getTime();
+            }
+
+            buffer.writeUInt32(this._pilot.Score);
+            buffer.writeUInt32(this._pilot.MissionsFlown);
+            buffer.writeUInt32(this._pilot.FlightTime);
+            buffer.writeInt32(lastFlown); // WARNING: Will break when the 32 bit int overflows!
+            buffer.writeUInt32(this._pilot.KillCount);
+            buffer.writeUInt32(this._pilot.KillCountOk);
+            buffer.writeUInt32(this._pilot.Assists);
+
+            buffer.writeUInt32(this._pilot.PrimaryShotsFired);
+            buffer.writeUInt32(this._pilot.PrimaryShotsHits);
+            buffer.writeUInt32(this._pilot.PrimaryBoneheadHits);
+
+            buffer.writeUInt32(this._pilot.SecondaryShotsFired);
+            buffer.writeUInt32(this._pilot.SecondaryShotsHits);
+            buffer.writeUInt32(this._pilot.SecondaryBoneheadHits);
+
+            buffer.writeInt32(this._pilot.Rank);
+
+            let shipKills = parsePackedString(this._pilot.ShipKillsPacked);
+            buffer.writeInt16(shipKills.length);
+            for (let entry of shipKills) {
+                buffer.writeString(entry.Name);
+                buffer.writeUInt16(entry.Count);
+            }
+
+            let medals = parsePackedString(this._pilot.MedalsPacked);
+            buffer.writeInt16(medals.length);
+            for (let entry of medals) {
+                buffer.writeUInt16(entry.Count);
+            }
+        }
 
         return buffer.finalize();
     }

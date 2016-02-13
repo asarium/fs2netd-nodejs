@@ -40,7 +40,7 @@ export class Database {
         return this._sequelize.sync();
     }
 
-    createUser(data: UserPojo) : UserInstance {
+    createUser(data: UserPojo): UserInstance {
         return this._models.User.build(data);
     }
 
@@ -62,13 +62,27 @@ export class Database {
         return this._models.OnlineUser.build(data);
     }
 
-    pilotExists(user: UserInstance, pilotname: String): Promise<boolean> {
+    pilotExists(user: UserInstance, pilotname: string): Promise<boolean> {
         return user.countPilots({
             where: {
                 PilotName: pilotname
             }
         }).then(count => {
             return count > 0;
+        });
+    }
+
+    getPilot(user: UserInstance, pilotname: string): Promise<PilotInstance> {
+        return user.getPilots({
+            where: {
+                PilotName: pilotname
+            }
+        }).then(pilots => {
+            if (pilots.length <= 0) {
+                return null;
+            } else {
+                return pilots[0];
+            }
         });
     }
 
