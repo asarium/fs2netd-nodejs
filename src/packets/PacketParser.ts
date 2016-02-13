@@ -18,6 +18,12 @@ export function PacketParser() {
                 case Identifiers.PCKT_VALID_SID_RQST:
                     this.int32le("sid");
                     break;
+                case Identifiers.PCKT_PING:
+                    this.int32le("time");
+                    break;
+                case Identifiers.PCKT_PONG:
+                    this.int32le("time");
+                    break;
                 default:
                     // Consume all data, maybe someone else can do something with it...
                     this.buffer("data", this.vars.length - 5); // subtract 5 to account for id and length

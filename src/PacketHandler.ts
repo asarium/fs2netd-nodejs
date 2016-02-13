@@ -12,6 +12,8 @@ import {LiteEvent} from "./Events";
 import {ILiteEvent} from "./Events";
 import {LoginMessage} from "./Messages";
 import {ValidSessionIDRequest} from "./Messages";
+import {PingMessage} from "./Messages";
+import {PongMessage} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -21,6 +23,10 @@ function convertData(data: any): Message {
             return new GetPilotMessage(data.sid, data.pilotname, data.create != 0);
         case Identifiers.PCKT_VALID_SID_RQST:
             return new ValidSessionIDRequest(data.sid);
+        case Identifiers.PCKT_PING:
+            return new PingMessage(data.time);
+        case Identifiers.PCKT_PONG:
+            return new PongMessage(data.time);
         default:
             winston.error("Unknown packet type 0x%s encountered!", data.id.toString(16));
             return null;

@@ -233,10 +233,49 @@ export class ValidSidReply extends ClientMessage {
         this._valid = valid;
     }
 
-
     public serialize(): Buffer {
         var buffer = this.createBuffer();
         buffer.writeUInt8(this._valid ? 1 : 0);
+
+        return buffer.finalize();
+    }
+}
+
+export class PingMessage extends ClientMessage {
+    private _time: number;
+
+    constructor(time: number) {
+        super(Identifiers.PCKT_PING);
+        this._time = time;
+    }
+
+    get Time(): number {
+        return this._time;
+    }
+
+    public serialize(): Buffer {
+        var buffer = this.createBuffer();
+        buffer.writeInt32(this._time);
+
+        return buffer.finalize();
+    }
+}
+
+export class PongMessage extends ClientMessage {
+    private _time: number;
+
+    constructor(time: number) {
+        super(Identifiers.PCKT_PONG);
+        this._time = time;
+    }
+
+    get Time(): number {
+        return this._time;
+    }
+
+    public serialize(): Buffer {
+        var buffer = this.createBuffer();
+        buffer.writeInt32(this._time);
 
         return buffer.finalize();
     }

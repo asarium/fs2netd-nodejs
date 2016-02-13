@@ -11,6 +11,8 @@ import {handleGetPilotMessage} from "./PilotHandler";
 import {GetPilotMessage} from "../Messages";
 import {ValidSessionIDRequest} from "../Messages";
 import {handleValidSessionIDRequest} from "./MinorHandlers";
+import {PingMessage} from "../Messages";
+import {handlePing} from "./MinorHandlers";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -30,6 +32,7 @@ let handlers: HandlerDefinition[] = [
     {MessageType: LoginMessage, Handler: handleLoginMessage},
     {MessageType: GetPilotMessage, Handler: handleGetPilotMessage},
     {MessageType: ValidSessionIDRequest, Handler: handleValidSessionIDRequest},
+    {MessageType: PingMessage, Handler: handlePing},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {
