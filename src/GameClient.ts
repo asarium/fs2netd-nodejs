@@ -42,6 +42,8 @@ export class GameClient {
     private _user: UserInstance;
     private _onlineUser: OnlineUserInstance;
 
+    private _lastPing: number;
+
     private _onDisconnected = new LiteEvent<void>();
 
     /**
@@ -54,7 +56,6 @@ export class GameClient {
     get User(): UserInstance {
         return this._user;
     }
-
     set User(value: UserInstance) {
         this._user = value;
     }
@@ -62,7 +63,6 @@ export class GameClient {
     get Session(): Session {
         return this._session;
     }
-
     set Session(value: Session) {
         this._session = value;
     }
@@ -70,7 +70,6 @@ export class GameClient {
     get Authenticated(): boolean {
         return this._authenticated;
     }
-
     set Authenticated(value: boolean) {
         this._authenticated = value;
     }
@@ -78,9 +77,15 @@ export class GameClient {
     get OnlineUser(): OnlineUserInstance {
         return this._onlineUser;
     }
-
     set OnlineUser(value: OnlineUserInstance) {
         this._onlineUser = value;
+    }
+
+    get LastPing(): number {
+        return this._lastPing;
+    }
+    set LastPing(value: number) {
+        this._lastPing = value;
     }
 
     /**

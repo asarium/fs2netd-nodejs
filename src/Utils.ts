@@ -30,3 +30,7 @@ export function parsePackedString(packed: string): Array<NameCount> {
 export function packString(array: NameCount[]): string {
     return array.map(nc => nc.Name + ";" + nc.Count).join(";");
 }
+
+export function getTimeMilliseconds() : number {
+    return Date.now(); // Could be used to fix the 32 bit timestamp issue, for now this works...
+}

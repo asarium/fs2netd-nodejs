@@ -13,6 +13,8 @@ import {ValidSessionIDRequest} from "../Messages";
 import {handleValidSessionIDRequest} from "./MinorHandlers";
 import {PingMessage} from "../Messages";
 import {handlePing} from "./MinorHandlers";
+import {PongMessage} from "../Messages";
+import {handlePong} from "./MinorHandlers";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -33,6 +35,7 @@ let handlers: HandlerDefinition[] = [
     {MessageType: GetPilotMessage, Handler: handleGetPilotMessage},
     {MessageType: ValidSessionIDRequest, Handler: handleValidSessionIDRequest},
     {MessageType: PingMessage, Handler: handlePing},
+    {MessageType: PongMessage, Handler: handlePong},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {
