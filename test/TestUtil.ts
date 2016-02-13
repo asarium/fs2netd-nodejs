@@ -24,6 +24,12 @@ describe("Util", () => {
             assert.equal(result[1].Name, "Test1");
             assert.equal(result[1].Count, 4);
         });
+
+        it("should handle a null string correctly", () => {
+            let result = parsePackedString(null);
+
+            assert.equal(result.length, 0);
+        });
     });
 
     describe("#packString()", () => {

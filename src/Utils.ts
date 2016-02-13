@@ -4,6 +4,10 @@ export interface NameCount {
 }
 
 export function parsePackedString(packed: string): Array<NameCount> {
+    if (packed == null) {
+        return [];
+    }
+
     let array: NameCount[] = [];
 
     let parts = packed.split(";");
