@@ -131,11 +131,53 @@ function defineServer(sequ: Sequelize): ServerModel {
     });
 }
 
+export interface TablePojo {
+    Filename?: string;
+
+    CRC32?: number;
+    Description?: string;
+}
+export interface TableInstance extends sequelize.Instance<TablePojo>, TablePojo {
+}
+export interface TableModel extends sequelize.Model<TableInstance, TablePojo> {
+}
+function defineTable(sequ: Sequelize): TableModel {
+    return sequ.define<TableInstance, TablePojo>("Table", {
+        "Filename": sequelize.STRING,
+
+        "CRC32": sequelize.INTEGER,
+        "Description": sequelize.TEXT,
+    });
+}
+
+export interface MissionPojo {
+    Filename?: string;
+    CRC32?: number;
+    MissionType?: string;
+    MaxPlayers?: number;
+    Description?: string;
+}
+export interface MissionInstance extends sequelize.Instance<MissionPojo>, MissionPojo {
+}
+export interface MissionModel extends sequelize.Model<MissionInstance, MissionPojo> {
+}
+function defineMission(sequ: Sequelize): MissionModel {
+    return sequ.define<MissionInstance, MissionPojo>("Mission", {
+        "Filename": sequelize.STRING,
+        "CRC32": sequelize.INTEGER,
+        "MissionType": sequelize.STRING,
+        "MaxPlayers": sequelize.INTEGER,
+        "Description": sequelize.TEXT,
+    });
+}
+
 export interface Models {
     OnlineUser: OnlineUserModel,
     User: UserModel,
     Pilot: PilotModel,
     Server: ServerModel,
+    Table: TableModel,
+    Mission: MissionModel,
 }
 
 export function defineModels(sequ: Sequelize): Models {
@@ -144,6 +186,8 @@ export function defineModels(sequ: Sequelize): Models {
         User: defineUser(sequ),
         Pilot: definePilot(sequ),
         Server: defineServer(sequ),
+        Table: defineTable(sequ),
+        Mission: defineMission(sequ),
     };
 
     models.User.hasMany(models.OnlineUser, {foreignKey: "UserId"});
