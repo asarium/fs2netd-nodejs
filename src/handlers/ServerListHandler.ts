@@ -12,7 +12,9 @@ export function handleServerListMessage(message: Message, context: HandlerContex
     let msg = <ServerListMessage>message;
 
     // TODO: Implement filtering
-    return context.Client.sendToClient(new ServerListReply(context.Server.ServerList.Servers));
+    return context.Server.ServerList.expireServers().then(() => {
+        return context.Client.sendToClient(new ServerListReply(context.Server.ServerList.Servers));
+    });
 }
 
 
@@ -43,7 +45,10 @@ export function handleServerStartMessage(message: Message, context: HandlerConte
     };
 
     return context.Server.ServerList.addServer(data).then(() => {
-        // Ignore return value
+        // Mark this client as being a server
+        context.Client.IsServer = true;
+    }).then(() => {
+        return context.Server.ServerList.expireServers();
     });
 }
 
@@ -69,5 +74,8 @@ export function handleServerDisconnectMessage(message: Message, context: Handler
 
     let server = context.Server.ServerList.getServer(context.Client.RemoteAddress, context.Client.RemotePort);
 
-    return context.Server.ServerList.removeServer(server);
+    return context.Server.ServerList.removeServer(server).then(_ => {
+        // Unmark this client as being a server
+        context.Client.IsServer = false;
+    });
 }

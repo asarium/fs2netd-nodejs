@@ -52,6 +52,8 @@ export class GameClient {
 
     private _logger: LoggerInstance;
 
+    private _isServer: boolean = true;
+
     /**
      * Initializes the client with
      * @param server The server this client belongs to
@@ -143,6 +145,13 @@ export class GameClient {
     }
     set RemotePort(value: number) {
         this._remotePort = value;
+    }
+
+    get IsServer(): boolean {
+        return this._isServer;
+    }
+    set IsServer(value: boolean) {
+        this._isServer = value;
     }
 
     /**

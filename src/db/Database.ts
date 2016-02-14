@@ -119,6 +119,10 @@ export class Database {
         return this._models.Server.build(values);
     }
 
+    clearServers() : Promise<void> {
+        return this._models.Server.truncate();
+    }
+
     getTables(): Promise<TableInstance[]> {
         return this._models.Table.findAll();
     }

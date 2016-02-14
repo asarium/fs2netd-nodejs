@@ -38,19 +38,13 @@ export class GameServer {
     start(): Promise<void> {
         return this._db.initialize().then(_ => {
             return this._db.clearOnlineUsers();
+        }).then(() => {
+            return this._db.clearServers();
         }).then(_ => {
             this._server = net.createServer((s) => {
                 let gameClient = new GameClient(this, s);
                 winston.info(util.format("Client '%s' connected!", gameClient.toString()));
-                gameClient.Disconnected.on(() => {
-                    winston.info("Client '%s' has disconnected", gameClient.toString());
-
-                    // Remove element from our list
-                    var index = this._gameClients.indexOf(gameClient);
-                    if (index >= 0) {
-                        this._gameClients.splice(index, 1);
-                    }
-                });
+                gameClient.Disconnected.on(() => this.clientDisconnected(gameClient));
 
                 this._gameClients.push(gameClient);
             });
@@ -73,6 +67,8 @@ export class GameServer {
 
         // Ping all clients
         this.pingAll();
+
+        this.ServerList.expireServers();
     }
 
     getClientFromPilot(pilot: string): GameClient {
@@ -98,7 +94,9 @@ export class GameServer {
         winston.info("Initiating game server shutdown!");
 
         clearInterval(this._intervalHandle);
-        return this._db.clearOnlineUsers().then(_ => {
+        return this._db.clearOnlineUsers().then(() => {
+            return this._db.clearServers();
+        }).then(_ => {
             this._gameClients.forEach(client => client.disconnect());
 
             return new Promise((done, _) => {
@@ -108,6 +106,21 @@ export class GameServer {
             winston.info("Shutdown complete!");
             return null;
         });
+    }
+
+    private clientDisconnected(gameClient: GameClient): void {
+        if (gameClient.IsServer) {
+            // If it was a server then remove it from the server list
+            this.ServerList.removeServer(this.ServerList.getServer(gameClient.RemoteAddress, gameClient.RemotePort));
+        }
+
+        winston.info("Client '%s' has disconnected", gameClient.toString());
+
+        // Remove element from our list
+        var index = this._gameClients.indexOf(gameClient);
+        if (index >= 0) {
+            this._gameClients.splice(index, 1);
+        }
     }
 }
 
