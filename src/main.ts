@@ -1,4 +1,3 @@
-import {Authentication} from "./Authentication";
 "use strict";
 
 import {GameServer} from "./GameServer";
