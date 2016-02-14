@@ -183,6 +183,47 @@ export class IpBanListRequest extends Message {
     }
 }
 
+export interface ServerProperties {
+    name?: string;
+    mission_name?: string
+    title?: string;
+    campaign_name?: string;
+    campaign_mode?: number;
+    flags?: number;
+    type_flags?: number;
+    num_players?: number;
+    max_players?: number;
+    mode?: number;
+    rank_base?: number;
+    game_state?: number;
+    connection_speed?: number;
+    tracker_channel?: string;
+}
+
+export class ServerStartMessage extends Message {
+    Properties: ServerProperties;
+
+    constructor(props: ServerProperties) {
+        super(Identifiers.PCKT_SERVER_START);
+        this.Properties = props;
+    }
+}
+
+export class ServerUpdateMessage extends Message {
+    Properties: ServerProperties;
+
+    constructor(props: ServerProperties) {
+        super(Identifiers.PCKT_SERVER_START);
+        this.Properties = props;
+    }
+}
+
+export class ServerDisconnectMessage extends Message {
+    constructor() {
+        super(Identifiers.PCKT_SERVER_DISCONNECT);
+    }
+}
+
 export abstract class ClientMessage extends Message {
     public abstract serialize(): Buffer;
 

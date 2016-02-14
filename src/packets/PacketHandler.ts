@@ -19,39 +19,54 @@ import {TableRequestMessage} from "./Messages";
 import {NameCRC} from "./Messages";
 import {MissionListRequest} from "./Messages";
 import {IpBanListRequest} from "./Messages";
+import {ServerStartMessage} from "./Messages";
+import {ServerUpdateMessage} from "./Messages";
+import {ServerDisconnectMessage} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
         case Identifiers.PCKT_LOGIN_AUTH:
             return new LoginMessage(data.id, data.username, data.password, data.port);
+
         case Identifiers.PCKT_PILOT_GET:
             return new GetPilotMessage(data.sid, data.pilotname, data.create != 0);
+
         case Identifiers.PCKT_VALID_SID_RQST:
             return new ValidSessionIDRequest(data.sid);
+
         case Identifiers.PCKT_PING:
             return new PingMessage(data.time);
         case Identifiers.PCKT_PONG:
             return new PongMessage(data.time);
+
         case Identifiers.PCKT_SLIST_REQUEST:
             return new ServerListMessage(data.type, data.status);
         case Identifiers.PCKT_SLIST_REQUEST_FILTER:
+
             return new ServerListMessage(data.type, data.status, data.filter);
         case Identifiers.PCKT_TABLES_RQST:
-            let array: NameCRC[] = [];
-            for (let entry of data.files) {
-                array.push({
+
+            return new TableRequestMessage(data.files.map(entry => {
+                return {
                     Name: entry.name,
                     CRC32: entry.crc32
-                });
-            }
+                }
+            }));
 
-            return new TableRequestMessage(array);
         case Identifiers.PCKT_MISSIONS_RQST:
             return new MissionListRequest();
         case Identifiers.PCKT_BANLIST_RQST:
             return new IpBanListRequest();
+
+        case Identifiers.PCKT_SERVER_START:
+            return new ServerStartMessage(data);
+        case Identifiers.PCKT_SERVER_UPDATE:
+            return new ServerUpdateMessage(data);
+        case Identifiers.PCKT_SERVER_DISCONNECT:
+            return new ServerDisconnectMessage();
+
         default:
-            winston.error("Unknown packet type 0x%s encountered!", data.id.toString(16));
+            winston.error(`Unknown packet type 0x${data.id.toString(16)} encountered!`, data);
             return null;
     }
 }

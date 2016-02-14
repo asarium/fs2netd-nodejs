@@ -110,11 +110,31 @@ function definePilot(sequ: Sequelize): PilotModel {
 
 export interface ServerPojo {
     Name?: string;
+    MissionName?: string;
+    Title?: string;
+
+    CampaignName?: string;
+    CampaignMode?: number;
+
+    Flags?: number;
+    TypeFlags?: number;
+
+    NumPlayers?: number;
+    MaxPlayers?: number;
+
+    Mode?: number;
+
+    RankBase?: number;
+
+    GameState?: number;
+
+    ConnectionSpeed?: number;
+
+    TrackerChannel?: string;
 
     Ip?: string;
     Port?: number;
 
-    Flags?: number;
 }
 export interface ServerInstance extends sequelize.Instance<ServerPojo>, ServerPojo {
 }
@@ -123,11 +143,30 @@ export interface ServerModel extends sequelize.Model<ServerInstance, ServerPojo>
 function defineServer(sequ: Sequelize): ServerModel {
     return sequ.define<ServerInstance, ServerPojo>("Server", {
         "Name": sequelize.STRING,
+        "MissionName": sequelize.STRING,
+        "Title": sequelize.STRING,
+
+        "CampaignName": sequelize.STRING,
+        "CampaignMode": sequelize.INTEGER,
+
+        "Flags": sequelize.INTEGER,
+        "TypeFlags": sequelize.INTEGER,
+
+        "NumPlayers": sequelize.INTEGER,
+        "MaxPlayers": sequelize.INTEGER,
+
+        "Mode": sequelize.INTEGER,
+
+        "RankBase": sequelize.INTEGER,
+
+        "GameState": sequelize.INTEGER,
+
+        "ConnectionSpeed": sequelize.INTEGER,
+
+        "TrackerChannel": sequelize.STRING,
 
         "Ip": sequelize.STRING,
         "Port": sequelize.INTEGER,
-
-        "Flags": sequelize.INTEGER,
     });
 }
 

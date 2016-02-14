@@ -21,6 +21,7 @@ import {ServerInstance} from "./sequelize-types";
 import {TableInstance} from "./sequelize-types";
 import {MissionInstance} from "./sequelize-types";
 import {IpBanInstance} from "./sequelize-types";
+import {Authentication} from "../Authentication";
 
 let seqOptions: Options = {
     dialect: "mysql",
@@ -42,7 +43,22 @@ export class Database {
 
         this._models = defineModels(this._sequelize);
 
-        return this._sequelize.sync();
+        return this._sequelize.sync().then(_ => {
+            return this._models.User.count();
+        }).then(count => {
+            if (count < 1) {
+                // set up test user
+                let instance = this._models.User.build({
+                    Username: "asarium"
+                });
+
+                return Authentication.setPassword(instance, "test").then(() => {
+
+                });
+            }
+
+            return Promise.resolve();
+        });
     }
 
     createUser(data: UserPojo): UserInstance {

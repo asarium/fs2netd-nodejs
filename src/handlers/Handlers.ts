@@ -24,6 +24,12 @@ import {MissionListRequest} from "../packets/Messages";
 import {handleMissionListRequest} from "./FilesHandler";
 import {IpBanListRequest} from "../packets/Messages";
 import {handleIpBanListRequest} from "./MinorHandlers";
+import {ServerStartMessage} from "../packets/Messages";
+import {ServerUpdateMessage} from "../packets/Messages";
+import {ServerDisconnectMessage} from "../packets/Messages";
+import {handleServerStartMessage} from "./ServerListHandler";
+import {handleServerDisconnectMessage} from "./ServerListHandler";
+import {handleServerUpdateMessage} from "./ServerListHandler";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -42,14 +48,23 @@ interface HandlerDefinition {
 
 let handlers: HandlerDefinition[] = [
     {MessageType: LoginMessage, Handler: handleLoginMessage},
+
     {MessageType: GetPilotMessage, Handler: handleGetPilotMessage},
+
     {MessageType: ValidSessionIDRequest, Handler: handleValidSessionIDRequest},
+
     {MessageType: PingMessage, Handler: handlePing},
     {MessageType: PongMessage, Handler: handlePong},
-    {MessageType: ServerListMessage, Handler: handleServerListMessage},
+
     {MessageType: TableRequestMessage, Handler: handleTableValidation},
     {MessageType: MissionListRequest, Handler: handleMissionListRequest},
+
     {MessageType: IpBanListRequest, Handler: handleIpBanListRequest},
+
+    {MessageType: ServerListMessage, Handler: handleServerListMessage},
+    {MessageType: ServerStartMessage, Handler: handleServerStartMessage},
+    {MessageType: ServerUpdateMessage, Handler: handleServerUpdateMessage},
+    {MessageType: ServerDisconnectMessage, Handler: handleServerDisconnectMessage},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {

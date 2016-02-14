@@ -27,6 +27,16 @@ export class ServerList {
         });
     }
 
+    getServer(address: string, port: number): ServerInstance {
+        for (let server of this._list) {
+            if (server.Ip === address && server.Port === port) {
+                return server;
+            }
+        }
+
+        return null;
+    }
+
     removeServer(server: ServerInstance): Promise<void> {
         return server.destroy().then(() => {
             let index = this._list.indexOf(server);
