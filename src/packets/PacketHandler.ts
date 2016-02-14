@@ -1,20 +1,20 @@
-import {GetPilotMessage} from "./Messages";
+import {GetPilotMessage} from "./../Messages";
 'use strict';
 
-import {Message} from "./Messages";
+import {Message} from "./../Messages";
 
 import {Socket} from "net";
-import {PacketParser} from "./packets/PacketParser";
-import {Identifiers} from "./packets/PacketIdentifiers";
+import {PacketParser} from "./PacketParser";
+import {Identifiers} from "./PacketIdentifiers";
 
 import winston = require("winston");
-import {LiteEvent} from "./Events";
-import {ILiteEvent} from "./Events";
-import {LoginMessage} from "./Messages";
-import {ValidSessionIDRequest} from "./Messages";
-import {PingMessage} from "./Messages";
-import {PongMessage} from "./Messages";
-import {ServerListMessage} from "./Messages";
+import {LiteEvent} from "./../Events";
+import {ILiteEvent} from "./../Events";
+import {LoginMessage} from "./../Messages";
+import {ValidSessionIDRequest} from "./../Messages";
+import {PingMessage} from "./../Messages";
+import {PongMessage} from "./../Messages";
+import {ServerListMessage} from "./../Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {

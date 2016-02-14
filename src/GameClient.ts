@@ -2,7 +2,7 @@ import {ClientMessage} from "./Messages";
 'use strict';
 
 import {Socket} from "net";
-import {PacketHandler} from "./PacketHandler";
+import {PacketHandler} from "./packets/PacketHandler";
 import {GameServer} from "./GameServer";
 import {ILiteEvent} from "./Events";
 import {LiteEvent} from "./Events";
