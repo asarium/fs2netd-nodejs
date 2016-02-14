@@ -8,7 +8,7 @@ import {ILiteEvent} from "./Events";
 import {LiteEvent} from "./Events";
 import {Message} from "./Messages";
 import {LoginMessage} from "./Messages";
-import winston = require("winston");
+import * as winston from "winston";
 import {LoginReply} from "./Messages";
 import {Session} from "./Session";
 import * as util from "util";
@@ -27,6 +27,7 @@ import {handleMessage} from "./handlers/Handlers";
 import {UnknownMessageError} from "./Exceptions";
 import {PingMessage} from "./Messages";
 import {getTimeMilliseconds} from "./Utils";
+import {LoggerInstance} from "winston";
 
 /**
  * A game instance that is connected to this server. The class handles communication with the client and dispatches
@@ -48,6 +49,43 @@ export class GameClient {
     private _lastPing: number;
 
     private _onDisconnected = new LiteEvent<void>();
+
+    private _logger: LoggerInstance;
+
+    /**
+     * Initializes the client with
+     * @param server The server this client belongs to
+     * @param socket The connected socket
+     */
+    constructor(server: GameServer, socket: Socket) {
+        this._server = server;
+        this._socket = socket;
+
+        this._remoteAddress = socket.remoteAddress;
+        this._remotePort = socket.remotePort;
+
+        this._logger = new winston.Logger({
+            transports: [
+                new (winston.transports.Console)(),
+            ],
+            filters: [
+                (level, msg, meta) => {
+                    return `[${this.toString()}] ${msg}`;
+                }
+            ]
+        });
+
+        socket.on("close", _ => this._onDisconnected.trigger());
+
+        this._handler = new PacketHandler(socket);
+        this._handler.Message.on(msg => this.messageHandler(msg));
+
+        this.Disconnected.on(_ => {
+            if (this._onlineUser) {
+                this._onlineUser.destroy();
+            }
+        });
+    }
 
     /**
      * Gets fired when the underlying socket is disconnected
@@ -97,30 +135,6 @@ export class GameClient {
     }
 
     /**
-     * Initializes the client with
-     * @param server The server this client belongs to
-     * @param socket The connected socket
-     */
-    constructor(server: GameServer, socket: Socket) {
-        this._server = server;
-        this._socket = socket;
-
-        this._remoteAddress = socket.remoteAddress;
-        this._remotePort = socket.remotePort;
-
-        socket.on("close", _ => this._onDisconnected.trigger());
-
-        this._handler = new PacketHandler(socket);
-        this._handler.Message.on(msg => this.messageHandler(msg));
-
-        this.Disconnected.on(_ => {
-            if (this._onlineUser) {
-                this._onlineUser.destroy();
-            }
-        });
-    }
-
-    /**
      * Sends a message packet to the client
      * @param msg The message to send
      */
@@ -156,11 +170,12 @@ export class GameClient {
                 Server: this._server,
                 Database: this._server.Database,
                 Client: this,
+                Logger: this._logger
             };
             handleMessage(message, context).catch(UnknownMessageError, () => {
-                winston.info("Unknown message typ received: %s", typeof(message));
+                this._logger.info("Unknown message typ received: %s", typeof(message));
             }).catch(err => {
-                winston.error("Uncaught error while handling message!", err);
+                this._logger.error("Uncaught error while handling message!", err);
             });
         }
     }

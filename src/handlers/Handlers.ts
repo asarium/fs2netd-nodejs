@@ -17,11 +17,13 @@ import {PongMessage} from "../Messages";
 import {handlePong} from "./MinorHandlers";
 import {ServerListMessage} from "../Messages";
 import {handleServerListMessage} from "./ServerListHandler";
+import {LoggerInstance} from "winston";
 
 export interface HandlerContext {
     Server: GameServer;
     Database: Database;
     Client: GameClient;
+    Logger: LoggerInstance;
 }
 
 export interface MessageHandlerCallback { (message: Message, context: HandlerContext): Promise<void>

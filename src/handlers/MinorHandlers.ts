@@ -4,7 +4,6 @@ import {ValidSidReply} from "../Messages";
 import {ValidSessionIDRequest} from "../Messages";
 
 import * as Promise from "bluebird";
-import * as winston from "winston";
 import {PongMessage} from "../Messages";
 import {PingMessage} from "../Messages";
 import {getTimeMilliseconds} from "../Utils";
@@ -15,14 +14,14 @@ export function handleValidSessionIDRequest(message: Message, context: HandlerCo
 }
 
 export function handlePing(message: Message, context: HandlerContext): Promise<void> {
-    winston.info("Received ping from %s", context.Client);
+    context.Logger.info("Received ping.");
 
     return context.Client.sendToClient(new PongMessage((<PingMessage>message).Time));
 }
 
 export function handlePong(message: Message, context: HandlerContext): Promise<void> {
     context.Client.LastPing = getTimeMilliseconds() - (<PongMessage>message).Time;
-    winston.info(`Client ${context.Client} has a ping of ${context.Client.LastPing}`);
+    context.Logger.info(`Client has a ping of ${context.Client.LastPing}`);
 
     return Promise.resolve();
 }

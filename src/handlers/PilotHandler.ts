@@ -7,6 +7,8 @@ import {GetPilotMessage} from "../Messages";
 export function handleGetPilotMessage(message: Message, context: HandlerContext): Promise<void> {
     let msg = <GetPilotMessage>message;
 
+    context.Logger.info("Client has requested pilot data");
+
     let client: GameClient = context.Client;
     let sessId = msg.SessionId;
 

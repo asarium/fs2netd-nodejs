@@ -1,7 +1,6 @@
 import {HandlerContext} from "./Handlers";
 import {Message} from "../Messages";
 
-import * as winston from "winston";
 import {NoSuchUserError} from "../Exceptions";
 import {Authentication} from "../Authentication";
 import {AuthenticationError} from "../Exceptions";
@@ -13,7 +12,7 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
     let msg = <LoginMessage>message;
 
     if (context.Client.Authenticated) {
-        winston.warn("User %s is already logged in! Tried to log in again.", msg.Username);
+        context.Logger.warn("User %s is already logged in! Tried to log in again.", msg.Username);
         return Promise.resolve();
     }
 
@@ -24,7 +23,7 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
     // 3. If login is valid, create a session
     // 4. Set session data for this instance and send successful reply so client
 
-    winston.info("Authenticating user %s...", msg.Username);
+    context.Logger.info("Authenticating user %s...", msg.Username);
     let userP = context.Database.getUserByName(msg.Username);
 
     let numPilotsP = userP.then(user => {
@@ -43,7 +42,7 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
         }
 
         context.Client.User = userP.value();
-        winston.info("Client %s successfully authenticated", context.Client.toString());
+        context.Logger.info("Client successfully authenticated");
 
         if (context.Client.Session != null) {
             // Client re-authenticated itself
@@ -76,7 +75,7 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
         context.Client.sendToClient(new LoginReply(false, -1, -1));
         return null;
     }).catch(err => {
-        winston.error("Error while authenticating User!", err);
+        context.Logger.error("Error while authenticating User!", err);
         context.Client.sendToClient(new LoginReply(false, -1, -1));
         return null;
     });
