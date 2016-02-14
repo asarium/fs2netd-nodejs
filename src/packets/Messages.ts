@@ -171,6 +171,12 @@ export class TableRequestMessage extends Message {
     }
 }
 
+export class MissionListRequest extends Message {
+    constructor() {
+        super(Identifiers.PCKT_MISSIONS_RQST);
+    }
+}
+
 export abstract class ClientMessage extends Message {
     public abstract serialize(): Buffer;
 
@@ -356,6 +362,27 @@ export class TablesReply extends ClientMessage {
         buffer.writeUInt16(this._valids.length);
         for (let valid of this._valids) {
             buffer.writeUInt16(valid ? 1 : 0);
+        }
+
+        return buffer.finalize();
+    }
+}
+
+export class MissionListReply extends ClientMessage {
+    private _missionList: NameCRC[];
+
+    constructor(missionList: NameCRC[]) {
+        super(Identifiers.PCKT_MISSIONS_REPLY);
+        this._missionList = missionList;
+    }
+
+    serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeInt32(this._missionList.length);
+        for (let crc of this._missionList) {
+            buffer.writeString(crc.Name);
+            buffer.writeUInt32(crc.CRC32);
         }
 
         return buffer.finalize();

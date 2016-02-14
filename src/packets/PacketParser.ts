@@ -32,7 +32,7 @@ export function PacketParser() {
                     this.int32le("type").int32le("status").string("filter");
                     break;
                 case Identifiers.PCKT_SERVER_START:
-                    this.string("name").string("mission_name").string("title").string("campaign_name").uin8le("campaign_mode")
+                    this.string("name").string("mission_name").string("title").string("campaign_name").uint8le("campaign_mode")
                         .int32le("flags").int32le("type_flags").int16le("num_players").int16le("max_players").uint8le("mode")
                         .uint8le("rank_base").uint8le("game_state").uint8le("connection_speed").string("tracker_channel");
                     break;

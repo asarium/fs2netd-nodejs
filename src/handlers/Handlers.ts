@@ -19,7 +19,9 @@ import {ServerListMessage} from "../packets/Messages";
 import {handleServerListMessage} from "./ServerListHandler";
 import {LoggerInstance} from "winston";
 import {TableRequestMessage} from "../packets/Messages";
-import {handleTableValidation} from "./ValidationHandler";
+import {handleTableValidation} from "./FilesHandler";
+import {MissionListRequest} from "../packets/Messages";
+import {handleMissionListRequest} from "./FilesHandler";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -44,6 +46,7 @@ let handlers: HandlerDefinition[] = [
     {MessageType: PongMessage, Handler: handlePong},
     {MessageType: ServerListMessage, Handler: handleServerListMessage},
     {MessageType: TableRequestMessage, Handler: handleTableValidation},
+    {MessageType: MissionListRequest, Handler: handleMissionListRequest},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {

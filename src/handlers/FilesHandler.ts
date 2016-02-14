@@ -2,6 +2,9 @@ import {HandlerContext} from "./Handlers";
 import {Message} from "../packets/Messages";
 import {TableRequestMessage} from "../packets/Messages";
 import {TablesReply} from "../packets/Messages";
+import {MissionListRequest} from "../packets/Messages";
+import {NameCRC} from "../packets/Messages";
+import {MissionListReply} from "../packets/Messages";
 
 export function handleTableValidation(message: Message, context: HandlerContext): Promise<void> {
     let msg = <TableRequestMessage>message;
@@ -32,5 +35,20 @@ export function handleTableValidation(message: Message, context: HandlerContext)
         }
 
         return context.Client.sendToClient(new TablesReply(result));
+    });
+}
+
+export function handleMissionListRequest(message: Message, context: HandlerContext): Promise<void> {
+    return context.Database.getMissions().then(missions => {
+        let crcs: NameCRC[] = [];
+
+        for (let mission of missions) {
+            crcs.push({
+                Name: mission.Filename,
+                CRC32: mission.CRC32,
+            });
+        }
+
+        return context.Client.sendToClient(new MissionListReply(crcs));
     });
 }
