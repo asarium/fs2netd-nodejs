@@ -1,7 +1,8 @@
-import * as Dissolve from "dissolve";
 import * as util from "util";
 
 import {Identifiers} from "./PacketIdentifiers";
+
+let Dissolve = require("dissolve");
 
 export function PacketParser() {
     Dissolve.call(this);
