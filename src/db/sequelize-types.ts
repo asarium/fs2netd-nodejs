@@ -171,6 +171,23 @@ function defineMission(sequ: Sequelize): MissionModel {
     });
 }
 
+export interface IpBanPojo {
+    IpMask?: string;
+    TTL?: number;
+    Comment?: string;
+}
+export interface IpBanInstance extends sequelize.Instance<IpBanPojo>, IpBanPojo {
+}
+export interface IpBanModel extends sequelize.Model<IpBanInstance, IpBanPojo> {
+}
+function defineIpBan(sequ: Sequelize): IpBanModel {
+    return sequ.define<IpBanInstance, IpBanPojo>("IpBan", {
+        "IpMask": sequelize.STRING,
+        "TTL": sequelize.INTEGER,
+        "Comment": sequelize.TEXT,
+    });
+}
+
 export interface Models {
     OnlineUser: OnlineUserModel,
     User: UserModel,
@@ -178,6 +195,7 @@ export interface Models {
     Server: ServerModel,
     Table: TableModel,
     Mission: MissionModel,
+    IpBan: IpBanModel,
 }
 
 export function defineModels(sequ: Sequelize): Models {
@@ -188,6 +206,7 @@ export function defineModels(sequ: Sequelize): Models {
         Server: defineServer(sequ),
         Table: defineTable(sequ),
         Mission: defineMission(sequ),
+        IpBan: defineIpBan(sequ),
     };
 
     models.User.hasMany(models.OnlineUser, {foreignKey: "UserId"});

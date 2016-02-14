@@ -18,6 +18,7 @@ import {ServerListMessage} from "./Messages";
 import {TableRequestMessage} from "./Messages";
 import {NameCRC} from "./Messages";
 import {MissionListRequest} from "./Messages";
+import {IpBanListRequest} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -47,6 +48,8 @@ function convertData(data: any): Message {
             return new TableRequestMessage(array);
         case Identifiers.PCKT_MISSIONS_RQST:
             return new MissionListRequest();
+        case Identifiers.PCKT_BANLIST_RQST:
+            return new IpBanListRequest();
         default:
             winston.error("Unknown packet type 0x%s encountered!", data.id.toString(16));
             return null;

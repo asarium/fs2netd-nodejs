@@ -177,6 +177,12 @@ export class MissionListRequest extends Message {
     }
 }
 
+export class IpBanListRequest extends Message {
+    constructor() {
+        super(Identifiers.PCKT_BANLIST_RQST);
+    }
+}
+
 export abstract class ClientMessage extends Message {
     public abstract serialize(): Buffer;
 
@@ -383,6 +389,26 @@ export class MissionListReply extends ClientMessage {
         for (let crc of this._missionList) {
             buffer.writeString(crc.Name);
             buffer.writeUInt32(crc.CRC32);
+        }
+
+        return buffer.finalize();
+    }
+}
+
+export class IpBanListReply extends ClientMessage {
+    private _list: string[];
+
+    constructor(list: string[]) {
+        super(Identifiers.PCKT_BANLIST_RPLY);
+        this._list = list;
+    }
+
+    public serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeInt32(this._list.length);
+        for (let entry of this._list) {
+            buffer.writeString(entry);
         }
 
         return buffer.finalize();

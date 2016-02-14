@@ -20,6 +20,7 @@ import {ServerPojo} from "./sequelize-types";
 import {ServerInstance} from "./sequelize-types";
 import {TableInstance} from "./sequelize-types";
 import {MissionInstance} from "./sequelize-types";
+import {IpBanInstance} from "./sequelize-types";
 
 let seqOptions: Options = {
     dialect: "mysql",
@@ -108,6 +109,14 @@ export class Database {
 
     getMissions(): Promise<MissionInstance[]> {
         return this._models.Mission.findAll();
+    }
+
+    getIpBans(): Promise<IpBanInstance[]> {
+        return this._models.IpBan.findAll({
+            where: {
+                TTL: 0
+            }
+        });
     }
 }
 

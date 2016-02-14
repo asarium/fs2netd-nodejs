@@ -22,6 +22,8 @@ import {TableRequestMessage} from "../packets/Messages";
 import {handleTableValidation} from "./FilesHandler";
 import {MissionListRequest} from "../packets/Messages";
 import {handleMissionListRequest} from "./FilesHandler";
+import {IpBanListRequest} from "../packets/Messages";
+import {handleIpBanListRequest} from "./MinorHandlers";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -47,6 +49,7 @@ let handlers: HandlerDefinition[] = [
     {MessageType: ServerListMessage, Handler: handleServerListMessage},
     {MessageType: TableRequestMessage, Handler: handleTableValidation},
     {MessageType: MissionListRequest, Handler: handleMissionListRequest},
+    {MessageType: IpBanListRequest, Handler: handleIpBanListRequest},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {

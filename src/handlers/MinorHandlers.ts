@@ -7,6 +7,7 @@ import * as Promise from "bluebird";
 import {PongMessage} from "../packets/Messages";
 import {PingMessage} from "../packets/Messages";
 import {getTimeMilliseconds} from "../Utils";
+import {IpBanListReply} from "../packets/Messages";
 
 export function handleValidSessionIDRequest(message: Message, context: HandlerContext): Promise<void> {
     let msg = <ValidSessionIDRequest>message;
@@ -24,4 +25,12 @@ export function handlePong(message: Message, context: HandlerContext): Promise<v
     context.Logger.info(`Client has a ping of ${context.Client.LastPing}`);
 
     return Promise.resolve();
+}
+
+export function handleIpBanListRequest(message: Message, context: HandlerContext): Promise<void> {
+    context.Logger.info("Client requested IP ban list");
+
+    return context.Database.getIpBans().then(ip_bans => {
+        return context.Client.sendToClient(new IpBanListReply(ip_bans.map(ban => ban.IpMask)));
+    });
 }
