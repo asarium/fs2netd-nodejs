@@ -18,6 +18,7 @@ import {PilotInstance} from "./sequelize-types";
 import {UserPojo} from "./sequelize-types";
 import {ServerPojo} from "./sequelize-types";
 import {ServerInstance} from "./sequelize-types";
+import {TableInstance} from "./sequelize-types";
 
 let seqOptions: Options = {
     dialect: "mysql",
@@ -98,6 +99,10 @@ export class Database {
 
     createServer(values: ServerPojo): ServerInstance {
         return this._models.Server.build(values);
+    }
+
+    getTables(): Promise<TableInstance[]> {
+        return this._models.Table.findAll();
     }
 }
 

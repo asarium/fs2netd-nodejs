@@ -36,6 +36,16 @@ export function PacketParser() {
                         .int32le("flags").int32le("type_flags").int16le("num_players").int16le("max_players").uint8le("mode")
                         .uint8le("rank_base").uint8le("game_state").uint8le("connection_speed").string("tracker_channel");
                     break;
+                case Identifiers.PCKT_TABLES_RQST:
+                    let count = 0;
+                    this.uint16le("num_files").loop("files", (end) => {
+                        if (count++ === this.vars.num_files) {
+                            return end(true);
+                        }
+
+                        this.string("name").uint32le("crc32");
+                    });
+                    break;
                 default:
                     // Consume all data, maybe someone else can do something with it...
                     this.buffer("data", this.vars.length - 5); // subtract 5 to account for id and length

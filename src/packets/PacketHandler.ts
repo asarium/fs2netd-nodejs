@@ -15,6 +15,8 @@ import {ValidSessionIDRequest} from "./Messages";
 import {PingMessage} from "./Messages";
 import {PongMessage} from "./Messages";
 import {ServerListMessage} from "./Messages";
+import {TableRequestMessage} from "./Messages";
+import {NameCRC} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -32,6 +34,16 @@ function convertData(data: any): Message {
             return new ServerListMessage(data.type, data.status);
         case Identifiers.PCKT_SLIST_REQUEST_FILTER:
             return new ServerListMessage(data.type, data.status, data.filter);
+        case Identifiers.PCKT_TABLES_RQST:
+            let array: NameCRC[] = [];
+            for (let entry of data.files) {
+                array.push({
+                    Name: entry.name,
+                    CRC32: entry.crc32
+                });
+            }
+
+            return new TableRequestMessage(array);
         default:
             winston.error("Unknown packet type 0x%s encountered!", data.id.toString(16));
             return null;

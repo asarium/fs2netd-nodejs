@@ -157,6 +157,20 @@ export class ServerListMessage extends Message {
     }
 }
 
+export interface NameCRC {
+    Name: string;
+    CRC32: number;
+}
+
+export class TableRequestMessage extends Message {
+    CRCs: NameCRC[];
+
+    constructor(CRCs: NameCRC[]) {
+        super(Identifiers.PCKT_TABLES_RQST);
+        this.CRCs = CRCs;
+    }
+}
+
 export abstract class ClientMessage extends Message {
     public abstract serialize(): Buffer;
 
@@ -322,6 +336,26 @@ export class ServerListReply extends ClientMessage {
             buffer.writeInt32(server.Flags);
             buffer.writeUInt16(server.Port);
             buffer.writeString(server.Ip);
+        }
+
+        return buffer.finalize();
+    }
+}
+
+export class TablesReply extends ClientMessage {
+    private _valids: boolean[];
+
+    constructor(valids: boolean[]) {
+        super(Identifiers.PCKT_TABLES_REPLY);
+        this._valids = valids;
+    }
+
+    serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeUInt16(this._valids.length);
+        for (let valid of this._valids) {
+            buffer.writeUInt16(valid ? 1 : 0);
         }
 
         return buffer.finalize();
