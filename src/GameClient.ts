@@ -29,7 +29,8 @@ import {PingMessage} from "./Messages";
 import {getTimeMilliseconds} from "./Utils";
 
 /**
- * A game instance that is connected to this server. Handles communication, authentication and user session.
+ * A game instance that is connected to this server. The class handles communication with the client and dispatches
+ * received messages to the message handler.
  */
 export class GameClient {
     private _socket: Socket;
