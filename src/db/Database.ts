@@ -5,7 +5,7 @@ import * as config from "config";
 import * as Promise from "bluebird";
 import * as sequelize from "sequelize";
 import * as winston from "winston";
-import {LoginMessage} from "./../Messages";
+import {LoginMessage} from "./../packets/Messages";
 import {Options} from "sequelize";
 import {defineModels} from "./sequelize-types";
 import {Models} from "./sequelize-types";

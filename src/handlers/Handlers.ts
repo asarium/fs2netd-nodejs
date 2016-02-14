@@ -1,21 +1,21 @@
 import {GameServer} from "../GameServer";
 import {Database} from "../db/Database";
 import {GameClient} from "../GameClient";
-import {Message} from "../Messages";
-import {LoginMessage} from "../Messages";
+import {Message} from "../packets/Messages";
+import {LoginMessage} from "../packets/Messages";
 import {handleLoginMessage} from "./LoginHandler";
 
 import * as Promise from "bluebird";
 import {UnknownMessageError} from "../Exceptions";
 import {handleGetPilotMessage} from "./PilotHandler";
-import {GetPilotMessage} from "../Messages";
-import {ValidSessionIDRequest} from "../Messages";
+import {GetPilotMessage} from "../packets/Messages";
+import {ValidSessionIDRequest} from "../packets/Messages";
 import {handleValidSessionIDRequest} from "./MinorHandlers";
-import {PingMessage} from "../Messages";
+import {PingMessage} from "../packets/Messages";
 import {handlePing} from "./MinorHandlers";
-import {PongMessage} from "../Messages";
+import {PongMessage} from "../packets/Messages";
 import {handlePong} from "./MinorHandlers";
-import {ServerListMessage} from "../Messages";
+import {ServerListMessage} from "../packets/Messages";
 import {handleServerListMessage} from "./ServerListHandler";
 import {LoggerInstance} from "winston";
 

@@ -1,7 +1,7 @@
-import {Identifiers} from "./packets/PacketIdentifiers";
-import {PilotInstance} from "./db/sequelize-types";
-import {parsePackedString} from "./Utils";
-import {ServerInstance} from "./db/sequelize-types";
+import {Identifiers} from "./PacketIdentifiers";
+import {PilotInstance} from "./../db/sequelize-types";
+import {parsePackedString} from "./../Utils";
+import {ServerInstance} from "./../db/sequelize-types";
 'use strict';
 
 export abstract class Message {

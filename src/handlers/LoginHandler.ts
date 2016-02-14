@@ -1,12 +1,12 @@
 import {HandlerContext} from "./Handlers";
-import {Message} from "../Messages";
+import {Message} from "../packets/Messages";
 
 import {NoSuchUserError} from "../Exceptions";
 import {Authentication} from "../Authentication";
 import {AuthenticationError} from "../Exceptions";
-import {LoginMessage} from "../Messages";
+import {LoginMessage} from "../packets/Messages";
 import {Session} from "../Session";
-import {LoginReply} from "../Messages";
+import {LoginReply} from "../packets/Messages";
 
 export function handleLoginMessage(message: Message, context: HandlerContext): Promise<void> {
     let msg = <LoginMessage>message;

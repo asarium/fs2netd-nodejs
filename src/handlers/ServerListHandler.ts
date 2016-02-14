@@ -1,7 +1,7 @@
-import {Message} from "../Messages";
+import {Message} from "../packets/Messages";
 import {HandlerContext} from "./Handlers";
-import {ServerListMessage} from "../Messages";
-import {ServerListReply} from "../Messages";
+import {ServerListMessage} from "../packets/Messages";
+import {ServerListReply} from "../packets/Messages";
 
 
 export function handleServerListMessage(message: Message, context: HandlerContext): Promise<void> {

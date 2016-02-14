@@ -1,11 +1,11 @@
 import {HandlerContext} from "./Handlers";
-import {Message} from "../Messages";
-import {ValidSidReply} from "../Messages";
-import {ValidSessionIDRequest} from "../Messages";
+import {Message} from "../packets/Messages";
+import {ValidSidReply} from "../packets/Messages";
+import {ValidSessionIDRequest} from "../packets/Messages";
 
 import * as Promise from "bluebird";
-import {PongMessage} from "../Messages";
-import {PingMessage} from "../Messages";
+import {PongMessage} from "../packets/Messages";
+import {PingMessage} from "../packets/Messages";
 import {getTimeMilliseconds} from "../Utils";
 
 export function handleValidSessionIDRequest(message: Message, context: HandlerContext): Promise<void> {

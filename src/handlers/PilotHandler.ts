@@ -1,8 +1,8 @@
 import {HandlerContext} from "./Handlers";
-import {Message} from "../Messages";
-import {PilotReply} from "../Messages";
+import {Message} from "../packets/Messages";
+import {PilotReply} from "../packets/Messages";
 import {GameClient} from "../GameClient";
-import {GetPilotMessage} from "../Messages";
+import {GetPilotMessage} from "../packets/Messages";
 
 export function handleGetPilotMessage(message: Message, context: HandlerContext): Promise<void> {
     let msg = <GetPilotMessage>message;
