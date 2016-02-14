@@ -1,6 +1,7 @@
 import {Identifiers} from "./packets/PacketIdentifiers";
 import {PilotInstance} from "./db/sequelize-types";
 import {parsePackedString} from "./Utils";
+import {ServerInstance} from "./db/sequelize-types";
 'use strict';
 
 export abstract class Message {
@@ -129,6 +130,30 @@ class BufferWriter {
         // write length
         this.writeInt32(x.length);
         this._offset += this._buffer.write(x, this._offset, x.length, "utf-8");
+    }
+}
+
+export class ServerListMessage extends Message {
+    private _type: number;
+    private _status: number;
+    private _filter: string;
+
+    constructor(type: number, status: number, filter?: string) {
+        super(Identifiers.PCKT_SLIST_REQUEST_FILTER);
+        this._type = type;
+        this._status = status;
+    }
+
+    get Type(): number {
+        return this._type;
+    }
+
+    get Status(): number {
+        return this._status;
+    }
+
+    get Filter(): string {
+        return this._filter;
     }
 }
 
@@ -276,6 +301,28 @@ export class PongMessage extends ClientMessage {
     public serialize(): Buffer {
         var buffer = this.createBuffer();
         buffer.writeInt32(this._time);
+
+        return buffer.finalize();
+    }
+}
+
+export class ServerListReply extends ClientMessage {
+    private _list: ServerInstance[];
+
+    constructor(list: ServerInstance[]) {
+        super(Identifiers.PCKT_SLIST_REPLY);
+        this._list = list;
+    }
+
+    serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeUInt16(this._list.length);
+        for (let server of this._list) {
+            buffer.writeInt32(server.Flags);
+            buffer.writeUInt16(server.Port);
+            buffer.writeString(server.Ip);
+        }
 
         return buffer.finalize();
     }

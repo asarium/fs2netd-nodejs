@@ -16,6 +16,8 @@ import {OnlineUserPojo} from "./sequelize-types";
 import {PilotPojo} from "./sequelize-types";
 import {PilotInstance} from "./sequelize-types";
 import {UserPojo} from "./sequelize-types";
+import {ServerPojo} from "./sequelize-types";
+import {ServerInstance} from "./sequelize-types";
 
 let seqOptions: Options = {
     dialect: "mysql",
@@ -92,6 +94,10 @@ export class Database {
 
     clearOnlineUsers(): Promise<void> {
         return this._models.OnlineUser.truncate();
+    }
+
+    createServer(values: ServerPojo): ServerInstance {
+        return this._models.Server.build(values);
     }
 }
 

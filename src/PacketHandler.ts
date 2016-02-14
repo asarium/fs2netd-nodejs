@@ -14,6 +14,7 @@ import {LoginMessage} from "./Messages";
 import {ValidSessionIDRequest} from "./Messages";
 import {PingMessage} from "./Messages";
 import {PongMessage} from "./Messages";
+import {ServerListMessage} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -27,6 +28,10 @@ function convertData(data: any): Message {
             return new PingMessage(data.time);
         case Identifiers.PCKT_PONG:
             return new PongMessage(data.time);
+        case Identifiers.PCKT_SLIST_REQUEST:
+            return new ServerListMessage(data.type, data.status);
+        case Identifiers.PCKT_SLIST_REQUEST_FILTER:
+            return new ServerListMessage(data.type, data.status, data.filter);
         default:
             winston.error("Unknown packet type 0x%s encountered!", data.id.toString(16));
             return null;

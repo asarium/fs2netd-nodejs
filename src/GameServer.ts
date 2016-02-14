@@ -1,3 +1,4 @@
+import {ServerList} from "./ServerList";
 'use strict';
 
 /// <reference path="../typings/tsd.d.ts" />
@@ -17,15 +18,21 @@ export class GameServer {
     private _gameClients: Array<GameClient> = [];
     private _server: Server;
     private _db: Database;
+    private _serverList: ServerList;
 
     private _intervalHandle: NodeJS.Timer;
 
     constructor() {
         this._db = new Database();
+        this._serverList = new ServerList(this._db);
     }
 
     get Database(): Database {
         return this._db;
+    }
+
+    get ServerList(): ServerList {
+        return this._serverList;
     }
 
     start(): Promise<void> {

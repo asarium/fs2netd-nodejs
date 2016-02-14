@@ -25,6 +25,12 @@ export function PacketParser() {
                 case Identifiers.PCKT_PONG:
                     this.int32le("time");
                     break;
+                case Identifiers.PCKT_SLIST_REQUEST:
+                    this.int32le("type").int32le("status");
+                    break;
+                case Identifiers.PCKT_SLIST_REQUEST_FILTER:
+                    this.int32le("type").int32le("status").string("filter");
+                    break;
                 default:
                     // Consume all data, maybe someone else can do something with it...
                     this.buffer("data", this.vars.length - 5); // subtract 5 to account for id and length

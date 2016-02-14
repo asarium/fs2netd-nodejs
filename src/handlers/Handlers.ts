@@ -15,6 +15,8 @@ import {PingMessage} from "../Messages";
 import {handlePing} from "./MinorHandlers";
 import {PongMessage} from "../Messages";
 import {handlePong} from "./MinorHandlers";
+import {ServerListMessage} from "../Messages";
+import {handleServerListMessage} from "./ServerListHandler";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -36,6 +38,7 @@ let handlers: HandlerDefinition[] = [
     {MessageType: ValidSessionIDRequest, Handler: handleValidSessionIDRequest},
     {MessageType: PingMessage, Handler: handlePing},
     {MessageType: PongMessage, Handler: handlePong},
+    {MessageType: ServerListMessage, Handler: handleServerListMessage},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {

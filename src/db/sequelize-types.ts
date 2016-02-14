@@ -38,7 +38,6 @@ export interface UserInstance extends sequelize.Instance<UserPojo>, UserPojo {
 export interface UserModel extends sequelize.Model<UserInstance, UserPojo> {
 }
 function defineUser(sequ: Sequelize): UserModel {
-    // The UserInstance interface functions are defined below, it's a bit ugly but I don't see a better way
     return sequ.define<UserInstance, UserPojo>("User", {
         "Username": sequelize.STRING,
         "PasswordHash": sequelize.STRING,
@@ -109,10 +108,34 @@ function definePilot(sequ: Sequelize): PilotModel {
     });
 }
 
+export interface ServerPojo {
+    Name?: string;
+
+    Ip?: string;
+    Port?: number;
+
+    Flags?: number;
+}
+export interface ServerInstance extends sequelize.Instance<ServerPojo>, ServerPojo {
+}
+export interface ServerModel extends sequelize.Model<ServerInstance, ServerPojo> {
+}
+function defineServer(sequ: Sequelize): ServerModel {
+    return sequ.define<ServerInstance, ServerPojo>("Server", {
+        "Name": sequelize.STRING,
+
+        "Ip": sequelize.STRING,
+        "Port": sequelize.INTEGER,
+
+        "Flags": sequelize.INTEGER,
+    });
+}
+
 export interface Models {
     OnlineUser: OnlineUserModel,
     User: UserModel,
     Pilot: PilotModel,
+    Server: ServerModel,
 }
 
 export function defineModels(sequ: Sequelize): Models {
@@ -120,6 +143,7 @@ export function defineModels(sequ: Sequelize): Models {
         OnlineUser: defineOnlineUser(sequ),
         User: defineUser(sequ),
         Pilot: definePilot(sequ),
+        Server: defineServer(sequ),
     };
 
     models.User.hasMany(models.OnlineUser, {foreignKey: "UserId"});
