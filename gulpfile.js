@@ -15,7 +15,7 @@ gulp.task('tsd', function (callback) {
 });
 
 var tsProject = ts.createProject('tsconfig.json');
-gulp.task('scripts', ["tsd"], function () {
+gulp.task('tsc', ["tsd"], function () {
     var tsResult = tsProject.src().pipe(ts(tsProject));
 
     return merge([
@@ -24,6 +24,6 @@ gulp.task('scripts', ["tsd"], function () {
     ]);
 });
 
-gulp.task("tests", ["scripts"], function () {
+gulp.task("tests", ["tsc"], function () {
     return gulp.src('build/js/test/**/*.js', {read: false}).pipe(mocha());
 });
