@@ -134,6 +134,17 @@ export class GameClient {
         this._lastPing = value;
     }
 
+    get RemoteAddress(): string {
+        return this._remoteAddress;
+    }
+
+    get RemotePort(): number {
+        return this._remotePort;
+    }
+    set RemotePort(value: number) {
+        this._remotePort = value;
+    }
+
     /**
      * Sends a message packet to the client
      * @param msg The message to send

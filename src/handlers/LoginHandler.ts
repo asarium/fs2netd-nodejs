@@ -11,6 +11,8 @@ import {LoginReply} from "../packets/Messages";
 export function handleLoginMessage(message: Message, context: HandlerContext): Promise<void> {
     let msg = <LoginMessage>message;
 
+    context.Client.RemotePort = msg.Port; // Update the port using the message
+
     if (context.Client.Authenticated) {
         context.Logger.warn("User %s is already logged in! Tried to log in again.", msg.Username);
         return Promise.resolve();
