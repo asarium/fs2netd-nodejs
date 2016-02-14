@@ -25,6 +25,8 @@ import {Authentication} from "./Authentication";
 import {OnlineUserPojo} from "./db/sequelize-types";
 import {handleMessage} from "./handlers/Handlers";
 import {UnknownMessageError} from "./Exceptions";
+import {PingMessage} from "./Messages";
+import {getTimeMilliseconds} from "./Utils";
 
 /**
  * A game instance that is connected to this server. Handles communication, authentication and user session.
@@ -56,6 +58,7 @@ export class GameClient {
     get User(): UserInstance {
         return this._user;
     }
+
     set User(value: UserInstance) {
         this._user = value;
     }
@@ -63,6 +66,7 @@ export class GameClient {
     get Session(): Session {
         return this._session;
     }
+
     set Session(value: Session) {
         this._session = value;
     }
@@ -70,6 +74,7 @@ export class GameClient {
     get Authenticated(): boolean {
         return this._authenticated;
     }
+
     set Authenticated(value: boolean) {
         this._authenticated = value;
     }
@@ -77,6 +82,7 @@ export class GameClient {
     get OnlineUser(): OnlineUserInstance {
         return this._onlineUser;
     }
+
     set OnlineUser(value: OnlineUserInstance) {
         this._onlineUser = value;
     }
@@ -84,6 +90,7 @@ export class GameClient {
     get LastPing(): number {
         return this._lastPing;
     }
+
     set LastPing(value: number) {
         this._lastPing = value;
     }
@@ -122,6 +129,10 @@ export class GameClient {
                 done();
             });
         });
+    }
+
+    public sendPing(): Promise<void> {
+        return this.sendToClient(new PingMessage(getTimeMilliseconds()));
     }
 
     public getOnlineUserData(): OnlineUserPojo {

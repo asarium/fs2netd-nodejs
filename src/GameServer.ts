@@ -18,6 +18,8 @@ export class GameServer {
     private _server: Server;
     private _db: Database;
 
+    private _intervalHandle: NodeJS.Timer;
+
     constructor() {
         this._db = new Database();
     }
@@ -52,8 +54,18 @@ export class GameServer {
 
                     done();
                 });
-            })
+            }).then(_ => {
+                // Server is initialized
+                this._intervalHandle = setInterval(() => this.intervalCallback(), 30 * 1000);
+            });
         });
+    }
+
+    private intervalCallback() {
+        winston.info("Performing periodic actions");
+
+        // Ping all clients
+        this.pingAll();
     }
 
     getClientFromPilot(pilot: string): GameClient {
@@ -66,8 +78,19 @@ export class GameServer {
         return null;
     }
 
+    pingAll(): Promise<any> {
+        let promises = [];
+        for (let client of this._gameClients) {
+            promises.push(client.sendPing());
+        }
+
+        return Promise.all(promises);
+    }
+
     stop(): Promise<void> {
         winston.info("Initiating game server shutdown!");
+
+        clearInterval(this._intervalHandle);
         return this._db.clearOnlineUsers().then(_ => {
             this._gameClients.forEach(client => client.disconnect());
 

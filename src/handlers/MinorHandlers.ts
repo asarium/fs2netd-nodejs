@@ -3,6 +3,7 @@ import {Message} from "../Messages";
 import {ValidSidReply} from "../Messages";
 import {ValidSessionIDRequest} from "../Messages";
 
+import * as Promise from "bluebird";
 import * as winston from "winston";
 import {PongMessage} from "../Messages";
 import {PingMessage} from "../Messages";
@@ -20,9 +21,8 @@ export function handlePing(message: Message, context: HandlerContext): Promise<v
 }
 
 export function handlePong(message: Message, context: HandlerContext): Promise<void> {
-    winston.info("Received pong from %s", context.Client);
-
     context.Client.LastPing = getTimeMilliseconds() - (<PongMessage>message).Time;
+    winston.info(`Client ${context.Client} has a ping of ${context.Client.LastPing}`);
 
     return Promise.resolve();
 }

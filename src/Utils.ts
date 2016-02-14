@@ -32,5 +32,5 @@ export function packString(array: NameCount[]): string {
 }
 
 export function getTimeMilliseconds() : number {
-    return Date.now(); // Could be used to fix the 32 bit timestamp issue, for now this works...
+    return Date.now() % 2147483647; // Make sure it stays in range for signed integers
 }
