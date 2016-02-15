@@ -12,6 +12,10 @@ interface ServerEntry {
 
 let SERVER_TIMEOUT = 5 * 60 * 1000; // 5 Minute timeout
 
+function isSameServer(entry: ServerEntry, instance: ServerInstance): boolean {
+    return entry.Server.Ip === instance.Ip && entry.Server.Port === instance.Port;
+}
+
 export class ServerList {
     private _list: ServerEntry[] = [];
 
@@ -52,7 +56,7 @@ export class ServerList {
         return server.save().then(() => {
             for (let i = 0; i < this._list.length; ++i) {
                 let entry = this._list[i];
-                if (entry.Server === server) {
+                if (isSameServer(entry, server)) {
                     entry.LastUpdate = new Date();
                     break;
                 }
@@ -64,7 +68,7 @@ export class ServerList {
         return server.destroy().then(() => {
             for (let i = 0; i < this._list.length; ++i) {
                 let entry = this._list[i];
-                if (entry.Server === server) {
+                if (isSameServer(entry, server)) {
                     this._list.splice(i, 1);
                     break;
                 }
