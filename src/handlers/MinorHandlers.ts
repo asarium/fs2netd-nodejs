@@ -10,6 +10,8 @@ import {getTimeMilliseconds} from "../Utils";
 import {IpBanListReply} from "../packets/Messages";
 
 export function handleValidSessionIDRequest(message: Message, context: HandlerContext): Promise<void> {
+    context.Logger.info("Client requested session validation");
+
     let msg = <ValidSessionIDRequest>message;
     return context.Client.sendToClient(new ValidSidReply(context.Client.Session.isValid(msg.SessionId)));
 }

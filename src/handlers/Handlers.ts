@@ -30,6 +30,8 @@ import {ServerDisconnectMessage} from "../packets/Messages";
 import {handleServerStartMessage} from "./ServerListHandler";
 import {handleServerDisconnectMessage} from "./ServerListHandler";
 import {handleServerUpdateMessage} from "./ServerListHandler";
+import {DuplicateLoginRequest} from "../packets/Messages";
+import {handleDuplicateLoginMessage} from "./LoginHandler";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -48,6 +50,7 @@ interface HandlerDefinition {
 
 let handlers: HandlerDefinition[] = [
     {MessageType: LoginMessage, Handler: handleLoginMessage},
+    {MessageType: DuplicateLoginRequest, Handler: handleDuplicateLoginMessage},
 
     {MessageType: GetPilotMessage, Handler: handleGetPilotMessage},
 

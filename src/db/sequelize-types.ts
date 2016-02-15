@@ -34,6 +34,8 @@ export interface UserPojo {
 export interface UserInstance extends sequelize.Instance<UserPojo>, UserPojo {
     countPilots:(options?: any) => Promise<number>
     getPilots:(options?: any) => Promise<PilotInstance[]>
+
+    getOnlineUsers:(options?:any) => Promise<OnlineUserInstance[]>
 }
 export interface UserModel extends sequelize.Model<UserInstance, UserPojo> {
 }

@@ -22,11 +22,14 @@ import {IpBanListRequest} from "./Messages";
 import {ServerStartMessage} from "./Messages";
 import {ServerUpdateMessage} from "./Messages";
 import {ServerDisconnectMessage} from "./Messages";
+import {DuplicateLoginRequest} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
         case Identifiers.PCKT_LOGIN_AUTH:
             return new LoginMessage(data.id, data.username, data.password, data.port);
+        case Identifiers.PCKT_DUP_LOGIN_RQST:
+            return new DuplicateLoginRequest(data.sid, data.ids.map(entry => entry.id));
 
         case Identifiers.PCKT_PILOT_GET:
             return new GetPilotMessage(data.sid, data.pilotname, data.create != 0);

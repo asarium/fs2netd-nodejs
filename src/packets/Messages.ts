@@ -41,6 +41,26 @@ export class LoginMessage extends Message {
     }
 }
 
+export class DuplicateLoginRequest extends Message {
+    private _sid: number;
+    private _ids: number[];
+
+
+    constructor(sid: number, ids: number[]) {
+        super(Identifiers.PCKT_DUP_LOGIN_RQST);
+        this._sid = sid;
+        this._ids = ids;
+    }
+
+    get SessionId(): number {
+        return this._sid;
+    }
+
+    get IDs(): number[] {
+        return this._ids;
+    }
+}
+
 export class GetPilotMessage extends Message {
     private _sessionId: number;
     private _pilotname: string;
@@ -451,6 +471,24 @@ export class IpBanListReply extends ClientMessage {
         for (let entry of this._list) {
             buffer.writeString(entry);
         }
+
+        return buffer.finalize();
+    }
+}
+
+export class DuplicateLoginReply extends ClientMessage {
+    private _invalid: boolean;
+
+    constructor(invalid: boolean) {
+        super(Identifiers.PCKT_DUP_LOGIN_REPLY);
+        this._invalid = invalid;
+    }
+
+
+    public serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeUInt8(this._invalid ? 1 : 0);
 
         return buffer.finalize();
     }

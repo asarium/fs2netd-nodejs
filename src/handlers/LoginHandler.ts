@@ -7,6 +7,8 @@ import {AuthenticationError} from "../Exceptions";
 import {LoginMessage} from "../packets/Messages";
 import {Session} from "../Session";
 import {LoginReply} from "../packets/Messages";
+import {DuplicateLoginRequest} from "../packets/Messages";
+import {DuplicateLoginReply} from "../packets/Messages";
 
 export function handleLoginMessage(message: Message, context: HandlerContext): Promise<void> {
     let msg = <LoginMessage>message;
@@ -80,5 +82,24 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
         context.Logger.error("Error while authenticating User!", err);
         context.Client.sendToClient(new LoginReply(false, -1, -1));
         return null;
+    });
+}
+
+export function handleDuplicateLoginMessage(message: Message, context: HandlerContext): Promise<void> {
+    context.Logger.info("Client checking for duplicate logins");
+
+    let msg = <DuplicateLoginRequest>message;
+
+    return context.Client.User.getOnlineUsers().then(online_users => {
+        let count = 0;
+        for (let online of online_users) {
+            for (let id of msg.IDs) {
+                if (online.SessionId == id) {
+                    ++count;
+                }
+            }
+        }
+
+        return context.Client.sendToClient(new DuplicateLoginReply(count != 1));
     });
 }

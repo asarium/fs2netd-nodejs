@@ -13,6 +13,16 @@ export function PacketParser() {
                 case Identifiers.PCKT_LOGIN_AUTH:
                     this.string("username").string("password").uint16le("port");
                     break;
+                case Identifiers.PCKT_DUP_LOGIN_RQST:
+                    let id_count = 0;
+                    this.int32le("sid").uint8("num_ids").loop("ids", (end) => {
+                        if (id_count++ === this.vars.num_ids) {
+                            return end(true);
+                        }
+
+                        this.int32le("id");
+                    });
+                    break;
 
                 case Identifiers.PCKT_PILOT_GET:
                     this.int32le("sid").string("pilotname").uint8("create");
@@ -49,9 +59,9 @@ export function PacketParser() {
                     break;
 
                 case Identifiers.PCKT_TABLES_RQST:
-                    let count = 0;
+                    let file_count = 0;
                     this.uint16le("num_files").loop("files", (end) => {
-                        if (count++ === this.vars.num_files) {
+                        if (file_count++ === this.vars.num_files) {
                             return end(true);
                         }
 
