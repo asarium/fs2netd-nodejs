@@ -112,7 +112,11 @@ export class GameServer {
     private clientDisconnected(gameClient: GameClient): void {
         if (gameClient.IsServer) {
             // If it was a server then remove it from the server list
-            this.ServerList.removeServer(this.ServerList.getServer(gameClient.RemoteAddress, gameClient.RemotePort));
+            let server = this.ServerList.getServer(gameClient.RemoteAddress, gameClient.RemotePort);
+
+            if (server) {
+                this.ServerList.removeServer(server);
+            }
         }
 
         winston.info("Client '%s' has disconnected", gameClient.toString());

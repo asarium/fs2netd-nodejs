@@ -52,7 +52,7 @@ export class GameClient {
 
     private _logger: LoggerInstance;
 
-    private _isServer: boolean = true;
+    private _isServer: boolean = false;
 
     /**
      * Initializes the client with
