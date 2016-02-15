@@ -23,6 +23,9 @@ import {ServerStartMessage} from "./Messages";
 import {ServerUpdateMessage} from "./Messages";
 import {ServerDisconnectMessage} from "./Messages";
 import {DuplicateLoginRequest} from "./Messages";
+import {PilotPojo} from "../db/sequelize-types";
+import {UpdatePilotMessage} from "./Messages";
+import {packString} from "../Utils";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -33,6 +36,39 @@ function convertData(data: any): Message {
 
         case Identifiers.PCKT_PILOT_GET:
             return new GetPilotMessage(data.sid, data.pilotname, data.create != 0);
+        case Identifiers.PCKT_PILOT_UPDATE:
+            let pilotData: PilotPojo = {
+                PilotName: data.pilot_name,
+                Score:data.score,
+                MissionsFlown:data.missions_flown,
+                FlightTime:data.flight_time,
+                LastFlown:new Date(data.last_flown * 1000),
+                KillCount:data.kill_count,
+                KillCountOk:data.kill_count_ok,
+                Assists:data.assists,
+                PrimaryShotsFired:data.p_shots_fired,
+                PrimaryShotsHits:data.p_shots_hit,
+                PrimaryBoneheadHits:data.p_bonehead_hits,
+                SecondaryShotsFired:data.s_shots_fired,
+                SecondaryShotsHits:data.s_shots_hit,
+                SecondaryBoneheadHits:data.s_bonehead_hits,
+                Rank:data.rank,
+                NumShipKills:data.num_ship_kills,
+                ShipKillsPacked:packString(data.ship_kills.map(kill => {
+                    return {
+                        Name: kill.name,
+                        Count: kill.count,
+                    };
+                })),
+                NumMedals:data.num_medals,
+                MedalsPacked:packString(data.medals.map(medal => {
+                    return {
+                        Name: "",
+                        Count: medal.count,
+                    }
+                })),
+            };
+            return new UpdatePilotMessage(data.sid, data.user_name, pilotData);
 
         case Identifiers.PCKT_VALID_SID_RQST:
             return new ValidSessionIDRequest(data.sid);

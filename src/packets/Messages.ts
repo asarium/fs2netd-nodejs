@@ -2,6 +2,7 @@ import {Identifiers} from "./PacketIdentifiers";
 import {PilotInstance} from "./../db/sequelize-types";
 import {parsePackedString} from "./../Utils";
 import {ServerInstance} from "./../db/sequelize-types";
+import {PilotPojo} from "../db/sequelize-types";
 'use strict';
 
 export abstract class Message {
@@ -84,6 +85,31 @@ export class GetPilotMessage extends Message {
 
     get CreatePilot(): boolean {
         return this._create;
+    }
+}
+
+export class UpdatePilotMessage extends Message {
+    private _pilotData: PilotPojo;
+    private _sid: number;
+    private _userName: string;
+
+    constructor(sid: number, userName: string, params: PilotPojo) {
+        super(Identifiers.PCKT_PILOT_UPDATE);
+        this._sid = sid;
+        this._userName = userName;
+        this._pilotData = params;
+    }
+
+    get PilotData(): PilotPojo {
+        return this._pilotData;
+    }
+
+    get SessionId(): number {
+        return this._sid;
+    }
+
+    get UserName(): string {
+        return this._userName;
     }
 }
 
@@ -298,7 +324,7 @@ export class PilotReply extends ClientMessage {
         if (this._pilot != null) {
             let lastFlown = 0;
             if (this._pilot.LastFlown != null) {
-                lastFlown = this._pilot.LastFlown.getTime();
+                lastFlown = this._pilot.LastFlown.getTime() / 1000;
             }
 
             buffer.writeUInt32(this._pilot.Score);
@@ -489,6 +515,24 @@ export class DuplicateLoginReply extends ClientMessage {
         var buffer = this.createBuffer();
 
         buffer.writeUInt8(this._invalid ? 1 : 0);
+
+        return buffer.finalize();
+    }
+}
+
+export class PilotUpdateReply extends ClientMessage {
+
+    private _reply: number;
+
+    constructor(reply: number) {
+        super(Identifiers.PCKT_PILOT_UREPLY);
+        this._reply = reply;
+    }
+
+    public serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeUInt8(this._reply);
 
         return buffer.finalize();
     }
