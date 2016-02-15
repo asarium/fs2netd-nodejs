@@ -58,6 +58,11 @@ export function handleServerUpdateMessage(message: Message, context: HandlerCont
 
     let server = context.Server.ServerList.getServer(context.Client.RemoteAddress, context.Client.RemotePort);
 
+    if (!server) {
+        context.Logger.info("Server is no longer valid!");
+        return null;
+    }
+
     server.MissionName = msg.Properties.mission_name;
     server.Title = msg.Properties.title;
     server.CampaignName = msg.Properties.campaign_name;
