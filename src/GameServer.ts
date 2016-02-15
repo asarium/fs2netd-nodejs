@@ -13,6 +13,8 @@ import * as net from 'net';
 import * as util from 'util';
 import * as Promise from "bluebird";
 
+let PERIODIC_INTERVAL = 30 * 1000; // Perform periodic actions every 30 seconds
+
 export class GameServer {
     private _gameClients: Array<GameClient> = [];
     private _server: Server;
@@ -56,7 +58,7 @@ export class GameServer {
                 });
             }).then(_ => {
                 // Server is initialized
-                this._intervalHandle = setInterval(() => this.intervalCallback(), 30 * 1000);
+                this._intervalHandle = setInterval(() => this.intervalCallback(), PERIODIC_INTERVAL);
             });
         });
     }
