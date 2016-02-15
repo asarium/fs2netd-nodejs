@@ -7,12 +7,11 @@ import {GameClient} from "./GameClient";
 import {Server} from "net";
 import {Database} from "./db/Database";
 
+import * as config from "config";
 import * as winston from "winston";
 import * as net from 'net';
 import * as util from 'util';
 import * as Promise from "bluebird";
-
-const PORT = 5000;
 
 export class GameServer {
     private _gameClients: Array<GameClient> = [];
@@ -50,8 +49,8 @@ export class GameServer {
             });
 
             return new Promise<void>((done, _) => {
-                this._server.listen(PORT, () => {
-                    winston.info("Server listening on port %d", PORT);
+                this._server.listen(config.get<number>("game_server.port"), () => {
+                    winston.info("Server listening on port %d", config.get<number>("game_server.port"));
 
                     done();
                 });

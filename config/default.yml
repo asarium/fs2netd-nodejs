@@ -4,3 +4,6 @@ db:
   pass: ''
   database: 'fs2netd-sequelize'
   connectionLimit: 100
+
+game_server:
+  port: 5000
