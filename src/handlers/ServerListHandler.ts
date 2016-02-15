@@ -6,6 +6,8 @@ import {ServerStartMessage} from "../packets/Messages";
 import {ServerPojo} from "../db/sequelize-types";
 import {ServerUpdateMessage} from "../packets/Messages";
 
+import * as Promise from "bluebird";
+
 export function handleServerListMessage(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Client has requested the server list");
 
@@ -60,7 +62,7 @@ export function handleServerUpdateMessage(message: Message, context: HandlerCont
 
     if (!server) {
         context.Logger.info("Server is no longer valid!");
-        return null;
+        return Promise.resolve();
     }
 
     server.MissionName = msg.Properties.mission_name;

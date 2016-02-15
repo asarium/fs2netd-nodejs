@@ -76,7 +76,7 @@ let handlers: HandlerDefinition[] = [
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {
     for (let def of handlers) {
         if (msg instanceof def.MessageType) {
-            return def.Handler(msg, context);
+            return def.Handler(msg, context) || Promise.resolve();
         }
     }
 
