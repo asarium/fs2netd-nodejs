@@ -68,6 +68,9 @@ function convertData(data: any): Message {
         case Identifiers.PCKT_SERVER_DISCONNECT:
             return new ServerDisconnectMessage();
 
+        case Identifiers.PCKT_SLIST_HB_2:
+            return null; // Ignore
+
         default:
             winston.error(`Unknown packet type 0x${data.id.toString(16)} encountered!`, data);
             return null;
