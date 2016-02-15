@@ -1,11 +1,11 @@
 import {ServerList} from "./ServerList";
 'use strict';
 
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.ts" />
 
 import {GameClient} from "./GameClient";
 import {Server} from "net";
-import {Database} from "./db/Database";
+import {Database} from "db/Database";
 
 import * as config from "config";
 import * as winston from "winston";

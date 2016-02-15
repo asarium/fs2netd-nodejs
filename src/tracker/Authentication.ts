@@ -1,8 +1,8 @@
 
 import * as bcrypt from "bcryptjs";
 import * as Promise from "bluebird";
-import {UserPojo} from "./db/sequelize-types";
-import {UserInstance} from "./db/sequelize-types";
+import {UserPojo} from "db/sequelize-types";
+import {UserInstance} from "db/sequelize-types";
 
 export class Authentication {
     static verifyPassword(user: UserPojo, password: string): Promise<boolean> {

@@ -1,6 +1,6 @@
 "use strict";
 
-import {GameServer} from "./GameServer";
+import {GameServer} from "./tracker/GameServer";
 
 let gameServer = new GameServer();
 

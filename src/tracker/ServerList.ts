@@ -1,8 +1,8 @@
-import {ServerInstance} from "./db/sequelize-types";
-import {ServerPojo} from "./db/sequelize-types";
-import {UserInstance} from "./db/sequelize-types";
+import {ServerInstance} from "db/sequelize-types";
+import {ServerPojo} from "db/sequelize-types";
+import {UserInstance} from "db/sequelize-types";
 import * as Promise from "bluebird";
-import {Database} from "./db/Database";
+import {Database} from "db/Database";
 
 interface ServerEntry {
     Server: ServerInstance;
