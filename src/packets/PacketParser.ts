@@ -27,6 +27,29 @@ export function PacketParser() {
                 case Identifiers.PCKT_PILOT_GET:
                     this.int32le("sid").string("pilotname").uint8("create");
                     break;
+                case Identifiers.PCKT_PILOT_UPDATE:
+                    let ship_kill_count = 0;
+                    let medal_count = 0;
+                    this.int32le("sid").string("pilot_name").string("user_name").uint32le("score")
+                        .uint32le("missions_flown").uint32le("flight_time").int32le("last_flown").uint32le("kill_count")
+                        .uint32le("kill_count_ok").uint32le("assists").uint32le("p_shots_fired")
+                        .uint32le("p_shots_hit").uint32le("p_bonehead_hits").uint32le("s_shots_fired")
+                        .uint32le("s_shots_hit").uint32le("s_bonehead_hits").int32le("rank").uint16le("num_ship_kills")
+                        .loop("ship_kills", end => {
+                            if (ship_kill_count++ === this.vars.num_ship_kills) {
+                                return end(true);
+                            }
+
+                            this.string("name").uint16le("count");
+                        }).uint16le("num_medals")
+                        .loop("medals", end => {
+                            if (medal_count++ === this.vars.num_medals) {
+                                return end(true);
+                            }
+
+                            this.int32le("count");
+                        });
+                    break;
 
                 case Identifiers.PCKT_VALID_SID_RQST:
                     this.int32le("sid");
@@ -47,12 +70,16 @@ export function PacketParser() {
                     break;
 
                 case Identifiers.PCKT_SERVER_START:
-                    this.string("name").string("mission_name").string("title").string("campaign_name").uint8le("campaign_mode")
-                        .int32le("flags").int32le("type_flags").int16le("num_players").int16le("max_players").uint8le("mode")
-                        .uint8le("rank_base").uint8le("game_state").uint8le("connection_speed").string("tracker_channel");
+                    this.string("name").string("mission_name").string("title").string("campaign_name")
+                        .uint8le("campaign_mode")
+                        .int32le("flags").int32le("type_flags").int16le("num_players").int16le("max_players")
+                        .uint8le("mode")
+                        .uint8le("rank_base").uint8le("game_state").uint8le("connection_speed")
+                        .string("tracker_channel");
                     break;
                 case Identifiers.PCKT_SERVER_UPDATE:
-                    this.string("mission_name").string("title").string("campaign_name").uint8("campaign_mode").int16le("num_players")
+                    this.string("mission_name").string("title").string("campaign_name").uint8("campaign_mode")
+                        .int16le("num_players")
                         .uint8("game_state");
                     break;
                 case Identifiers.PCKT_SERVER_DISCONNECT:
