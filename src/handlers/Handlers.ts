@@ -34,6 +34,8 @@ import {DuplicateLoginRequest} from "../packets/Messages";
 import {handleDuplicateLoginMessage} from "./LoginHandler";
 import {UpdatePilotMessage} from "../packets/Messages";
 import {handleUpdatePilotMessage} from "./PilotHandler";
+import {ChannelCountRequest} from "../packets/Messages";
+import {handleChannelCountRequest} from "./ServerListHandler";
 
 export interface HandlerContext {
     Server: GameServer;
@@ -71,6 +73,7 @@ let handlers: HandlerDefinition[] = [
     {MessageType: ServerStartMessage, Handler: handleServerStartMessage},
     {MessageType: ServerUpdateMessage, Handler: handleServerUpdateMessage},
     {MessageType: ServerDisconnectMessage, Handler: handleServerDisconnectMessage},
+    {MessageType: ChannelCountRequest, Handler: handleChannelCountRequest},
 ];
 
 export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {

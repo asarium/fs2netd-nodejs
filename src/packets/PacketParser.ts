@@ -96,6 +96,13 @@ export function PacketParser() {
                     });
                     break;
 
+                case Identifiers.PCKT_CHAT_CHANNEL_UPD:
+                    this.string("channel");
+                    break;
+                case Identifiers.PCKT_CHAT_CHAN_COUNT_RQST:
+                    this.string("channel");
+                    break;
+
                 default:
                     // Consume all data, maybe someone else can do something with it...
                     this.buffer("data", this.vars.length - 5); // subtract 5 to account for id and length

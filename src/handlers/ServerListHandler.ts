@@ -7,6 +7,8 @@ import {ServerPojo} from "../db/sequelize-types";
 import {ServerUpdateMessage} from "../packets/Messages";
 
 import * as Promise from "bluebird";
+import {ChannelCountRequest} from "../packets/Messages";
+import {ChannelCountReply} from "../packets/Messages";
 
 export function handleServerListMessage(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Client has requested the server list");
@@ -85,4 +87,20 @@ export function handleServerDisconnectMessage(message: Message, context: Handler
         // Unmark this client as being a server
         context.Client.IsServer = false;
     });
+}
+
+export function handleChannelCountRequest(message: Message, context: HandlerContext): Promise<void> {
+    context.Logger.info("Client requesting channel count.");
+
+    let msg = <ChannelCountRequest>message;
+
+    let servers = context.Server.ServerList.Servers;
+    let count = 0;
+    for (let server of servers) {
+        if (server.TrackerChannel.length == 0 || server.TrackerChannel === msg.Channel) {
+            ++count;
+        }
+    }
+
+    return context.Client.sendToClient(new ChannelCountReply(msg.Channel, count));
 }

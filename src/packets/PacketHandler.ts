@@ -26,6 +26,7 @@ import {DuplicateLoginRequest} from "./Messages";
 import {PilotPojo} from "../db/sequelize-types";
 import {UpdatePilotMessage} from "./Messages";
 import {packString} from "../Utils";
+import {ChannelCountRequest} from "./Messages";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -106,6 +107,12 @@ function convertData(data: any): Message {
 
         case Identifiers.PCKT_SLIST_HB_2:
             return null; // Ignore
+
+        case Identifiers.PCKT_CHAT_CHANNEL_UPD:
+            return null; // Ignore
+        case Identifiers.PCKT_CHAT_CHAN_COUNT_RQST:
+            return new ChannelCountRequest(data.channel);
+            break;
 
         default:
             winston.error(`Unknown packet type 0x${data.id.toString(16)} encountered!`, data);

@@ -270,6 +270,19 @@ export class ServerDisconnectMessage extends Message {
     }
 }
 
+export class ChannelCountRequest extends Message {
+    private _channel: string;
+
+    constructor(channel: string) {
+        super(Identifiers.PCKT_CHAT_CHAN_COUNT_RQST);
+        this._channel = channel;
+    }
+
+    get Channel(): string {
+        return this._channel;
+    }
+}
+
 export abstract class ClientMessage extends Message {
     public abstract serialize(): Buffer;
 
@@ -533,6 +546,26 @@ export class PilotUpdateReply extends ClientMessage {
         var buffer = this.createBuffer();
 
         buffer.writeUInt8(this._reply);
+
+        return buffer.finalize();
+    }
+}
+
+export class ChannelCountReply extends ClientMessage {
+    private _channel: string;
+    private _count: number;
+
+    constructor(channel: string, count:number) {
+        super(Identifiers.PCKT_CHAT_CHAN_COUNT_RQST);
+        this._channel = channel;
+        this._count = count;
+    }
+
+    public serialize(): Buffer {
+        var buffer = this.createBuffer();
+
+        buffer.writeString(this._channel);
+        buffer.writeInt32(this._count);
 
         return buffer.finalize();
     }
