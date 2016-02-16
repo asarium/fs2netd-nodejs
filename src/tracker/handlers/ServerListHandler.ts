@@ -3,12 +3,12 @@ import {HandlerContext} from "./Handlers";
 import {ServerListMessage} from "../packets/Messages";
 import {ServerListReply} from "../packets/Messages";
 import {ServerStartMessage} from "../packets/Messages";
-import {ServerPojo} from "../db/sequelize-types";
 import {ServerUpdateMessage} from "../packets/Messages";
 
 import * as Promise from "bluebird";
 import {ChannelCountRequest} from "../packets/Messages";
 import {ChannelCountReply} from "../packets/Messages";
+import {ServerPojo} from "../db/models/Server";
 
 export function handleServerListMessage(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Client has requested the server list");

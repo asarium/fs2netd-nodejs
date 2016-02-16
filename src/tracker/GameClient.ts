@@ -19,15 +19,15 @@ import * as Promise from "bluebird";
 import {PilotReply} from "./packets/Messages";
 import {ValidSessionIDRequest} from "./packets/Messages";
 import {ValidSidReply} from "./packets/Messages";
-import {UserInstance} from "./db/sequelize-types";
-import {OnlineUserInstance} from "./db/sequelize-types";
 import {Authentication} from "./Authentication";
-import {OnlineUserPojo} from "./db/sequelize-types";
 import {handleMessage} from "./handlers/Handlers";
 import {UnknownMessageError} from "./Exceptions";
 import {PingMessage} from "./packets/Messages";
 import {getTimeMilliseconds} from "./Utils";
 import {LoggerInstance} from "winston";
+import {UserInstance} from "./db/models/User";
+import {OnlineUserInstance} from "./db/models/OnlineUser";
+import {OnlineUserPojo} from "./db/models/OnlineUser";
 
 /**
  * A game instance that is connected to this server. The class handles communication with the client and dispatches

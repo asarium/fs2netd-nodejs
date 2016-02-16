@@ -7,21 +7,21 @@ import * as sequelize from "sequelize";
 import * as winston from "winston";
 import {LoginMessage} from "../packets/Messages";
 import {Options} from "sequelize";
-import {defineModels} from "./sequelize-types";
-import {Models} from "./sequelize-types";
 import {Sequelize} from "sequelize";
-import {UserInstance} from "./sequelize-types";
-import {OnlineUserInstance} from "./sequelize-types";
-import {OnlineUserPojo} from "./sequelize-types";
-import {PilotPojo} from "./sequelize-types";
-import {PilotInstance} from "./sequelize-types";
-import {UserPojo} from "./sequelize-types";
-import {ServerPojo} from "./sequelize-types";
-import {ServerInstance} from "./sequelize-types";
-import {TableInstance} from "./sequelize-types";
-import {MissionInstance} from "./sequelize-types";
-import {IpBanInstance} from "./sequelize-types";
 import {Authentication} from "../Authentication";
+import {Models} from "./models/index";
+import {defineModels} from "./models/index";
+import {UserPojo} from "./models/User";
+import {UserInstance} from "./models/User";
+import {OnlineUserPojo} from "./models/OnlineUser";
+import {OnlineUserInstance} from "./models/OnlineUser";
+import {PilotInstance} from "./models/Pilot";
+import {PilotPojo} from "./models/Pilot";
+import {ServerPojo} from "./models/Server";
+import {ServerInstance} from "./models/Server";
+import {TableInstance} from "./models/Table";
+import {MissionInstance} from "./models/Mission";
+import {IpBanInstance} from "./models/IpBan";
 
 let seqOptions: Options = {
     dialect: "mysql",

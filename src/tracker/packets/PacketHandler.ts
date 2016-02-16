@@ -23,10 +23,10 @@ import {ServerStartMessage} from "./Messages";
 import {ServerUpdateMessage} from "./Messages";
 import {ServerDisconnectMessage} from "./Messages";
 import {DuplicateLoginRequest} from "./Messages";
-import {PilotPojo} from "../db/sequelize-types";
 import {UpdatePilotMessage} from "./Messages";
 import {packString} from "../Utils";
 import {ChannelCountRequest} from "./Messages";
+import {PilotPojo} from "../db/models/Pilot";
 
 function convertData(data: any): Message {
     switch (data.id) {
