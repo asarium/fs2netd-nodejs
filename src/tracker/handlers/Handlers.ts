@@ -36,9 +36,10 @@ import {handleUpdatePilotMessage} from "./PilotHandler";
 import {ChannelCountRequest} from "../packets/Messages";
 import {handleChannelCountRequest} from "./ServerListHandler";
 import {IGameClient} from "../GameClient";
+import {IGameServer} from "../GameServer";
 
 export interface HandlerContext {
-    Server: GameServer;
+    Server: IGameServer;
     Database: Database;
     Client: IGameClient;
     Logger: LoggerInstance;

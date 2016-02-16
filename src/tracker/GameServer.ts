@@ -15,8 +15,10 @@ import * as Promise from "bluebird";
 
 let PERIODIC_INTERVAL = 30 * 1000; // Perform periodic actions every 30 seconds
 
-interface IGameServer {
-    Database: Database;
+export interface IGameServer {
+    getClientFromPilot:(pilot: string) => GameClient;
+
+    ServerList: ServerList;
 }
 
 export class GameServer implements IGameServer {

@@ -384,6 +384,10 @@ export class ValidSidReply extends ClientMessage {
         this._valid = valid;
     }
 
+    get Valid(): boolean {
+        return this._valid;
+    }
+
     public serialize(): Buffer {
         var buffer = this.createBuffer();
         buffer.writeUInt8(this._valid ? 1 : 0);
