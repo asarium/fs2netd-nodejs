@@ -22,6 +22,6 @@
     "gulp-mocha": "~2.2.0",
     "merge2": "~1.0.1",
     "assert": "~1.3.0",
-    "gulp-typings": "git+https://github.com/asarium/gulp-typings.git#fix/path"
+    "gulp-typings": "~1.0.7"
   }
 }
