@@ -1,8 +1,8 @@
 
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../../typings/main.d.ts" />
 import * as assert from "assert";
-import {UserPojo} from "../src/tracker/db/sequelize-types";
-import {Authentication} from "../src/tracker/Authentication";
+import {UserPojo} from "../../src/tracker/db/sequelize-types";
+import {Authentication} from "../../src/tracker/Authentication";
 
 let PASSWORD_HASH = "$2a$10$YZyuPWiSasB/5bGVHd88DOMCBf.JbKfhtR9Y7wojlXtHxCyrd3ygm";
 let PASSWORD = "test";

@@ -1,8 +1,8 @@
 
-/// <reference path="../typings/tsd.d.ts" />
-import {parsePackedString} from "../src/tracker/Utils";
-import {packString} from "../src/tracker/Utils";
-import {NameCount} from "../src/tracker/Utils";
+/// <reference path="../../typings/main.d.ts" />
+import {parsePackedString} from "../../src/tracker/Utils";
+import {packString} from "../../src/tracker/Utils";
+import {NameCount} from "../../src/tracker/Utils";
 import * as assert from "assert";
 
 describe("Util", () => {
