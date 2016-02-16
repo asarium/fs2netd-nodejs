@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 import * as mysql from "mysql";
 import * as config from "config";
