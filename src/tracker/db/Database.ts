@@ -23,7 +23,7 @@ import {TableInstance} from "./models/Table";
 import {MissionInstance} from "./models/Mission";
 import {IpBanInstance} from "./models/IpBan";
 
-let seqOptions: Options = {
+let defaultOptions: Options = {
     dialect: config.get<string>("db.dialect"),
     host: config.get<string>("db.host"),
     pool: {
@@ -35,16 +35,30 @@ let seqOptions: Options = {
 };
 
 if (config.has("db.port")) {
-    seqOptions.port = config.get<number>("db.port");
+    defaultOptions.port = config.get<number>("db.port");
+}
+
+export interface DatabaseOptions {
+    sequelize?: Options;
+
+    database?: string;
+    user?: string;
+    password?: string;
 }
 
 export class Database {
     private _sequelize: Sequelize;
     private _models: Models;
 
-    initialize(): Promise<void> {
-        this._sequelize = new sequelize(config.get<string>("db.database"), config.get<string>(
-            "db.user"), config.get<string>("db.pass"), seqOptions);
+    initialize(options?: DatabaseOptions): Promise<void> {
+        options = options || {};
+
+        options.sequelize = options.sequelize || defaultOptions;
+        options.database = options.database || config.get<string>("db.database");
+        options.user = options.user || config.get<string>("db.user");
+        options.password = options.password || config.get<string>("db.pass");
+
+        this._sequelize = new sequelize(options.database, options.user, options.password, options.sequelize);
 
         this._models = defineModels(this._sequelize);
 
