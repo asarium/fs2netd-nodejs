@@ -40,5 +40,45 @@ describe("Util", () => {
 
             assert.equal(result, "");
         });
+
+        it("should handle a list properly", () => {
+            let parameter: NameCount[] = [
+                {
+                    Name: "Test1",
+                    Count: 5
+                },
+                {
+                    Name: "Test2",
+                    Count: 42
+                }
+            ];
+
+            let result = packString(parameter);
+
+            assert.equal(result, "Test1;5;Test2;42");
+        });
+
+        it("should handle empty names properly", () => {
+            let parameter: NameCount[] = [
+                {
+                    Name: "",
+                    Count: 5
+                },
+                {
+                    Name: "",
+                    Count: 42
+                }
+            ];
+
+            let result = packString(parameter);
+
+            assert.equal(result, ";5;;42");
+        });
+
+        it("should handle a null argument properly", () => {
+            let result = packString(null);
+
+            assert.equal(result, "");
+        });
     });
 });

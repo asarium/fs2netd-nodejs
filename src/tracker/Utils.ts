@@ -19,18 +19,22 @@ export function parsePackedString(packed: string): Array<NameCount> {
 
     for (let i = 0; i < parts.length; i += 2) {
         array.push({
-            Name: parts[i],
-            Count: parseInt(parts[i + 1])
-        });
+                       Name: parts[i],
+                       Count: parseInt(parts[i + 1])
+                   });
     }
 
     return array;
 }
 
 export function packString(array: NameCount[]): string {
+    if (array == null) {
+        return "";
+    }
+
     return array.map(nc => nc.Name + ";" + nc.Count).join(";");
 }
 
-export function getTimeMilliseconds() : number {
+export function getTimeMilliseconds(): number {
     return Date.now() % 2147483647; // Make sure it stays in range for signed integers
 }
