@@ -24,7 +24,7 @@ import {MissionInstance} from "./models/Mission";
 import {IpBanInstance} from "./models/IpBan";
 
 let seqOptions: Options = {
-    dialect: "mysql",
+    dialect: config.get<string>("db.dialect"),
     host: config.get<string>("db.host"),
     pool: {
         maxConnections: config.get<number>("db.connectionLimit")
@@ -34,12 +34,17 @@ let seqOptions: Options = {
     }
 };
 
+if (config.has("db.port")) {
+    seqOptions.port = config.get<number>("db.port");
+}
+
 export class Database {
     private _sequelize: Sequelize;
     private _models: Models;
 
     initialize(): Promise<void> {
-        this._sequelize = new sequelize(config.get<string>("db.database"), config.get<string>("db.user"), config.get<string>("db.pass"), seqOptions);
+        this._sequelize = new sequelize(config.get<string>("db.database"), config.get<string>(
+            "db.user"), config.get<string>("db.pass"), seqOptions);
 
         this._models = defineModels(this._sequelize);
 
@@ -49,8 +54,8 @@ export class Database {
             if (count < 1) {
                 // set up test user
                 let instance = this._models.User.build({
-                    Username: "asarium"
-                });
+                                                           Username: "asarium"
+                                                       });
 
                 return Authentication.setPassword(instance, "test").then(() => {
 
@@ -67,16 +72,16 @@ export class Database {
 
     getUserByName(username: string): Promise<UserInstance> {
         return this._models.User.find({
-            where: {
-                UserName: username
-            }
-        });
+                                          where: {
+                                              UserName: username
+                                          }
+                                      });
     }
 
     updateLastLogin(user: UserInstance): Promise<UserInstance> {
         return user.update({
-            LastLogin: this._sequelize.fn('NOW')
-        });
+                               LastLogin: this._sequelize.fn('NOW')
+                           });
     }
 
     createOnlineUser(data: OnlineUserPojo): OnlineUserInstance {
@@ -85,20 +90,20 @@ export class Database {
 
     pilotExists(user: UserInstance, pilotname: string): Promise<boolean> {
         return user.countPilots({
-            where: {
-                PilotName: pilotname
-            }
-        }).then(count => {
+                                    where: {
+                                        PilotName: pilotname
+                                    }
+                                }).then(count => {
             return count > 0;
         });
     }
 
     getPilot(user: UserInstance, pilotname: string): Promise<PilotInstance> {
         return user.getPilots({
-            where: {
-                PilotName: pilotname
-            }
-        }).then(pilots => {
+                                  where: {
+                                      PilotName: pilotname
+                                  }
+                              }).then(pilots => {
             if (pilots.length <= 0) {
                 return null;
             } else {
@@ -119,7 +124,7 @@ export class Database {
         return this._models.Server.build(values);
     }
 
-    clearServers() : Promise<void> {
+    clearServers(): Promise<void> {
         return this._models.Server.truncate();
     }
 
@@ -133,10 +138,10 @@ export class Database {
 
     getIpBans(): Promise<IpBanInstance[]> {
         return this._models.IpBan.findAll({
-            where: {
-                TTL: 0
-            }
-        });
+                                              where: {
+                                                  TTL: 0
+                                              }
+                                          });
     }
 }
 

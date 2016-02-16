@@ -1,5 +1,7 @@
 db:
+  dialect: 'mysql'
   host: 'localhost'
+  #port: 1234 # Uncomment if non-default port should be used
   user: 'root'
   pass: ''
   database: 'fs2netd-sequelize'
