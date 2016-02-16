@@ -1,6 +1,5 @@
 import {GameServer} from "../GameServer";
 import {Database} from "../db/Database";
-import {GameClient} from "../GameClient";
 import {Message} from "../packets/Messages";
 import {LoginMessage} from "../packets/Messages";
 import {handleLoginMessage} from "./LoginHandler";
@@ -36,11 +35,12 @@ import {UpdatePilotMessage} from "../packets/Messages";
 import {handleUpdatePilotMessage} from "./PilotHandler";
 import {ChannelCountRequest} from "../packets/Messages";
 import {handleChannelCountRequest} from "./ServerListHandler";
+import {IGameClient} from "../GameClient";
 
 export interface HandlerContext {
     Server: GameServer;
     Database: Database;
-    Client: GameClient;
+    Client: IGameClient;
     Logger: LoggerInstance;
 }
 

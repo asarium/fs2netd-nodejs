@@ -11,7 +11,7 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
 
     context.Logger.info("Client has requested pilot data");
 
-    let client: GameClient = context.Client;
+    let client = context.Client;
     let sessId = msg.SessionId;
 
     if (sessId == -2) {

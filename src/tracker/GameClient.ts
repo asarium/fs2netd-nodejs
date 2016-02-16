@@ -29,11 +29,25 @@ import {UserInstance} from "./db/models/User";
 import {OnlineUserInstance} from "./db/models/OnlineUser";
 import {OnlineUserPojo} from "./db/models/OnlineUser";
 
+export interface IGameClient {
+    sendToClient:(msg: ClientMessage) => Promise<void>;
+    getOnlineUserData:() => OnlineUserPojo;
+
+    RemoteAddress: string;
+    RemotePort: number;
+    Authenticated: boolean;
+    User: UserInstance;
+    Session: Session;
+    OnlineUser: OnlineUserInstance;
+    LastPing: number;
+    IsServer: boolean;
+}
+
 /**
  * A game instance that is connected to this server. The class handles communication with the client and dispatches
  * received messages to the message handler.
  */
-export class GameClient {
+export class GameClient implements IGameClient {
     private _socket: Socket;
     private _handler: PacketHandler;
     private _authenticated: boolean = false;
