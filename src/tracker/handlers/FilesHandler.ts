@@ -30,7 +30,7 @@ export function handleTableValidation(message: Message, context: HandlerContext)
             }
 
             if (!found) {
-                result.push(true); // Unknown table is not valid!
+                result.push(false); // Unknown table is not valid!
             }
         }
 
