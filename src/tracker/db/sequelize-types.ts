@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/main.d.ts" />
 
 import * as sequelize from "sequelize";
 import * as Promise from "bluebird";

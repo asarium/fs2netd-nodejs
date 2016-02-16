@@ -7,8 +7,8 @@ var merge = require('merge2');
 var gulpTypings = require("gulp-typings");
 
 
-gulp.task('typings', function (callback) {
-    gulp.src("./typings.json").pipe(gulpTypings());
+gulp.task('typings', function () {
+    return gulp.src("./typings.json").pipe(gulpTypings());
 });
 
 var tsProject = ts.createProject('tsconfig.json');

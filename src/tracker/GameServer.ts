@@ -1,7 +1,7 @@
 import {ServerList} from "./ServerList";
 'use strict';
 
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/main.d.ts" />
 
 import {GameClient} from "./GameClient";
 import {Server} from "net";
