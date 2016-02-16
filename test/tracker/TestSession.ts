@@ -10,7 +10,7 @@ describe("Session", () => {
     });
     it("should not accept an invalid session id", () => {
         return Session.createSession().then(session => {
-            assert.equal(session.isValid(session.Id + 1), true);
+            assert.equal(session.isValid(session.Id + 1), false);
         });
     });
 });
