@@ -4,18 +4,15 @@ var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var mocha = require('gulp-mocha');
 var merge = require('merge2');
-var tsd = require('gulp-tsd');
+var gulpTypings = require("gulp-typings");
 
-gulp.task('tsd', function (callback) {
-    tsd({
-        command: 'reinstall',
-        latest: true,
-        config: './tsd.json'
-    }, callback);
+
+gulp.task('typings', function (callback) {
+    gulp.src("./typings.json").pipe(gulpTypings());
 });
 
 var tsProject = ts.createProject('tsconfig.json');
-gulp.task('tsc', ["tsd"], function () {
+gulp.task('tsc', ["typings"], function () {
     var tsResult = tsProject.src().pipe(ts(tsProject));
 
     return merge([
