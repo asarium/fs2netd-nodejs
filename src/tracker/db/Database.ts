@@ -50,6 +50,10 @@ export class Database {
     private _sequelize: Sequelize;
     private _models: Models;
 
+    get Models(): Models {
+        return this._models;
+    }
+
     initialize(options?: DatabaseOptions): Promise<void> {
         options = options || {};
 
@@ -62,22 +66,7 @@ export class Database {
 
         this._models = defineModels(this._sequelize);
 
-        return this._sequelize.sync().then(_ => {
-            return this._models.User.count();
-        }).then(count => {
-            if (count < 1) {
-                // set up test user
-                let instance = this._models.User.build({
-                                                           Username: "asarium"
-                                                       });
-
-                return Authentication.setPassword(instance, "test").then(() => {
-
-                });
-            }
-
-            return Promise.resolve();
-        });
+        return this._sequelize.sync();
     }
 
     createUser(data: UserPojo): UserInstance {

@@ -1,8 +1,8 @@
 import * as sequelize from "sequelize";
-import {PilotInstance} from "../sequelize-types";
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 import {OnlineUserInstance} from "./OnlineUser";
+import {PilotInstance} from "./Pilot";
 
 export interface UserPojo {
     Username?: string;
