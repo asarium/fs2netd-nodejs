@@ -89,7 +89,10 @@ export class ServerList {
     }
 
     expireServers(): Promise<void> {
-        let expired = this._list.filter(entry => (Date.now() - entry.LastUpdate.getTime()) > SERVER_TIMEOUT);
+        let expired = this._list.filter(entry => {
+            let diff = (Date.now() - entry.LastUpdate.getTime());
+            return diff > SERVER_TIMEOUT;
+        });
 
         return Promise.all(expired.map(entry => this.removeServer(entry.Server))).then(() => {
             // Ignore return value
