@@ -15,6 +15,7 @@ import {IpBanPojo} from "../../../src/tracker/db/models/IpBan";
 import {handleIpBanListRequest} from "../../../src/tracker/handlers/MinorHandlers";
 import {IpBanListRequest} from "../../../src/tracker/packets/Messages";
 import {IpBanListReply} from "../../../src/tracker/packets/Messages";
+import * as Promise from "bluebird";
 
 import * as sinon from "sinon";
 import {SinonFakeTimers} from "sinon/lib/sinon";
