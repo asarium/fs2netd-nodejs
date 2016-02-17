@@ -16,6 +16,9 @@ import {handleIpBanListRequest} from "../../../src/tracker/handlers/MinorHandler
 import {IpBanListRequest} from "../../../src/tracker/packets/Messages";
 import {IpBanListReply} from "../../../src/tracker/packets/Messages";
 
+import * as sinon from "sinon";
+import {SinonFakeTimers} from "sinon/lib/sinon";
+
 describe("Handlers", () => {
     let context: TestContext;
     beforeEach(() => {
@@ -53,14 +56,26 @@ describe("Handlers", () => {
     });
 
     describe("#handlePong()", () => {
+        let clock: SinonFakeTimers;
+        before(() => {
+            clock = sinon.useFakeTimers();
+        });
+        after(() => {
+            clock.restore();
+        });
+
         it("should update the ping of a client", () => {
-            return handlePong(new PongMessage(getTimeMilliseconds() - 20), context).then(() => {
+            let time = getTimeMilliseconds();
+
+            clock.tick(20);
+
+            return handlePong(new PongMessage(time), context).then(() => {
                 let lastMsg = context.Client.LastMessage;
 
-                assert.equal(context.Client.LastPing, 20); // This is time sensitive, may need a mock if it doesn't work
+                assert.equal(context.Client.LastPing, 20);
                 assert.equal(lastMsg, null);
             });
-        })
+        });
     });
 
     describe("#handleIpBanListRequest()", () => {
