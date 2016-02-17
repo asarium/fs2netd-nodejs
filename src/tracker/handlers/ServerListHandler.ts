@@ -17,7 +17,18 @@ export function handleServerListMessage(message: Message, context: HandlerContex
 
     // TODO: Implement filtering
     return context.Server.ServerList.expireServers().then(() => {
-        return context.Client.sendToClient(new ServerListReply(context.Server.ServerList.Servers));
+        if (msg.Filter) {
+            let filtered = [];
+            for (let server of context.Server.ServerList.Servers) {
+                if (server.TrackerChannel.length == 0 || server.TrackerChannel === msg.Filter) {
+                    filtered.push(server);
+                }
+            }
+
+            return context.Client.sendToClient(new ServerListReply(filtered));
+        } else {
+            return context.Client.sendToClient(new ServerListReply(context.Server.ServerList.Servers));
+        }
     });
 }
 
