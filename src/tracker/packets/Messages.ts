@@ -539,6 +539,9 @@ export class DuplicateLoginReply extends ClientMessage {
         this._invalid = invalid;
     }
 
+    get Invalid(): boolean {
+        return this._invalid;
+    }
 
     public serialize(): Buffer {
         var buffer = this.createBuffer();

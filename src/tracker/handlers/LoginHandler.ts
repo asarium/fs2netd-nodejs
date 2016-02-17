@@ -90,6 +90,10 @@ export function handleDuplicateLoginMessage(message: Message, context: HandlerCo
 
     let msg = <DuplicateLoginRequest>message;
 
+    if (!context.Client.Session.isValid(msg.SessionId)) {
+        return context.Client.sendToClient(new DuplicateLoginReply(true)); // Invalid Session id!
+    }
+
     return context.Client.User.getOnlineUsers().then(online_users => {
         let count = 0;
         for (let online of online_users) {
