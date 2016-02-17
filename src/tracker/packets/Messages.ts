@@ -507,6 +507,10 @@ export class IpBanListReply extends ClientMessage {
         this._list = list;
     }
 
+    get List(): string[] {
+        return this._list;
+    }
+
     public serialize(): Buffer {
         var buffer = this.createBuffer();
 
