@@ -131,7 +131,7 @@ describe("FilesHandler", () => {
                 assert.equal(reply.MissionList[3].CRC32, 12345);
 
                 assert.equal(reply.MissionList[4].Name, "baz.fs2");
-                assert.equal(reply.MissionList[5].CRC32, 3534987);
+                assert.equal(reply.MissionList[4].CRC32, 3534987);
             });
         });
     });
