@@ -334,12 +334,20 @@ export class LoginReply extends ClientMessage {
 
 export class PilotReply extends ClientMessage {
     private _replytype: number;
-    private _pilot: PilotInstance;
+    private _pilot: PilotPojo;
 
-    constructor(replytype: number, pilot?: PilotInstance) {
+    constructor(replytype: number, pilot?: PilotPojo) {
         super(Identifiers.PCKT_PILOT_REPLY);
         this._replytype = replytype;
         this._pilot = pilot;
+    }
+
+    get Replytype(): number {
+        return this._replytype;
+    }
+
+    get PilotData(): PilotPojo {
+        return this._pilot;
     }
 
     serialize(): Buffer {

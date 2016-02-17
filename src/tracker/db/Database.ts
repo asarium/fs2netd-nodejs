@@ -101,16 +101,6 @@ export class Database {
         return this._models.OnlineUser.build(data);
     }
 
-    pilotExists(user: UserInstance, pilotname: string): Promise<boolean> {
-        return user.countPilots({
-                                    where: {
-                                        PilotName: pilotname
-                                    }
-                                }).then(count => {
-            return count > 0;
-        });
-    }
-
     getPilot(user: UserInstance, pilotname: string): Promise<PilotInstance> {
         return user.getPilots({
                                   where: {

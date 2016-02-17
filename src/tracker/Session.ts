@@ -3,7 +3,7 @@ import * as Promise from "bluebird";
 
 export class Session {
     private _id: number;
-    private _activePilot: string;
+    private _activePilot: string = null;
 
     constructor(id: number) {
         this._id = id;

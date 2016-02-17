@@ -14,6 +14,7 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
     let client = context.Client;
     let sessId = msg.SessionId;
 
+    // -2 means we are looking for another player
     if (sessId == -2) {
         client = context.Server.getClientFromPilot(msg.Pilotname);
 
@@ -34,23 +35,27 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
         client.Session.ActivePilot = msg.Pilotname;
     }
 
-    return context.Database.pilotExists(client.User, msg.Pilotname).then(exists => {
-        if (exists) {
-            return context.Database.getPilot(client.User, msg.Pilotname).then(pilot => {
-                // pilot could be null if there is no such pilot but then exists would be false
-                return context.Client.sendToClient(new PilotReply(0, pilot));
-            });
-        } else {
+    return context.Database.getPilot(client.User, msg.Pilotname).then(pilot => {
+        if (pilot) {
+            return context.Client.sendToClient(new PilotReply(0, pilot));
+        } else if (msg.CreatePilot) {
             let pilot = context.Database.createPilot({
-                PilotName: msg.Pilotname
-            });
+                                                         PilotName: msg.Pilotname
+                                                     });
 
             return pilot.save().then(_ => {
                 return pilot.setUser(client.User);
             }).then(_ => {
                 return context.Client.sendToClient(new PilotReply(1));
             });
+        } else {
+            // WARNING: The original fs2netd didn't handle this case properly and sent status 0 which is wrong
+            // This probably can't happen but a status of 5 should signify an error for FSO
+            return context.Client.sendToClient(new PilotReply(5));
         }
+    }).catch(err => {
+        context.Logger.error("Error while retrieving pilot!", err);
+        return context.Client.sendToClient(new PilotReply(4));
     });
 }
 
@@ -63,15 +68,17 @@ export function handleUpdatePilotMessage(message: Message, context: HandlerConte
         return context.Client.sendToClient(new PilotUpdateReply(2)); // Session not valid
     }
 
+    if (context.Client.User.Username !== msg.UserName) {
+        return context.Client.sendToClient(new PilotUpdateReply(2)); // Username not valid
+    }
+
     // The original fs2netd uses the user name from the message but that seems like a bad idea...
-    return context.Database.pilotExists(context.Client.User, msg.PilotData.PilotName).then(exists => {
-        if (!exists) {
+    return context.Database.getPilot(context.Client.User, msg.PilotData.PilotName).then(pilot => {
+        if (!pilot) {
             return context.Client.sendToClient(new PilotUpdateReply(1)); // No such pilot
         }
 
-        return context.Database.getPilot(context.Client.User, msg.PilotData.PilotName).then(pilot => {
-            return pilot.set(msg.PilotData).save();
-        }).then(() => {
+        return pilot.set(msg.PilotData).save().then(() => {
             return context.Client.sendToClient(new PilotUpdateReply(0)); // Update was successful
         });
     });
