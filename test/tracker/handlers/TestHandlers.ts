@@ -24,16 +24,16 @@ export class TestClient implements IGameClient {
         return {};
     }
 
-    LastMessage: ClientMessage;
+    LastMessage: ClientMessage = null;
 
     RemoteAddress: string;
     RemotePort: number;
-    Authenticated: boolean;
+    Authenticated: boolean = false;
     User: UserInstance;
     Session: Session = new Session(42);
-    OnlineUser: OnlineUserInstance;
+    OnlineUser: OnlineUserInstance = null;
     LastPing: number;
-    IsServer: boolean;
+    IsServer: boolean = false;
 }
 
 export class TestServer implements IGameServer {

@@ -22,8 +22,8 @@ export class LoginMessage extends Message {
     private _password: string;
     private _port: number;
 
-    constructor(id: number, username: string, password: string, port: number) {
-        super(id);
+    constructor(username: string, password: string, port: number) {
+        super(Identifiers.PCKT_LOGIN_AUTH);
         this._username = username;
         this._password = password;
         this._port = port;
@@ -306,6 +306,18 @@ export class LoginReply extends ClientMessage {
         this._login_status = login_status;
         this._session_id = session_id;
         this._num_pilots = num_pilots;
+    }
+
+    get LoginStatus(): boolean {
+        return this._login_status;
+    }
+
+    get SessionId(): number {
+        return this._session_id;
+    }
+
+    get NumPilots(): number {
+        return this._num_pilots;
     }
 
     serialize(): Buffer {

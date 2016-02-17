@@ -31,7 +31,7 @@ import {PilotPojo} from "../db/models/Pilot";
 function convertData(data: any): Message {
     switch (data.id) {
         case Identifiers.PCKT_LOGIN_AUTH:
-            return new LoginMessage(data.id, data.username, data.password, data.port);
+            return new LoginMessage(data.username, data.password, data.port);
         case Identifiers.PCKT_DUP_LOGIN_RQST:
             return new DuplicateLoginRequest(data.sid, data.ids.map(entry => entry.id));
 

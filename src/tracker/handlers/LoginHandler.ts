@@ -13,11 +13,13 @@ import {DuplicateLoginReply} from "../packets/Messages";
 export function handleLoginMessage(message: Message, context: HandlerContext): Promise<void> {
     let msg = <LoginMessage>message;
 
-    context.Client.RemotePort = msg.Port; // Update the port using the message
-
     if (context.Client.Authenticated) {
+        context.Client.RemotePort = msg.Port; // Update the port using the message
         context.Logger.warn("User %s is already logged in! Tried to log in again.", msg.Username);
-        return Promise.resolve();
+        return context.Client.User.countPilots().then(count => {
+            // Send a message telling the client that the login was successful
+            return context.Client.sendToClient(new LoginReply(true, context.Client.Session.Id, count));
+        });
     }
 
     // This code handles authentication and setup of this client instance based on the data sent to us.
@@ -30,7 +32,7 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
     context.Logger.info("Authenticating user %s...", msg.Username);
     let userP = context.Database.getUserByName(msg.Username);
 
-    let numPilotsP = userP.then(user => {
+    return userP.then(user => {
         if (user == null) {
             // If there is no such user then reject the login
             throw new NoSuchUserError(msg.Username);
@@ -48,8 +50,9 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
         context.Client.User = userP.value();
         context.Logger.info("Client successfully authenticated");
 
-        if (context.Client.Session != null) {
-            // Client re-authenticated itself
+        if (context.Client.Session) {
+            context.Logger.warn("Client was not authenticated but had a session! Probably a coding error!");
+            // Client re-authenticated itself, this should not be able to happen but why not return the session then?
             return Promise.resolve(context.Client.Session);
         } else {
             // Create a session and send the generated id
@@ -65,11 +68,10 @@ export function handleLoginMessage(message: Message, context: HandlerContext): P
         return context.Client.OnlineUser.setUser(context.Client.User);
     }).then(_ => {
         return context.Client.User.countPilots();
-    });
-
-    return numPilotsP.then(() => {
+    }).then(count => {
+        context.Client.RemotePort = msg.Port; // Update the port using the message
         // Send a message telling the client that the login was successful
-        return context.Client.sendToClient(new LoginReply(true, context.Client.Session.Id, numPilotsP.value()));
+        return context.Client.sendToClient(new LoginReply(true, context.Client.Session.Id, count));
     }).catch(NoSuchUserError, () => {
         // User isn't known
         context.Client.sendToClient(new LoginReply(false, -1, -1));

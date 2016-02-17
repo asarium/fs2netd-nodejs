@@ -49,6 +49,7 @@ export interface DatabaseOptions {
 export class Database {
     private _sequelize: Sequelize;
     private _models: Models;
+    private _options: DatabaseOptions;
 
     get Models(): Models {
         return this._models;
@@ -61,6 +62,8 @@ export class Database {
         options.database = options.database || config.get<string>("db.database");
         options.user = options.user || config.get<string>("db.user");
         options.password = options.password || config.get<string>("db.pass");
+
+        this._options = options;
 
         this._sequelize = new sequelize(options.database, options.user, options.password, options.sequelize);
 
@@ -76,15 +79,22 @@ export class Database {
     getUserByName(username: string): Promise<UserInstance> {
         return this._models.User.find({
                                           where: {
-                                              UserName: username
+                                              Username: username
                                           }
                                       });
     }
 
     updateLastLogin(user: UserInstance): Promise<UserInstance> {
-        return user.update({
-                               LastLogin: this._sequelize.fn('NOW')
-                           });
+        if (this._options.sequelize.dialect === "mysql") {
+            // MySQL supports NOW, maybe other too but that isn't tested
+            return user.update({
+                                   LastLogin: this._sequelize.fn('NOW')
+                               });
+        } else {
+            return user.update({
+                                   LastLogin: new Date()
+                               });
+        }
     }
 
     createOnlineUser(data: OnlineUserPojo): OnlineUserInstance {
