@@ -490,6 +490,10 @@ export class MissionListReply extends ClientMessage {
         this._missionList = missionList;
     }
 
+    get MissionList(): NameCRC[] {
+        return this._missionList;
+    }
+
     serialize(): Buffer {
         var buffer = this.createBuffer();
 
