@@ -466,6 +466,10 @@ export class TablesReply extends ClientMessage {
         this._valids = valids;
     }
 
+    get Valids(): boolean[] {
+        return this._valids;
+    }
+
     serialize(): Buffer {
         var buffer = this.createBuffer();
 
