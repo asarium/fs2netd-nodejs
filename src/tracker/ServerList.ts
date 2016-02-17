@@ -1,4 +1,3 @@
-
 import * as Promise from "bluebird";
 import {Database} from "./db/Database";
 import {ServerInstance} from "./db/models/Server";
@@ -25,18 +24,31 @@ export class ServerList {
         this._db = db;
     }
 
+    initialize(): Promise<void> {
+        // Initialize the list with what we have in the database
+        return this._db.Models.Server.findAll().then(servers => {
+            for (let server of servers) {
+                this.addInstance(server);
+            }
+        });
+    }
+
     get Servers(): ServerInstance[] {
         return this._list.map(entry => entry.Server);
+    }
+
+    private addInstance(server: ServerInstance): void {
+        this._list.push({
+                            Server: server,
+                            LastUpdate: new Date()
+                        });
     }
 
     addServer(server: ServerPojo): Promise<ServerInstance> {
         let instance = this._db.createServer(server);
 
         return instance.save().then(saved => {
-            this._list.push({
-                Server: saved,
-                LastUpdate: new Date()
-            });
+            this.addInstance(saved);
 
             return saved;
         });

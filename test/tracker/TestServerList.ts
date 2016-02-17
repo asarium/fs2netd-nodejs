@@ -17,6 +17,17 @@ describe("ServerList", () => {
         assert.equal(list.Servers.length, 0);
     });
 
+    it("should initialize with the servers from the database", () => {
+        return db.Models.Server.create({
+                                           Name: "TestServer"
+                                       }).then(() => {
+            return list.initialize();
+        }).then(() => {
+            assert.equal(list.Servers.length, 1);
+            assert.equal(list.Servers[0].Name, "TestServer");
+        });
+    });
+
     it("should add a server to the database", () => {
         return list.addServer({
                                   Name: "Test",

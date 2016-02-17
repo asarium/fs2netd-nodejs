@@ -47,6 +47,8 @@ export class GameServer implements IGameServer {
             return this._db.clearOnlineUsers();
         }).then(() => {
             return this._db.clearServers();
+        }).then(() => {
+            return this._serverList.initialize();
         }).then(_ => {
             this._server = net.createServer((s) => {
                 let gameClient = new GameClient(this, s);
