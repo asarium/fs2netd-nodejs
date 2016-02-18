@@ -29,8 +29,8 @@ export class GameServer implements IGameServer {
 
     private _intervalHandle: NodeJS.Timer;
 
-    constructor() {
-        this._db = new Database();
+    constructor(db: Database) {
+        this._db = db;
         this._serverList = new ServerList(this._db);
     }
 

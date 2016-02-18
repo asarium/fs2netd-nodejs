@@ -1,13 +1,17 @@
+import {Database} from "./db/Database";
 "use strict";
 
 import {WebInterface} from "./app/WebInterface";
 import {GameServer} from "./tracker/GameServer";
 import * as winston from "winston";
 
-let gameServer = new GameServer();
-let webInterface = new WebInterface();
+let db = new Database();
+let gameServer = new GameServer(db);
+let webInterface = new WebInterface(db, gameServer);
 
-gameServer.start().then(() => {
+db.initialize().then(() => {
+    return gameServer.start();
+}).then(() => {
     return webInterface.start();
 });
 

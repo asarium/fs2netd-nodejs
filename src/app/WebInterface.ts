@@ -4,26 +4,44 @@ import * as https from "https";
 import * as http from "http";
 import * as fs from "fs";
 import * as express from "express";
-import * as routes from "./routes";
+import routes = require("./routes");
 import * as winston from "winston";
 import {ServerOptions} from "https";
 import {Express} from "express";
+import {Database} from "../db/Database";
+import {GameServer} from "../tracker/GameServer";
+
+export interface RouterContext {
+    Database: Database;
+    GameServer: GameServer;
+}
 
 export class WebInterface {
     private _server;
-
+    private _db: Database;
     private _app: Express;
+    private _gameServer: GameServer;
 
-    private static initializeExpress(): Express {
+    constructor(db: Database, gameServer: GameServer) {
+        this._db = db;
+        this._gameServer = gameServer;
+    }
+
+    private initializeExpress(): Express {
         let app = express();
 
-        app.use(routes);
+        let ctx: RouterContext = {
+            Database: this._db,
+            GameServer: this._gameServer
+        };
+
+        app.use(routes(ctx));
 
         return app;
     }
 
     start(): Promise<void> {
-        this._app = WebInterface.initializeExpress();
+        this._app = this.initializeExpress();
 
         let port = config.get<number>("web.port");
 

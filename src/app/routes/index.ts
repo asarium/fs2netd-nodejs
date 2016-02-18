@@ -2,16 +2,19 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 
-import * as api from "./api";
+import api = require("./api");
+import {RouterContext} from "../WebInterface";
+import {Router} from "express";
 
-let router = express.Router();
+export = function(context: RouterContext): Router {
+    let router = express.Router();
 
-router.use("/api", api);
-router.use(express.static(path.join(__dirname, "..", "..", "public")));
+    router.use("/api", api(context));
 
-router.use((req, res, next) => {
-    // Not found handler
-    res.type('txt').status(404).send('Not found');
-});
+    router.use((req, res, next) => {
+        // Not found handler
+        res.type('txt').status(404).send('Not found');
+    });
 
-export = router;
+    return router;
+}
