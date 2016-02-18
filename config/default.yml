@@ -9,3 +9,9 @@ db:
 
 game_server:
   port: 5000
+
+web:
+  port: 8080
+  # tls:
+    # key: file.key # Specify TLS key file here
+    # cert: file.cert # Specify TLS certificate file here
