@@ -3,7 +3,6 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var mocha = require('gulp-mocha');
-var merge = require('merge2');
 var gulpTypings = require("gulp-typings");
 
 
@@ -15,12 +14,17 @@ var tsProject = ts.createProject('tsconfig.json');
 gulp.task('tsc', ["typings"], function () {
     var tsResult = tsProject.src().pipe(ts(tsProject));
 
-    return merge([
-        tsResult.dts.pipe(gulp.dest('build/definitions')),
-        tsResult.js.pipe(gulp.dest('build/js'))
-    ]);
+    return tsResult.js.pipe(gulp.dest('build'));
 });
 
 gulp.task("tests", ["tsc"], function () {
-    return gulp.src('build/js/test/**/*.js', {read: false}).pipe(mocha());
+    return gulp.src('build/test/**/*.js', {read: false}).pipe(mocha());
+});
+
+gulp.task("deploy", ["tsc"], function () {
+    return [
+        gulp.src("build/src/**/*.js").pipe(gulp.dest("deploy/src")),
+        gulp.src("config/**/*").pipe(gulp.dest("deploy/config")),
+        gulp.src("public/**/*").pipe(gulp.dest("deploy/public"))
+    ];
 });

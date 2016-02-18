@@ -49,5 +49,6 @@ test/**/*.js
 test/**/*.map
 
 build/
+deploy/
 
 typings
