@@ -9,7 +9,7 @@ import {Router} from "express";
 export = function(context: RouterContext): Router {
     let router = express.Router();
 
-    router.use("/api", api(context));
+    router.use("/api/v1", api(context));
 
     router.use((req, res, next) => {
         // Not found handler
