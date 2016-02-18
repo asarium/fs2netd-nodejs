@@ -72,8 +72,6 @@ export class GameServer implements IGameServer {
     }
 
     private intervalCallback() {
-        winston.info("Performing periodic actions");
-
         // Ping all clients
         this.pingAll();
 
