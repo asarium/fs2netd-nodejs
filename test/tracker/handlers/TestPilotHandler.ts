@@ -4,7 +4,7 @@ import {TestContext} from "./TestHandlers";
 import {GetPilotMessage} from "../../../src/tracker/packets/Messages";
 import * as assert from "assert";
 import {PilotReply} from "../../../src/tracker/packets/Messages";
-import {PilotPojo} from "../../../src/tracker/db/models/Pilot";
+import {PilotPojo} from "../../../src/db/models/Pilot";
 import {handleUpdatePilotMessage} from "../../../src/tracker/handlers/PilotHandler";
 import {UpdatePilotMessage} from "../../../src/tracker/packets/Messages";
 import {PilotUpdateReply} from "../../../src/tracker/packets/Messages";

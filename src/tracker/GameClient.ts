@@ -25,9 +25,9 @@ import {UnknownMessageError} from "./Exceptions";
 import {PingMessage} from "./packets/Messages";
 import {getTimeMilliseconds} from "./Utils";
 import {LoggerInstance} from "winston";
-import {UserInstance} from "./db/models/User";
-import {OnlineUserInstance} from "./db/models/OnlineUser";
-import {OnlineUserPojo} from "./db/models/OnlineUser";
+import {UserInstance} from "../db/models/User";
+import {OnlineUserInstance} from "../db/models/OnlineUser";
+import {OnlineUserPojo} from "../db/models/OnlineUser";
 
 export interface IGameClient {
     sendToClient:(msg: ClientMessage) => Promise<void>;

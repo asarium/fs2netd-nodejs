@@ -1,7 +1,7 @@
 import * as Promise from "bluebird";
-import {Database} from "./db/Database";
-import {ServerInstance} from "./db/models/Server";
-import {ServerPojo} from "./db/models/Server";
+import {Database} from "../db/Database";
+import {ServerInstance} from "../db/models/Server";
+import {ServerPojo} from "../db/models/Server";
 
 interface ServerEntry {
     Server: ServerInstance;

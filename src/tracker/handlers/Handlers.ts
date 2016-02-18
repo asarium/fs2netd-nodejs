@@ -1,5 +1,5 @@
 import {GameServer} from "../GameServer";
-import {Database} from "../db/Database";
+import {Database} from "../../db/Database";
 import {Message} from "../packets/Messages";
 import {LoginMessage} from "../packets/Messages";
 import {handleLoginMessage} from "./LoginHandler";

@@ -1,12 +1,12 @@
 import {IGameClient} from "../../../src/tracker/GameClient";
 import {ClientMessage} from "../../../src/tracker/packets/Messages";
-import {OnlineUserPojo} from "../../../src/tracker/db/models/OnlineUser";
-import {UserInstance} from "../../../src/tracker/db/models/User";
+import {OnlineUserPojo} from "../../../src/db/models/OnlineUser";
+import {UserInstance} from "../../../src/db/models/User";
 import {Session} from "../../../src/tracker/Session";
-import {OnlineUserInstance} from "../../../src/tracker/db/models/OnlineUser";
+import {OnlineUserInstance} from "../../../src/db/models/OnlineUser";
 import * as Promise from "bluebird";
 import {HandlerContext} from "../../../src/tracker/handlers/Handlers";
-import {Database} from "../../../src/tracker/db/Database";
+import {Database} from "../../../src/db/Database";
 import {initializeTestDatabase} from "../db/TestDatabase";
 import {IGameServer} from "../../../src/tracker/GameServer";
 import {ServerList} from "../../../src/tracker/ServerList";

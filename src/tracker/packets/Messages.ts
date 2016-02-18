@@ -1,9 +1,9 @@
 import {Identifiers} from "./PacketIdentifiers";
 import {parsePackedString} from "./../Utils";
-import {PilotPojo} from "../db/models/Pilot";
-import {PilotInstance} from "../db/models/Pilot";
-import {ServerInstance} from "../db/models/Server";
-import {ServerPojo} from "../db/models/Server";
+import {PilotPojo} from "../../db/models/Pilot";
+import {PilotInstance} from "../../db/models/Pilot";
+import {ServerInstance} from "../../db/models/Server";
+import {ServerPojo} from "../../db/models/Server";
 'use strict';
 
 export abstract class Message {

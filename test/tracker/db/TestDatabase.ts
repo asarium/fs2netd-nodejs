@@ -1,6 +1,6 @@
-import {Database} from "../../../src/tracker/db/Database";
+import {Database} from "../../../src/db/Database";
 import * as Promise from "bluebird";
-import {DatabaseOptions} from "../../../src/tracker/db/Database";
+import {DatabaseOptions} from "../../../src/db/Database";
 
 require("sqlite3");
 

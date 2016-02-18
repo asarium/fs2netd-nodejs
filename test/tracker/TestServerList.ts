@@ -1,4 +1,4 @@
-import {Database} from "../../src/tracker/db/Database";
+import {Database} from "../../src/db/Database";
 import {initializeTestDatabase} from "./db/TestDatabase";
 import {ServerList} from "../../src/tracker/ServerList";
 import * as assert from "assert";

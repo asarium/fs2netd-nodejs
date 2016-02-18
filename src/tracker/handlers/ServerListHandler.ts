@@ -8,7 +8,7 @@ import {ServerUpdateMessage} from "../packets/Messages";
 import * as Promise from "bluebird";
 import {ChannelCountRequest} from "../packets/Messages";
 import {ChannelCountReply} from "../packets/Messages";
-import {ServerPojo} from "../db/models/Server";
+import {ServerPojo} from "../../db/models/Server";
 
 export function handleServerListMessage(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Client has requested the server list");
