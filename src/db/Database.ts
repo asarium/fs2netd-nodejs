@@ -1,14 +1,11 @@
-/// <reference path="../../../typings/main.d.ts" />
 
 import * as mysql from "mysql";
 import * as config from "config";
 import * as Promise from "bluebird";
 import * as sequelize from "sequelize";
 import * as winston from "winston";
-import {LoginMessage} from "../packets/Messages";
 import {Options} from "sequelize";
 import {Sequelize} from "sequelize";
-import {Authentication} from "../Authentication";
 import {Models} from "./models/index";
 import {defineModels} from "./models/index";
 import {UserPojo} from "./models/User";
