@@ -37,6 +37,11 @@ export class TestClient implements IGameClient {
 }
 
 export class TestServer implements IGameServer {
+
+    constructor(db: Database) {
+        this.ServerList = new ServerList(db);
+    }
+
     getClientFromPilot(pilot: string): GameClient {
         return null;
     }
@@ -54,7 +59,7 @@ export function getHandlerContext(): Promise<TestContext> {
         return {
             Client: new TestClient(),
             Database: db,
-            Server: new TestServer(),
+            Server: new TestServer(db),
             Logger: new winston.Logger(),
         }
     });

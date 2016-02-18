@@ -15,7 +15,6 @@ export function handleServerListMessage(message: Message, context: HandlerContex
 
     let msg = <ServerListMessage>message;
 
-    // TODO: Implement filtering
     return context.Server.ServerList.expireServers().then(() => {
         if (msg.Filter) {
             let filtered = [];
@@ -31,7 +30,6 @@ export function handleServerListMessage(message: Message, context: HandlerContex
         }
     });
 }
-
 
 export function handleServerStartMessage(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Client has started a server.");
@@ -89,6 +87,7 @@ export function handleServerUpdateMessage(message: Message, context: HandlerCont
         // Ignore return value
     });
 }
+
 export function handleServerDisconnectMessage(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Removing server.");
 

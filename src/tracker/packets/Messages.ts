@@ -3,6 +3,7 @@ import {parsePackedString} from "./../Utils";
 import {PilotPojo} from "../db/models/Pilot";
 import {PilotInstance} from "../db/models/Pilot";
 import {ServerInstance} from "../db/models/Server";
+import {ServerPojo} from "../db/models/Server";
 'use strict';
 
 export abstract class Message {
@@ -188,6 +189,7 @@ export class ServerListMessage extends Message {
         super(Identifiers.PCKT_SLIST_REQUEST_FILTER);
         this._type = type;
         this._status = status;
+        this._filter = filter;
     }
 
     get Type(): number {
@@ -457,11 +459,15 @@ export class PongMessage extends ClientMessage {
 }
 
 export class ServerListReply extends ClientMessage {
-    private _list: ServerInstance[];
+    private _list: ServerPojo[];
 
-    constructor(list: ServerInstance[]) {
+    constructor(list: ServerPojo[]) {
         super(Identifiers.PCKT_SLIST_REPLY);
         this._list = list;
+    }
+
+    get List(): ServerPojo[] {
+        return this._list;
     }
 
     serialize(): Buffer {
@@ -594,10 +600,18 @@ export class ChannelCountReply extends ClientMessage {
     private _channel: string;
     private _count: number;
 
-    constructor(channel: string, count:number) {
+    constructor(channel: string, count: number) {
         super(Identifiers.PCKT_CHAT_CHAN_COUNT_RQST);
         this._channel = channel;
         this._count = count;
+    }
+
+    get Channel(): string {
+        return this._channel;
+    }
+
+    get Count(): number {
+        return this._count;
     }
 
     public serialize(): Buffer {
