@@ -1,5 +1,3 @@
-
-
 import {defineTable} from "./Table";
 import {definePilot} from "./Pilot";
 
@@ -39,10 +37,10 @@ export function defineModels(sequ: Sequelize): Models {
         IpBan: defineIpBan(sequ, sequelize),
     };
 
-    models.User.hasMany(models.OnlineUser, {foreignKey: "UserId"});
+    models.User.hasMany(models.OnlineUser, {foreignKey: "UserId", onDelete: "cascade"});
     models.OnlineUser.belongsTo(models.User, {foreignKey: "UserId"});
 
-    models.User.hasMany(models.Pilot, {foreignKey: "UserId"});
+    models.User.hasMany(models.Pilot, {foreignKey: "UserId", onDelete: "cascade"});
     models.Pilot.belongsTo(models.User, {foreignKey: "UserId"});
 
     return models;
