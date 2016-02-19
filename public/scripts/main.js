@@ -2,7 +2,8 @@
     "use strict";
 
     var overlay = $("#overlay");
-    var content = $("#server-list");
+    var server_list = $("#server-list");
+    var online_users_list = $("#online-users-list");
 
     // Load the server list
     $.ajax("/api/v1/servers", {
@@ -14,8 +15,20 @@
             return server.name;
         });
 
-        content.text(names.join("\n"));
+        server_list.append(names.join("<br>"));
+    }).then(function(){
+        return $.ajax("/api/v1/onlineusers",{
+            accepts: "application/json"
+        });
+    }).then(function(data) {
+        console.log(data);
 
+        var names = data.map(function(user) {
+            return user.name;
+        });
+
+        online_users_list.append(names.join("<br>"));
+    }).then(function() {
         overlay.hide();
     });
 
