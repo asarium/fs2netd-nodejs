@@ -14,6 +14,7 @@ import {GameServer} from "../tracker/GameServer";
 export interface RouterContext {
     Database: Database;
     GameServer: GameServer;
+    WebInterface: WebInterface;
 }
 
 export class WebInterface {
@@ -30,9 +31,12 @@ export class WebInterface {
     private initializeExpress(): Express {
         let app = express();
 
+        app.use(require("morgan")("dev"));
+
         let ctx: RouterContext = {
             Database: this._db,
-            GameServer: this._gameServer
+            GameServer: this._gameServer,
+            WebInterface: this
         };
 
         app.use(routes(ctx));
