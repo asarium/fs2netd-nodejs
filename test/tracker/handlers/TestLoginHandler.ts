@@ -117,9 +117,7 @@ describe("LoginHandler", () => {
     describe("#handleDuplicateLoginMessage()", () => {
         beforeEach(() => {
             context.Client.Session = new Session(42);
-            return context.Database.Models.User.create({
-                                                           Username: "test"
-                                                       }).then(userInstance => context.Client.User = userInstance);
+            context.Client.User = user;
         });
 
         it("should reject a wrong session id", () => {
