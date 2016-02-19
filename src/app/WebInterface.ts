@@ -20,11 +20,9 @@ export class WebInterface {
     private _server;
     private _db: Database;
     private _app: Express;
-    private _gameServer: GameServer;
 
-    constructor(db: Database, gameServer: GameServer) {
+    constructor(db: Database) {
         this._db = db;
-        this._gameServer = gameServer;
     }
 
     private initializeExpress(): Express {
@@ -34,7 +32,6 @@ export class WebInterface {
 
         let ctx: RouterContext = {
             Database: this._db,
-            GameServer: this._gameServer,
             WebInterface: this
         };
 
