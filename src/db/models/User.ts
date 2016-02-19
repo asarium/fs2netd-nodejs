@@ -20,7 +20,10 @@ export interface UserModel extends sequelize.Model<UserInstance, UserPojo> {
 
 export function defineUser(sequelize: Sequelize, DataTypes: DataTypes): UserModel {
     return sequelize.define<UserInstance, UserPojo>("User", {
-        "Username": DataTypes.STRING,
+        "Username": {
+            type: DataTypes.STRING,
+            unique: true
+        },
         "PasswordHash": DataTypes.STRING,
         "LastLogin": DataTypes.DATE,
     });
