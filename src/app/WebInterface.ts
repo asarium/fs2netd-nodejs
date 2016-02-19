@@ -13,7 +13,6 @@ import {GameServer} from "../tracker/GameServer";
 
 export interface RouterContext {
     Database: Database;
-    GameServer: GameServer;
     WebInterface: WebInterface;
 }
 

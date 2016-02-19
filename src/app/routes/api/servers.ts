@@ -7,15 +7,22 @@ export = function (context: RouterContext): Router {
     let router = express.Router();
 
     router.get("/", (req, res, next) => {
-        let jsonData = context.GameServer.ServerList.Servers.map(server => {
-            return {
-                name: server.Name,
-                num_players: server.NumPlayers,
-                max_players: server.MaxPlayers
-            }
+        context.Database.Models.Server.findAll().then(servers => {
+            let jsonData = servers.map(server => {
+                return {
+                    name: server.Name,
+                    num_players: server.NumPlayers,
+                    max_players: server.MaxPlayers
+                }
+            });
+
+            res.json(jsonData);
+        }).catch(() => {
+            res.status(500).json({
+                                     err: "Internal server error"
+                                 });
         });
 
-        res.json(jsonData);
     });
 
     return router;
