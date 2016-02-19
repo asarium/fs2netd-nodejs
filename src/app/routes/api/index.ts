@@ -11,6 +11,7 @@ export = function(context: RouterContext): Router {
     router.use(bodyParser.json());
 
     router.use("/servers", require("./servers")(context));
+    router.use("/users", require("./users")(context));
 
     return router;
 }
