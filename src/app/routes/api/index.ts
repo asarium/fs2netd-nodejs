@@ -12,6 +12,7 @@ export = function(context: RouterContext): Router {
 
     router.use("/servers", require("./servers")(context));
     router.use("/users", require("./users")(context));
+    router.use("/onlineusers", require("./onlineusers")(context));
 
     return router;
 }
