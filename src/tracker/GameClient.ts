@@ -19,7 +19,7 @@ import * as Promise from "bluebird";
 import {PilotReply} from "./packets/Messages";
 import {ValidSessionIDRequest} from "./packets/Messages";
 import {ValidSidReply} from "./packets/Messages";
-import {Authentication} from "./Authentication";
+import {Authentication} from "./../util/Authentication";
 import {handleMessage} from "./handlers/Handlers";
 import {UnknownMessageError} from "./Exceptions";
 import {PingMessage} from "./packets/Messages";

@@ -2,7 +2,7 @@ import {HandlerContext} from "./Handlers";
 import {Message} from "../packets/Messages";
 
 import {NoSuchUserError} from "../Exceptions";
-import {Authentication} from "../Authentication";
+import {Authentication} from "../../util/Authentication";
 import {AuthenticationError} from "../Exceptions";
 import {LoginMessage} from "../packets/Messages";
 import {Session} from "../Session";
