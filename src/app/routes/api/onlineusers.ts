@@ -2,6 +2,7 @@ import * as express from "express";
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {json} from "sequelize";
+import * as winston from "winston";
 
 export = function (context: RouterContext): Router {
     let router = express.Router();
@@ -17,7 +18,8 @@ export = function (context: RouterContext): Router {
             }));
         }).then(array => {
             res.json(array);
-        }).catch(() => {
+        }).catch(err => {
+            winston.error("Error while getting online users", err);
             res.status(500).json({
                                      err: "Internal server error"
                                  });

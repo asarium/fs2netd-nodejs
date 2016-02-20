@@ -2,6 +2,7 @@ import * as express from "express";
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {Authentication} from "../../../util/Authentication";
+import * as winston from "winston";
 
 export = function (context: RouterContext): Router {
     let router = express.Router();
@@ -34,7 +35,8 @@ export = function (context: RouterContext): Router {
             return Authentication.setPassword(user, password).then(() => {
                 res.status(201).send(null);
             });
-        }).catch(() => {
+        }).catch(err => {
+            winston.error("Error while getting user list", err);
             res.status(500).json({
                                      err: "Internal server error"
                                  });

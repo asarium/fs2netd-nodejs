@@ -12,6 +12,8 @@ game_server:
 
 web:
   port: 8080
+  jwt: # Options for REST API JWT tokens
+    secret: 'my secret' # Replace with proper secret in production
   # tls:
     # key: file.key # Specify TLS key file here
     # cert: file.cert # Specify TLS certificate file here
