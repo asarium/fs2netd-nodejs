@@ -76,9 +76,10 @@ export = function (context: RouterContext): Router {
         context.Database.Models.User.findById(payload.id).then(user => {
             if (user == null) {
                 done(null, false);
-                return;
+            } else {
+                done(null, user);
             }
-            done(null, user);
+            return null; // Silence bluebird warning about creating a promise inside a promise
         }).catch(err => {
             done(err, false);
         });

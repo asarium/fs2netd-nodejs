@@ -3,6 +3,7 @@ import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 import {OnlineUserInstance} from "./OnlineUser";
 import {PilotInstance} from "./Pilot";
+import {RoleInstance} from "./Role";
 
 export interface UserPojo {
     Username?: string;
@@ -14,6 +15,10 @@ export interface UserInstance extends sequelize.Instance<UserPojo>, UserPojo {
     getPilots:(options?: any) => Promise<PilotInstance[]>
 
     getOnlineUsers:(options?: any) => Promise<OnlineUserInstance[]>
+
+    getRoles:(options?: any) => Promise<RoleInstance[]>
+    countRoles:(options?: any) => Promise<number>
+    addRole:(role: RoleInstance, options?: any) => Promise<void>
 }
 export interface UserModel extends sequelize.Model<UserInstance, UserPojo> {
 }

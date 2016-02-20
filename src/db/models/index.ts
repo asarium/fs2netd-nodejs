@@ -15,6 +15,8 @@ import {defineOnlineUser} from "./OnlineUser";
 import {defineMission} from "./Mission";
 import {defineServer} from "./Server";
 import {defineUser} from "./User";
+import {RoleModel} from "./Role";
+import {defineRole} from "./Role";
 
 export interface Models {
     OnlineUser: OnlineUserModel,
@@ -24,6 +26,7 @@ export interface Models {
     Table: TableModel,
     Mission: MissionModel,
     IpBan: IpBanModel,
+    Role: RoleModel,
 }
 
 export function defineModels(sequ: Sequelize): Models {
@@ -35,6 +38,7 @@ export function defineModels(sequ: Sequelize): Models {
         Table: defineTable(sequ, sequelize),
         Mission: defineMission(sequ, sequelize),
         IpBan: defineIpBan(sequ, sequelize),
+        Role: defineRole(sequ, sequelize),
     };
 
     models.User.hasMany(models.OnlineUser, {foreignKey: "UserId", onDelete: "cascade"});
@@ -42,6 +46,9 @@ export function defineModels(sequ: Sequelize): Models {
 
     models.User.hasMany(models.Pilot, {foreignKey: "UserId", onDelete: "cascade"});
     models.Pilot.belongsTo(models.User, {foreignKey: "UserId"});
+
+    models.User.belongsToMany(models.Role, {through: "UserRoles"});
+    models.Role.belongsToMany(models.User, {through: "UserRoles"});
 
     return models;
 }

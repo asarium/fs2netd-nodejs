@@ -15,7 +15,10 @@ export interface TableModel extends sequelize.Model<TableInstance, TablePojo> {
 
 export function defineTable(sequelize: Sequelize, DataTypes: DataTypes): TableModel {
     return sequelize.define<TableInstance, TablePojo>("Table", {
-        "Filename": DataTypes.STRING,
+        "Filename": {
+            type: DataTypes.STRING,
+            unique: true
+        },
 
         "CRC32": DataTypes.INTEGER,
         "Description": DataTypes.TEXT,
