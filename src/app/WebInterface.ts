@@ -69,8 +69,13 @@ export class WebInterface {
 
     stop(): Promise<void> {
         winston.info("Shutting down webserver...");
-        return new Promise<void>((done, _) => {
-            this._server.close(() => done());
-        });
+
+        if (!this._server) {
+            return Promise.resolve();
+        } else {
+            return new Promise<void>((done, _) => {
+                this._server.close(() => done());
+            });
+        }
     }
 }
