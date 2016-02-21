@@ -124,9 +124,9 @@ export = function (context: RouterContext): Router {
         }
 
         // At this point all values are valid
-        table.Filename = req.body.filename || table.Filename;
-        table.CRC32 = req.body.crc32 || table.CRC32;
-        table.Description = req.body.description || table.Description;
+        table.Filename = req.body.filename;
+        table.CRC32 = req.body.crc32;
+        table.Description = req.body.description;
 
         await table.save();
         res.status(201).json({

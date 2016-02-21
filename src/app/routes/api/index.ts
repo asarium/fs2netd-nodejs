@@ -18,6 +18,7 @@ export = function (context: RouterContext): Router {
     router.use("/users", require("./users")(context));
     router.use("/onlineusers", require("./onlineusers")(context));
     router.use("/tables", require("./tables")(context));
+    router.use("/missions", require("./missions")(context));
 
     router.use((err: any, req: Request, res: Response, next: NextFunction) => {
         winston.error("Error in API function!", err);

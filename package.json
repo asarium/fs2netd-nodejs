@@ -11,7 +11,7 @@
     "bluebird": "~3.2.2",
     "body-parser": "^1.15.0",
     "config": "~1.19.0",
-    "dissolve": "~0.3.3",
+    "dissolve": "^0.3.3",
     "express": "^4.13.4",
     "express-promise-router": "^1.0.0",
     "gulp": "~3.9.1",
@@ -23,9 +23,11 @@
     "merge2": "~1.0.1",
     "morgan": "^1.7.0",
     "mysql": "~2.10.2",
+    "paperwork": "^2.1.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.0.0",
     "sequelize": "~3.19.2",
+    "stream-browserify": "^2.0.1",
     "winston": "~2.1.1"
   },
   "devDependencies": {
