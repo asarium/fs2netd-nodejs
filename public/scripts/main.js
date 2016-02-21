@@ -44,7 +44,7 @@
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify({
-                user: name,
+                name: name,
                 password: password
             })
         }).then(function() {
