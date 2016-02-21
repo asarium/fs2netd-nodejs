@@ -19,7 +19,7 @@ export = function (context: RouterContext): Router {
     let router = promiseRouter();
 
     router.post("/authenticate", (req, res) => {
-        let username = req.body.user;
+        let username = req.body.name;
         let password = req.body.password;
 
         if (typeof username !== "string" || typeof password !== "string") {
