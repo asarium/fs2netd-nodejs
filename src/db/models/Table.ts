@@ -2,7 +2,8 @@
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 import sequelize = require("sequelize");
-export interface TablePojo {
+import {HasId} from "./index";
+export interface TablePojo extends HasId {
     Filename?: string;
 
     CRC32?: number;

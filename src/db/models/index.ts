@@ -18,6 +18,10 @@ import {defineUser} from "./User";
 import {RoleModel} from "./Role";
 import {defineRole} from "./Role";
 
+export interface HasId {
+    id?: number;
+}
+
 export interface Models {
     OnlineUser: OnlineUserModel,
     User: UserModel,
