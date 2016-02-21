@@ -23,10 +23,10 @@ export = function (context: RouterContext): Router {
         }
 
         return context.Database.Models.User.find({
-                                              where: {
-                                                  Username: username
-                                              }
-                                          }).then(user => {
+                                                     where: {
+                                                         Username: username
+                                                     }
+                                                 }).then(user => {
             if (user != null) {
                 res.status(409).json({
                                          err: "User already exists!"
@@ -38,7 +38,8 @@ export = function (context: RouterContext): Router {
 
             return Authentication.setPassword(user, password).then(user => {
                 res.status(201).json({
-                                         name: user.Username
+                                         name: user.Username,
+                                         id: user.id
                                      });
             });
         });
@@ -56,18 +57,15 @@ export = function (context: RouterContext): Router {
             return;
         }
 
-        let delete_user = await context.Database.Models.User.findById(req.params.id);
+        let users = await context.Database.Models.User.findAll();
 
-        if (!delete_user) {
-            res.status(409).json({
-                                     err: "User does not exist"
-                                 });
-            return;
-        }
-
-        await delete_user.destroy();
-
-        res.status(200).send(null);
+        res.status(200).send(users.map(user => {
+            return {
+                name: user.Username,
+                last_login: user.LastLogin,
+                id: user.id
+            }
+        }));
     });
 
     router.delete("/:id", authenticate(), async (req, res) => {

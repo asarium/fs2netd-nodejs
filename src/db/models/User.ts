@@ -4,8 +4,9 @@ import {DataTypes} from "sequelize";
 import {OnlineUserInstance} from "./OnlineUser";
 import {PilotInstance} from "./Pilot";
 import {RoleInstance} from "./Role";
+import {HasId} from "./index";
 
-export interface UserPojo {
+export interface UserPojo extends HasId {
     Username?: string;
     PasswordHash?: string;
     LastLogin?: Date;
