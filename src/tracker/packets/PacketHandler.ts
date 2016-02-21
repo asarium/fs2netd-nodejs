@@ -112,7 +112,6 @@ function convertData(data: any): Message {
             return null; // Ignore
         case Identifiers.PCKT_CHAT_CHAN_COUNT_RQST:
             return new ChannelCountRequest(data.channel);
-            break;
 
         default:
             winston.error(`Unknown packet type 0x${data.id.toString(16)} encountered!`, data);

@@ -1,6 +1,4 @@
 import {Database} from "./db/Database";
-"use strict";
-
 import {WebInterface} from "./app/WebInterface";
 import {GameServer} from "./tracker/GameServer";
 import * as winston from "winston";

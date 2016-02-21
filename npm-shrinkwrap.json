@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "gulp-typescript": {
+      "version": "2.11.0",
+      "from": "gulp-typescript@2.11.0",
+      "dependencies": {
+        "typescript": {
+          "version": "1.8.0",
+          "from": "typescript@1.7.5"
+        }
+      }
+    }
+  }
+}
