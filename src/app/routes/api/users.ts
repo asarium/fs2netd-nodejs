@@ -2,12 +2,13 @@ import * as express from "express";
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {Authentication} from "../../../util/Authentication";
-import * as winston from "winston";
+
+let promiseRouter = require("express-promise-router");
 
 export = function (context: RouterContext): Router {
-    let router = express.Router();
+    let router = promiseRouter();
 
-    router.put("/", (req, res, next) => {
+    router.put("/", (req, res) => {
         let username = req.body.user;
         let password = req.body.password;
 
@@ -15,10 +16,10 @@ export = function (context: RouterContext): Router {
             res.status(400).json({
                                      err: "Invalid parameters"
                                  });
-            return null;
+            return Promise.resolve();
         }
 
-        context.Database.Models.User.find({
+        return context.Database.Models.User.find({
                                               where: {
                                                   Username: username
                                               }
@@ -35,11 +36,6 @@ export = function (context: RouterContext): Router {
             return Authentication.setPassword(user, password).then(() => {
                 res.status(201).send(null);
             });
-        }).catch(err => {
-            winston.error("Error while getting user list", err);
-            res.status(500).json({
-                                     err: "Internal server error"
-                                 });
         });
     });
 

@@ -1,20 +1,21 @@
 import * as express from "express";
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
-import * as winston from "winston";
 import {authenticate} from "./authentication";
 import {UserInstance} from "../../../db/models/User";
 import {isAdmin} from "../../../util/Roles";
 import {TablePojo} from "../../../db/models/Table";
 import {RequestHandler} from "express";
 
+let promiseRouter = require("express-promise-router");
+
 export = function (context: RouterContext): Router {
-    let router = express.Router();
+    let router = promiseRouter();
 
     router.get("/", authenticate(), (req, res) => {
         let user = <UserInstance>req.user;
 
-        isAdmin(user).then(admin => {
+        return isAdmin(user).then(admin => {
             if (!admin) {
                 res.status(403).json({
                                          err: "Only admins may execute this action"
@@ -34,11 +35,6 @@ export = function (context: RouterContext): Router {
 
                 res.status(200).json(jsondata);
             });
-        }).catch(err => {
-            winston.error("Error while getting table list", err);
-            res.status(500).json({
-                                     err: "Internal server error"
-                                 });
         });
     });
 
@@ -50,10 +46,10 @@ export = function (context: RouterContext): Router {
             res.status(400).json({
                                      err: "Invalid parameters"
                                  });
-            return;
+            return Promise.resolve();
         }
 
-        isAdmin(user).then(admin => {
+        return isAdmin(user).then(admin => {
             if (!admin) {
                 res.status(403).json({
                                          err: "Only admins may execute this action"
@@ -86,11 +82,6 @@ export = function (context: RouterContext): Router {
                                              id: table.id
                                          });
                 });
-            }).catch(err => {
-                winston.error("Error while creating table", err);
-                res.status(500).json({
-                                         err: "Internal server error"
-                                     });
             });
         });
     });

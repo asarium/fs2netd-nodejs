@@ -13,6 +13,7 @@
     "config": "~1.19.0",
     "dissolve": "~0.3.3",
     "express": "^4.13.4",
+    "express-promise-router": "^1.0.0",
     "gulp": "~3.9.1",
     "gulp-mocha": "~2.2.0",
     "gulp-typescript": "~2.11.0",

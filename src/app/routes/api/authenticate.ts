@@ -6,6 +6,9 @@ import * as config from "config";
 import {Authentication} from "../../../util/Authentication";
 import * as jwt from "jwt-simple";
 import * as winston from "winston";
+import * as Promise from "bluebird";
+
+let promiseRouter = require("express-promise-router");
 
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -13,7 +16,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const JWT_SECRET = config.get<string>("web.jwt.secret");
 
 export = function (context: RouterContext): Router {
-    let router = express.Router();
+    let router = promiseRouter();
 
     router.post("/authenticate", (req, res) => {
         let username = req.body.user;
@@ -23,10 +26,10 @@ export = function (context: RouterContext): Router {
             res.status(400).json({
                                      err: "Invalid parameters"
                                  });
-            return null;
+            return Promise.resolve();
         }
 
-        context.Database.Models.User.find({
+        return context.Database.Models.User.find({
                                               where: {
                                                   Username: username
                                               }
@@ -55,11 +58,6 @@ export = function (context: RouterContext): Router {
                                          token: "JWT " + token
                                      });
             });
-        }).catch(err => {
-            winston.error("Error while authenticating client.", err);
-            res.status(500).json({
-                                     err: "Internal server error"
-                                 });
         });
     });
 

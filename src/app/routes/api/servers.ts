@@ -2,13 +2,14 @@ import * as express from "express";
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {json} from "sequelize";
-import * as winston from "winston";
+
+let promiseRouter = require("express-promise-router");
 
 export = function (context: RouterContext): Router {
-    let router = express.Router();
+    let router = promiseRouter();
 
     router.get("/", (req, res, next) => {
-        context.Database.Models.Server.findAll().then(servers => {
+        return context.Database.Models.Server.findAll().then(servers => {
             let jsonData = servers.map(server => {
                 return {
                     name: server.Name,
@@ -18,13 +19,7 @@ export = function (context: RouterContext): Router {
             });
 
             res.json(jsonData);
-        }).catch(err => {
-            winston.error("Error while getting server list", err);
-            res.status(500).json({
-                                     err: "Internal server error"
-                                 });
         });
-
     });
 
     return router;

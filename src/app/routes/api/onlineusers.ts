@@ -2,13 +2,14 @@ import * as express from "express";
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {json} from "sequelize";
-import * as winston from "winston";
+
+let promiseRouter = require("express-promise-router");
 
 export = function (context: RouterContext): Router {
-    let router = express.Router();
+    let router = promiseRouter();
 
-    router.get("/", (req, res, next) => {
-        context.Database.Models.OnlineUser.findAll().then(online_users => {
+    router.get("/", (req, res) => {
+        return context.Database.Models.OnlineUser.findAll().then(online_users => {
             return Promise.all(online_users.map(user => {
                 return user.getUser().then(user => {
                     return {
@@ -18,12 +19,7 @@ export = function (context: RouterContext): Router {
             }));
         }).then(array => {
             res.json(array);
-        }).catch(err => {
-            winston.error("Error while getting online users", err);
-            res.status(500).json({
-                                     err: "Internal server error"
-                                 });
-        });
+        })
     });
 
     return router;
