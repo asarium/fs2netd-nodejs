@@ -137,5 +137,31 @@ export = function (context: RouterContext): Router {
                              });
     });
 
+    router.delete("/:id", authenticate(), async (req, res) => {
+        let user = <UserInstance>req.user;
+
+        let admin = await isAdmin(user);
+
+        if (!admin) {
+            res.status(403).json({
+                                     err: "Only admins may execute this action"
+                                 });
+            return;
+        }
+
+        let table = await context.Database.Models.Table.findById(req.params.id);
+
+        if (!table) {
+            res.status(409).json({
+                                     err: "Table does not exist"
+                                 });
+            return;
+        }
+
+        await table.destroy();
+
+        res.status(200).send(null);
+    });
+
     return router;
 }
