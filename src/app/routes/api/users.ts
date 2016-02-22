@@ -68,6 +68,39 @@ export = function (context: RouterContext): Router {
         }));
     });
 
+    router.get("/:id", authenticate(), async (req, res) => {
+        let user = <UserInstance>req.user;
+
+        let admin = await isAdmin(user);
+
+        if (!admin) {
+            res.status(403).json({
+                                     err: "Only admins may execute this action"
+                                 });
+            return;
+        }
+
+        let requested = await context.Database.Models.User.findById(req.params.id);
+
+        if (!requested) {
+            res.status(409).json({
+                                     err: "User does not exist"
+                                 });
+            return;
+        }
+
+        let roles = await requested.getRoles();
+
+        let jsonData = {
+            name: requested.Username,
+            last_login: requested.LastLogin,
+            id: requested.id,
+            roles: roles.map(r => r.Name)
+        };
+
+        res.status(200).json(jsonData);
+    });
+
     router.delete("/:id", authenticate(), async (req, res) => {
         let user = <UserInstance>req.user;
 
