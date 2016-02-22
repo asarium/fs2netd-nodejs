@@ -14,6 +14,7 @@ web:
   port: 8080
   jwt: # Options for REST API JWT tokens
     secret: 'my secret' # Replace with proper secret in production
+    expires_in: '7d' # Specifies when a JWT expires, accepts strings for https://github.com/rauchg/ms.js
   # tls:
     # key: file.key # Specify TLS key file here
     # cert: file.cert # Specify TLS certificate file here

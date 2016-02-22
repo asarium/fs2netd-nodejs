@@ -20,5 +20,9 @@
   },
   "devDependencies": {
     "sinon": "github:typed-typings/npm-sinon#6cff4e3351276e85785f97cd55d810ebdf7e842e"
+  },
+  "ambientDevDependencies": {
+    "superagent": "github:DefinitelyTyped/DefinitelyTyped/superagent/superagent.d.ts#b30dbc4dd32b3237cd78e9139c3fc270caaacacb",
+    "supertest": "github:DefinitelyTyped/DefinitelyTyped/supertest/supertest.d.ts#15852a714521bb27a8b4e129c7f48e7e1046cfdb"
   }
 }

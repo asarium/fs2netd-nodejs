@@ -4,7 +4,7 @@ import {Router} from "express";
 import * as passport from "passport";
 import * as config from "config";
 import {Authentication} from "../../../util/Authentication";
-import * as jwt from "jwt-simple";
+import * as jwt from "jsonwebtoken";
 import * as winston from "winston";
 import * as Promise from "bluebird";
 
@@ -14,11 +14,12 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const JWT_SECRET = config.get<string>("web.jwt.secret");
+const JWT_EXPIRES_IN = config.get<string>("web.jwt.expires_in");
 
 export = function (context: RouterContext): Router {
     let router = promiseRouter();
 
-    router.post("/", (req, res) => {
+    router.post("/", (req, res, next) => {
         let username = req.body.name;
         let password = req.body.password;
 
@@ -52,11 +53,13 @@ export = function (context: RouterContext): Router {
                 let user_data = {
                     id: user.get("id")
                 };
-                let token = jwt.encode(user_data, JWT_SECRET);
-
-                res.status(200).json({
-                                         token: "JWT " + token
-                                     });
+                jwt.sign(user_data, JWT_SECRET, {
+                    expiresIn: JWT_EXPIRES_IN
+                }, token => {
+                    res.status(200).json({
+                                             token: "JWT " + token
+                                         });
+                });
             });
         });
     });
