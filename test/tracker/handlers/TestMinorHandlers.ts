@@ -84,15 +84,15 @@ describe("MinorHandlers", () => {
             let ipBans: IpBanPojo[] = [
                 {
                     IpMask: "127.0.0.1",
-                    TTL: 5
+                    Expiration: new Date(0)
                 },
                 {
                     IpMask: "192.168.0.0",
-                    TTL: 0
+                    Expiration: new Date(Date.now() + 5000)
                 },
                 {
                     IpMask: "2001:0db8:0a0b:12f0:0000:0000:0000:0001",
-                    TTL: 0
+                    Expiration: new Date(Date.now() + 5000)
                 }
             ];
 

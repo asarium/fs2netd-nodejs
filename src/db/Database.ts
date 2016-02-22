@@ -1,4 +1,3 @@
-
 import * as mysql from "mysql";
 import * as config from "config";
 import * as Promise from "bluebird";
@@ -48,6 +47,15 @@ export class Database {
     private _models: Models;
     private _options: DatabaseOptions;
 
+    private now(): any {
+        if (this._options.sequelize.dialect === "mysql") {
+            // MySQL supports NOW, maybe other too but that isn't tested
+            return this._sequelize.fn('NOW');
+        } else {
+            return new Date();
+        }
+    }
+
     get Models(): Models {
         return this._models;
     }
@@ -82,16 +90,9 @@ export class Database {
     }
 
     updateLastLogin(user: UserInstance): Promise<UserInstance> {
-        if (this._options.sequelize.dialect === "mysql") {
-            // MySQL supports NOW, maybe other too but that isn't tested
-            return user.update({
-                                   LastLogin: this._sequelize.fn('NOW')
-                               });
-        } else {
-            return user.update({
-                                   LastLogin: new Date()
-                               });
-        }
+        return user.update({
+                               LastLogin: this.now()
+                           });
     }
 
     createOnlineUser(data: OnlineUserPojo): OnlineUserInstance {
@@ -139,9 +140,22 @@ export class Database {
     getIpBans(): Promise<IpBanInstance[]> {
         return this._models.IpBan.findAll({
                                               where: {
-                                                  TTL: 0
+                                                  Expiration: {
+                                                      gt: this.now()
+                                                  }
                                               }
                                           });
+    }
+
+    trimIpBanList(): Promise<void> {
+        return this.Models.IpBan.destroy({
+                                             where: {
+                                                 Expiration: {
+                                                     lt: this.now()
+                                                 }
+                                             }
+                                         }).then(() => {
+        });
     }
 }
 

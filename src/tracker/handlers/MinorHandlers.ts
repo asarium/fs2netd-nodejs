@@ -32,7 +32,9 @@ export function handlePong(message: Message, context: HandlerContext): Promise<v
 export function handleIpBanListRequest(message: Message, context: HandlerContext): Promise<void> {
     context.Logger.info("Client requested IP ban list");
 
-    return context.Database.getIpBans().then(ip_bans => {
+    return context.Database.trimIpBanList().then(() => {
+        return context.Database.getIpBans();
+    }).then(ip_bans => {
         return context.Client.sendToClient(new IpBanListReply(ip_bans.map(ban => ban.IpMask)));
     });
 }

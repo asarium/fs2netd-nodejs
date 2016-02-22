@@ -3,6 +3,8 @@ import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 import {UserInstance} from "./User";
 
+export const ADMIN_ROLE: string = "Admin";
+
 export interface RolePojo {
     Name?: string;
 }
