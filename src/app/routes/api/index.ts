@@ -13,7 +13,8 @@ export = function (context: RouterContext): Router {
     router.use(bodyParser.urlencoded({extended: true}));
     router.use(bodyParser.json());
 
-    router.use("/", require("./authenticate")(context));
+    router.use("/authenticate", require("./authenticate")(context));
+
     router.use("/servers", require("./servers")(context));
     router.use("/users", require("./users")(context));
     router.use("/onlineusers", require("./onlineusers")(context));

@@ -18,7 +18,7 @@ const JWT_SECRET = config.get<string>("web.jwt.secret");
 export = function (context: RouterContext): Router {
     let router = promiseRouter();
 
-    router.post("/authenticate", (req, res) => {
+    router.post("/", (req, res) => {
         let username = req.body.name;
         let password = req.body.password;
 
