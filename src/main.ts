@@ -5,7 +5,9 @@ import * as winston from "winston";
 
 let db = new Database();
 let gameServer = new GameServer(db);
-let webInterface = new WebInterface(db);
+let webInterface = new WebInterface(db, {
+    logging: true
+});
 
 db.initialize().then(() => {
     return gameServer.start();

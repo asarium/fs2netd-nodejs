@@ -27,7 +27,7 @@ export = function (context: RouterContext): Router {
     });
 
     router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
-        let server = await context.Database.Models.Server.findById(req.parms.id);
+        let server = await context.Database.Models.Server.findById(req.params.id);
 
         if (!server) {
             res.status(409).json({

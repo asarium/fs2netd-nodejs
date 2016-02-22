@@ -16,19 +16,32 @@ export interface RouterContext {
     WebInterface: WebInterface;
 }
 
+export interface WebOptions {
+    logging?: boolean;
+}
+
 export class WebInterface {
     private _server;
     private _db: Database;
     private _app: Express;
+    private _options: WebOptions;
 
-    constructor(db: Database) {
+    constructor(db: Database, options: WebOptions) {
         this._db = db;
+        this._options = options;
+        this._app = this.initializeExpress();
+    }
+
+    get App(): Express {
+        return this._app;
     }
 
     private initializeExpress(): Express {
         let app = express();
 
-        app.use(require("morgan")("dev"));
+        if (this._options.logging) {
+            app.use(require("morgan")("dev"));
+        }
 
         let ctx: RouterContext = {
             Database: this._db,
@@ -41,8 +54,6 @@ export class WebInterface {
     }
 
     start(): Promise<void> {
-        this._app = this.initializeExpress();
-
         let port = config.get<number>("web.port");
 
         if (config.has("web.tls.key") && config.has("web.tls.cert")) {

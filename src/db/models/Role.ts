@@ -18,6 +18,7 @@ export function defineRole(sequelize: Sequelize, DataTypes: DataTypes): RoleMode
     return sequelize.define<RoleInstance, RolePojo>("Role", {
         "Name": {
             type: DataTypes.STRING,
+            primaryKey: true,
             unique: true
         },
     });
