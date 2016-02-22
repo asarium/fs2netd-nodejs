@@ -18,11 +18,12 @@ import {ServerInstance} from "./models/Server";
 import {TableInstance} from "./models/Table";
 import {MissionInstance} from "./models/Mission";
 import {IpBanInstance} from "./models/IpBan";
+import {ADMIN_ROLE} from "./models/Role";
 
 let defaultOptions: Options = {
     dialect: config.get<string>("db.dialect"),
-    host: config.get<string>("db.host"),
-    pool: {
+    host:    config.get<string>("db.host"),
+    pool:    {
         maxConnections: config.get<number>("db.connectionLimit")
     },
     logging: (msg) => {
@@ -64,9 +65,9 @@ export class Database {
         options = options || {};
 
         options.sequelize = options.sequelize || defaultOptions;
-        options.database = options.database || config.get<string>("db.database");
-        options.user = options.user || config.get<string>("db.user");
-        options.password = options.password || config.get<string>("db.pass");
+        options.database  = options.database || config.get<string>("db.database");
+        options.user      = options.user || config.get<string>("db.user");
+        options.password  = options.password || config.get<string>("db.pass");
 
         this._options = options;
 
@@ -74,7 +75,21 @@ export class Database {
 
         this._models = defineModels(this._sequelize);
 
-        return this._sequelize.sync();
+        return this._sequelize.sync().then(() => {
+            // Check if we need to initialize the default roles
+            return this._models.Role.count();
+        }).then(count => {
+            if (count > 0) {
+                return null;
+            }
+
+            return this._models.Role.bulkCreate([
+                                                    {
+                                                        Name: ADMIN_ROLE
+                                                    }
+                                                ]);
+        }).then(() => {
+        });
     }
 
     createUser(data: UserPojo): UserInstance {
