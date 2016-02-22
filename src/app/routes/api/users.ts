@@ -3,8 +3,9 @@ import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {Authentication} from "../../../util/Authentication";
 import {authenticate} from "./authentication";
-import {isAdmin} from "../../../util/Roles";
 import {UserInstance} from "../../../db/models/User";
+import {ADMIN_ROLE} from "../../../db/models/Role";
+import {checkUserRole} from "./authentication";
 
 let promiseRouter = require("express-promise-router");
 
@@ -39,47 +40,25 @@ export = function (context: RouterContext): Router {
             return Authentication.setPassword(user, password).then(user => {
                 res.status(201).json({
                                          name: user.Username,
-                                         id: user.id
+                                         id:   user.id
                                      });
             });
         });
     });
 
-    router.get("/", authenticate(), async (req, res) => {
-        let user = <UserInstance>req.user;
-
-        let admin = await isAdmin(user);
-
-        if (!admin) {
-            res.status(403).json({
-                                     err: "Only admins may execute this action"
-                                 });
-            return;
-        }
-
+    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
         let users = await context.Database.Models.User.findAll();
 
         res.status(200).send(users.map(user => {
             return {
-                name: user.Username,
+                name:       user.Username,
                 last_login: user.LastLogin,
-                id: user.id
+                id:         user.id
             }
         }));
     });
 
-    router.get("/:id", authenticate(), async (req, res) => {
-        let user = <UserInstance>req.user;
-
-        let admin = await isAdmin(user);
-
-        if (!admin) {
-            res.status(403).json({
-                                     err: "Only admins may execute this action"
-                                 });
-            return;
-        }
-
+    router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
         let requested = await context.Database.Models.User.findById(req.params.id);
 
         if (!requested) {
@@ -92,27 +71,16 @@ export = function (context: RouterContext): Router {
         let roles = await requested.getRoles();
 
         let jsonData = {
-            name: requested.Username,
+            name:       requested.Username,
             last_login: requested.LastLogin,
-            id: requested.id,
-            roles: roles.map(r => r.Name)
+            id:         requested.id,
+            roles:      roles.map(r => r.Name)
         };
 
         res.status(200).json(jsonData);
     });
 
-    router.delete("/:id", authenticate(), async (req, res) => {
-        let user = <UserInstance>req.user;
-
-        let admin = await isAdmin(user);
-
-        if (!admin) {
-            res.status(403).json({
-                                     err: "Only admins may execute this action"
-                                 });
-            return;
-        }
-
+    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
         let delete_user = await context.Database.Models.User.findById(req.params.id);
 
         if (!delete_user) {

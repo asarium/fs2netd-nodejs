@@ -1,7 +1,6 @@
 import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {authenticate} from "./authentication";
-import {isAdmin} from "../../../util/Roles";
 import {MissionPojo} from "../../../db/models/Mission";
 import {checkUserRole} from "./authentication";
 import {ADMIN_ROLE} from "../../../db/models/Role";

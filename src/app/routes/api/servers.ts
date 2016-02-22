@@ -3,21 +3,22 @@ import {RouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {json} from "sequelize";
 import {authenticate} from "./authentication";
-import {isAdmin} from "../../../util/Roles";
+import {ADMIN_ROLE} from "../../../db/models/Role";
+import {checkUserRole} from "./authentication";
 
 let promiseRouter = require("express-promise-router");
 
 export = function (context: RouterContext): Router {
     let router = promiseRouter();
 
-    router.get("/", (req, res, next) => {
+    router.get("/", (req, res) => {
         return context.Database.Models.Server.findAll().then(servers => {
             let jsonData = servers.map(server => {
                 return {
-                    name: server.Name,
+                    name:        server.Name,
                     num_players: server.NumPlayers,
                     max_players: server.MaxPlayers,
-                    id: server.id
+                    id:          server.id
                 }
             });
 
@@ -25,14 +26,7 @@ export = function (context: RouterContext): Router {
         });
     });
 
-    router.get("/:id", authenticate(), async (req, res) => {
-        if (!(await isAdmin(req.user))) {
-            res.status(403).json({
-                                     err: "Only admins may execute this action"
-                                 });
-            return;
-        }
-
+    router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
         let server = await context.Database.Models.Server.findById(req.parms.id);
 
         if (!server) {
@@ -43,12 +37,12 @@ export = function (context: RouterContext): Router {
         }
 
         res.status(200).json({
-                                 name: server.Name,
+                                 name:        server.Name,
                                  num_players: server.NumPlayers,
                                  max_players: server.MaxPlayers,
-                                 id: server.id,
-                                 ip: server.Ip,
-                                 port: server.Port
+                                 id:          server.id,
+                                 ip:          server.Ip,
+                                 port:        server.Port
                              });
     });
 
