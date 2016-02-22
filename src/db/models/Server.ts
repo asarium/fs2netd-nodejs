@@ -2,7 +2,8 @@
 import {DataTypes} from "sequelize";
 import {Sequelize} from "sequelize";
 import sequelize = require("sequelize");
-export interface ServerPojo {
+import {HasId} from "./index";
+export interface ServerPojo extends HasId {
     Name?: string;
     MissionName?: string;
     Title?: string;
