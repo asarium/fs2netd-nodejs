@@ -1,8 +1,6 @@
-import {Database} from "../../../src/db/Database";
+import {Database} from "../../src/db/Database";
 import * as Promise from "bluebird";
-import {DatabaseOptions} from "../../../src/db/Database";
-
-require("sqlite3");
+import {DatabaseOptions} from "../../src/db/Database";
 
 export function initializeTestDatabase(): Promise<Database> {
     let db = new Database();

@@ -7,7 +7,7 @@ import {OnlineUserInstance} from "../../../src/db/models/OnlineUser";
 import * as Promise from "bluebird";
 import {HandlerContext} from "../../../src/tracker/handlers/Handlers";
 import {Database} from "../../../src/db/Database";
-import {initializeTestDatabase} from "../db/TestDatabase";
+import {initializeTestDatabase} from "../../db/TestDatabase";
 import {IGameServer} from "../../../src/tracker/GameServer";
 import {ServerList} from "../../../src/tracker/ServerList";
 import {GameClient} from "../../../src/tracker/GameClient";
