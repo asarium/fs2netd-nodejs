@@ -75,6 +75,13 @@ export = function (context: RouterContext): Router {
                 paperwork.accept(MISSION_TEMPLATE), async (req, res) => {
             let mission = await context.Database.Models.Mission.findById(req.params.id);
 
+            if (!mission) {
+                res.status(409).json({
+                                         err: "Mission does not exist"
+                                     });
+                return;
+            }
+
             if (mission.Filename !== req.body.filename) {
                 // Name change, check if unique
                 let count = await context.Database.Models.Mission.count({
