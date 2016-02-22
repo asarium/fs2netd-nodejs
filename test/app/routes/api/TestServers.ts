@@ -58,7 +58,7 @@ describe("REST API: /servers", () => {
             });
         });
 
-        testAdminAccessControl(() => context, "/api/v1/servers/1");
+        testAdminAccessControl(() => context, "get", "/api/v1/servers/1");
 
         it("should return more information for an admin", (done) => {
             supertest.agent(context.WebInterface.App).get("/api/v1/servers/1").set("Authorization", ADMIN_JWT)
