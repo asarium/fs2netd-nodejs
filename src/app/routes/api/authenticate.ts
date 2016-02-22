@@ -4,11 +4,11 @@ import {Router} from "express";
 import * as passport from "passport";
 import * as config from "config";
 import {Authentication} from "../../../util/Authentication";
-import * as jwt from "jsonwebtoken";
 import * as winston from "winston";
 import * as Promise from "bluebird";
 
 let promiseRouter = require("express-promise-router");
+let jwt = require("jsonwebtoken");
 
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
