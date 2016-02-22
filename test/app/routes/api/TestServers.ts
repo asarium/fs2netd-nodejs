@@ -5,6 +5,7 @@ import * as supertest from "supertest";
 import * as assert from "assert";
 import {ADMIN_JWT} from "../../TestWebInterface";
 import {USER_JWT} from "../../TestWebInterface";
+import {testAdminAccessControl} from "../../util";
 
 describe("REST API: /servers", () => {
     let context: RouterContext;
@@ -44,18 +45,6 @@ describe("REST API: /servers", () => {
     });
 
     describe("GET /:id", () => {
-        it("should deny an unauthorized user", (done) => {
-            supertest.agent(context.WebInterface.App).get("/api/v1/servers/123")
-                     .expect(401).end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
-
-                assert.equal(res.status, 401);
-
-                done();
-            });
-        });
         it("should return an error for invalid id", (done) => {
             supertest.agent(context.WebInterface.App).get("/api/v1/servers/123").set("Authorization", ADMIN_JWT)
                      .expect(409).expect("Content-type", /json/).end((err, res) => {
@@ -68,6 +57,9 @@ describe("REST API: /servers", () => {
                 done();
             });
         });
+
+        testAdminAccessControl(() => context, "/api/v1/servers/1");
+
         it("should return more information for an admin", (done) => {
             supertest.agent(context.WebInterface.App).get("/api/v1/servers/1").set("Authorization", ADMIN_JWT)
                      .expect(200).expect("Content-type", /json/).end((err, res) => {
@@ -82,18 +74,6 @@ describe("REST API: /servers", () => {
                 assert.equal(res.body.max_players, 16);
                 assert.equal(res.body.ip, "127.0.0.1");
                 assert.equal(res.body.port, 12345);
-
-                done();
-            });
-        });
-        it("should not return more information for a normal user", (done) => {
-            supertest.agent(context.WebInterface.App).get("/api/v1/servers/1").set("Authorization", USER_JWT)
-                     .expect(403).expect("Content-type", /json/).end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
-
-                assert.equal(res.status, 403);
 
                 done();
             });
