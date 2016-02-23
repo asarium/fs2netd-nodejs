@@ -6,9 +6,10 @@ import * as assert from "assert";
 import {ADMIN_JWT} from "../../TestWebInterface";
 import {USER_JWT} from "../../TestWebInterface";
 import {testAdminAccessControl} from "../../util";
+import {TestWebContext} from "../../TestWebInterface";
 
 describe("REST API: /ip_bans", () => {
-    let context: RouterContext;
+    let context: TestWebContext;
     beforeEach(() => {
         return initializeTestWeb().then(test_ctx=> {
             context = test_ctx;

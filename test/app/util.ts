@@ -3,9 +3,9 @@ import * as supertest from "supertest";
 import * as assert from "assert";
 import {ADMIN_JWT} from "./TestWebInterface";
 import {USER_JWT} from "./TestWebInterface";
-import {TestContext} from "./TestWebInterface";
+import {TestWebContext} from "./TestWebInterface";
 
-export function testAdminAccessControl(context: () => TestContext, func:string, path: string) {
+export function testAdminAccessControl(context: () => TestWebContext, func:string, path: string) {
     it("should deny an unauthorized user", (done) => {
         supertest.agent(context().WebInterface.App)[func](path)
                  .expect(401).end((err, res) => {

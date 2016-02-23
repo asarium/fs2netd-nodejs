@@ -20,12 +20,12 @@ export const USER_JWT = "JWT " + <string>jwt.sign({
                                                       id: 2
                                                   }, config.get<string>("web.jwt.secret"), {});
 
-export interface TestContext extends RouterContext {
+export interface TestWebContext extends RouterContext {
     TestAdmin: UserInstance;
     TestUser: UserInstance;
 }
 
-export async function initializeTestWeb(): Promise<TestContext> {
+export async function initializeTestWeb(): Promise<TestWebContext> {
     let db = await initializeTestDatabase();
 
     // Add a test admin

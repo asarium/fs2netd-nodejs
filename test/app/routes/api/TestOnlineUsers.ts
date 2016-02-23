@@ -4,10 +4,10 @@ import {initializeTestWeb} from "../../TestWebInterface";
 import * as supertest from "supertest";
 import * as assert from "assert";
 import * as Promise from "bluebird";
-import {TestContext} from "../../TestWebInterface";
+import {TestWebContext} from "../../TestWebInterface";
 
 describe("REST API: /authenticate", () => {
-    let context: TestContext;
+    let context: TestWebContext;
     beforeEach(() => {
         return initializeTestWeb().then(test_ctx=> {
             context = test_ctx;
