@@ -50,7 +50,7 @@ describe("REST API: /ip_bans", () => {
 
         it("should add a new ip ban to the database", (done) => {
             supertest.agent(context.WebInterface.App).put("/api/v1/ip_bans").set("Authorization", ADMIN_JWT)
-                     .expect(200).expect("Content-type", /json/).send({
+                     .expect(201).expect("Content-type", /json/).send({
                                                                           ip_mask:    "::1",
                                                                           expiration: new Date(120),
                                                                           comment:    "New ban"
@@ -59,7 +59,7 @@ describe("REST API: /ip_bans", () => {
                     return done(err);
                 }
 
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 201);
                 assert.equal(res.body.ip_mask, "::1");
                 assert.equal(new Date(res.body.expiration).toJSON(), new Date(120).toJSON());
                 assert.equal(res.body.comment, "New ban");

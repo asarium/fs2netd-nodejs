@@ -68,7 +68,7 @@ describe("REST API: /missions", () => {
 
         it("should add a new mission to the database", (done) => {
             supertest.agent(context.WebInterface.App).put("/api/v1/missions").set("Authorization", ADMIN_JWT)
-                     .expect(200).expect("Content-type", /json/).send({
+                     .expect(201).expect("Content-type", /json/).send({
                                                                           filename:     "test2.fs2",
                                                                           crc32:        44543,
                                                                           mission_type: "MissionType",
@@ -79,7 +79,7 @@ describe("REST API: /missions", () => {
                     return done(err);
                 }
 
-                assert.equal(res.status, 200);
+                assert.equal(res.status, 201);
 
                 assert.equal(res.body.filename, "test2.fs2");
                 assert.equal(res.body.crc32, 44543);

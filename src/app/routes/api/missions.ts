@@ -61,7 +61,7 @@ export = function (context: RouterContext): Router {
 
             let mission = await context.Database.Models.Mission.create(mission_info);
 
-            res.status(200).json({
+            res.status(201).json({
                                      filename:     mission.Filename,
                                      crc32:        mission.CRC32,
                                      mission_type: mission.MissionType,

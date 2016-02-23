@@ -50,7 +50,7 @@ export = function (context: RouterContext): Router {
 
         let ban = await context.Database.Models.IpBan.create(info);
 
-        res.status(200).json({
+        res.status(201).json({
                                  ip_mask:    ban.IpMask,
                                  expiration: ban.Expiration,
                                  comment:    ban.Comment,
