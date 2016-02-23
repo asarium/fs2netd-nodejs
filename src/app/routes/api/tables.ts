@@ -97,7 +97,7 @@ export = function (context: RouterContext): Router {
         table.Description = req.body.description;
 
         await table.save();
-        res.status(201).json({
+        res.status(200).json({
                                  filename:    table.Filename,
                                  crc32:       table.CRC32,
                                  description: table.Description,
