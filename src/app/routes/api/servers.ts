@@ -30,8 +30,12 @@ export = function (context: RouterContext): Router {
         let server = await context.Database.Models.Server.findById(req.params.id);
 
         if (!server) {
-            res.status(409).json({
-                                     err: "Server does not exist"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }

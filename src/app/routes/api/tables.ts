@@ -32,7 +32,11 @@ export = function (context: RouterContext): Router {
         if (typeof req.body.filename !== "string" || typeof req.body.crc32 !== "number" ||
             typeof req.body.description !== "string") {
             res.status(400).json({
-                                     err: "Invalid parameters"
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }
@@ -69,8 +73,12 @@ export = function (context: RouterContext): Router {
         let table = await context.Database.Models.Table.findById(req.params.id);
 
         if (!table) {
-            res.status(409).json({
-                                     err: "Table does not exist"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }
@@ -109,8 +117,12 @@ export = function (context: RouterContext): Router {
         let table = await context.Database.Models.Table.findById(req.params.id);
 
         if (!table) {
-            res.status(409).json({
-                                     err: "Table does not exist"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }

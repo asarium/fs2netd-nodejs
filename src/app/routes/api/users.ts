@@ -59,8 +59,12 @@ export = function (context: RouterContext): Router {
         let requested = await context.Database.Models.User.findById(req.params.id);
 
         if (!requested) {
-            res.status(409).json({
-                                     err: "User does not exist"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }
@@ -81,8 +85,12 @@ export = function (context: RouterContext): Router {
         let delete_user = await context.Database.Models.User.findById(req.params.id);
 
         if (!delete_user) {
-            res.status(409).json({
-                                     err: "User does not exist"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }

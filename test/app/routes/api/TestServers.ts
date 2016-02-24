@@ -48,12 +48,12 @@ describe("REST API: /servers", () => {
     describe("GET /:id", () => {
         it("should return an error for invalid id", (done) => {
             supertest.agent(context.WebInterface.App).get("/api/v1/servers/123").set("Authorization", ADMIN_JWT)
-                     .expect(409).expect("Content-type", /json/).end((err, res) => {
+                     .expect(400).expect("Content-type", /json/).end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
 
                 done();
             });

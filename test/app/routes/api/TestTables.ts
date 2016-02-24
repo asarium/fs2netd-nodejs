@@ -161,7 +161,7 @@ describe("REST API: /tables", () => {
 
         it("should reject a request for an invalid id", (done) => {
             supertest.agent(context.WebInterface.App).post("/api/v1/tables/1000").set("Authorization", ADMIN_JWT)
-                     .expect(409).send({
+                     .expect(400).send({
                                            filename:     "test2.tbl",
                                            crc32:        44543,
                                            description:  "Another table",
@@ -170,7 +170,7 @@ describe("REST API: /tables", () => {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
                 done();
             });
         });
@@ -200,12 +200,12 @@ describe("REST API: /tables", () => {
         it("should reject a request for an invalid id", (done) => {
             supertest.agent(context.WebInterface.App).delete("/api/v1/tables/1000")
                      .set("Authorization", ADMIN_JWT)
-                     .expect(409).end((err, res) => {
+                     .expect(400).end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
 
                 context.Database.Models.Table.count().then(count => {
                     assert.equal(count, 2);

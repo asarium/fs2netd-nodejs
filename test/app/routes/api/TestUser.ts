@@ -103,12 +103,12 @@ describe("REST API: /users", () => {
 
         it("should reject an invalid id", (done) => {
             supertest.agent(context.WebInterface.App).get("/api/v1/users/1000").set("Authorization", ADMIN_JWT)
-                     .expect(409).expect("Content-type", /json/).end((err, res) => {
+                     .expect(400).expect("Content-type", /json/).end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
                 done();
             });
         });
@@ -141,12 +141,12 @@ describe("REST API: /users", () => {
 
         it("should reject an invalid id", (done) => {
             supertest.agent(context.WebInterface.App).delete("/api/v1/users/1000").set("Authorization", ADMIN_JWT)
-                     .expect(409).expect("Content-type", /json/).end((err, res) => {
+                     .expect(400).expect("Content-type", /json/).end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
                 done();
             });
         });
