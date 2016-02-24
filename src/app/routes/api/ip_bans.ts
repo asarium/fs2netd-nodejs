@@ -75,7 +75,11 @@ export = function (context: RouterContext): Router {
             let expiration = Date.parse(req.body.expiration);
             if (expiration != expiration) { // Check for NaN
                 res.status(400).json({
-                                         err: "Invalid date format"
+                                         status: 'bad_request',
+                                         reason: 'Body did not satisfy requirements',
+                                         errors:  [
+                                             "Invalid date format"
+                                         ]
                                      });
                 return;
             }
