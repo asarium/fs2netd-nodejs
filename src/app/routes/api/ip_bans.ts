@@ -36,8 +36,12 @@ export = function (context: RouterContext): Router {
     router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]), paperwork.accept(IPBAN_TEMPLATE), async (req, res) => {
         let expiration = Date.parse(req.body.expiration);
         if (expiration != expiration) { // Check for NaN
-            res.status(409).json({
-                                     err: "Invalid date format"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Body did not satisfy requirements',
+                                     errors:  [
+                                         "Invalid date format"
+                                     ]
                                  });
             return;
         }
@@ -63,14 +67,14 @@ export = function (context: RouterContext): Router {
             let ban = await context.Database.Models.IpBan.findById(req.params.id);
 
             if (!ban) {
-                res.status(409).json({
+                res.status(400).json({
                                          err: "Invalid ID specified"
                                      });
                 return;
             }
             let expiration = Date.parse(req.body.expiration);
             if (expiration != expiration) { // Check for NaN
-                res.status(409).json({
+                res.status(400).json({
                                          err: "Invalid date format"
                                      });
                 return;

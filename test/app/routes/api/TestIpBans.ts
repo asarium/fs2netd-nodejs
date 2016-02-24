@@ -79,7 +79,7 @@ describe("REST API: /ip_bans", () => {
 
         it("should reject malformed input", (done) => {
             supertest.agent(context.WebInterface.App).put("/api/v1/ip_bans").set("Authorization", ADMIN_JWT)
-                     .expect(409).expect("Content-type", /json/).send({
+                     .expect(400).expect("Content-type", /json/).send({
                                                                           ip_mask:    "::1",
                                                                           expiration: "abcdefg",
                                                                           comment:    "New ban"
@@ -88,7 +88,7 @@ describe("REST API: /ip_bans", () => {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
                 done();
             });
         });
@@ -128,7 +128,7 @@ describe("REST API: /ip_bans", () => {
 
         it("should reject malformed input", (done) => {
             supertest.agent(context.WebInterface.App).post("/api/v1/ip_bans/1").set("Authorization", ADMIN_JWT)
-                     .expect(409).expect("Content-type", /json/).send({
+                     .expect(400).expect("Content-type", /json/).send({
                                                                           ip_mask:    "::1",
                                                                           expiration: "abcdefg",
                                                                           comment:    "New ban"
@@ -137,7 +137,7 @@ describe("REST API: /ip_bans", () => {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
 
                 context.Database.Models.IpBan.findById(1).then(ban => {
                     assert.equal(ban.IpMask, "127.0.0.1");
@@ -153,7 +153,7 @@ describe("REST API: /ip_bans", () => {
 
         it("should reject a request for an invalid id", (done) => {
             supertest.agent(context.WebInterface.App).post("/api/v1/ip_bans/1000").set("Authorization", ADMIN_JWT)
-                     .expect(409).send({
+                     .expect(400).send({
                                            ip_mask:    "::1",
                                            expiration: new Date(0),
                                            comment:    "Test ban2"
@@ -162,7 +162,7 @@ describe("REST API: /ip_bans", () => {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
 
                 context.Database.Models.IpBan.findById(1).then(ban => {
                     assert.equal(ban.IpMask, "127.0.0.1");
