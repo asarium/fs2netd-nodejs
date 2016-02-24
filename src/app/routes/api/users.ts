@@ -7,25 +7,22 @@ import {UserInstance} from "../../../db/models/User";
 import {ADMIN_ROLE} from "../../../db/models/Role";
 import {checkUserRole} from "./authentication";
 
+let paperwork = require("paperwork");
+
 let promiseRouter = require("express-promise-router");
+
+let LOGIN_MODEL = {
+    name: String,
+    password: String
+};
 
 export = function (context: RouterContext): Router {
     let router = promiseRouter();
 
-    router.put("/", (req, res) => {
-        let username = req.body.name;
-        let password = req.body.password;
-
-        if (typeof username !== "string" || typeof password !== "string") {
-            res.status(400).json({
-                                     err: "Invalid parameters"
-                                 });
-            return Promise.resolve();
-        }
-
+    router.put("/", paperwork.accept(LOGIN_MODEL), (req, res) => {
         return context.Database.Models.User.find({
                                                      where: {
-                                                         Username: username
+                                                         Username: req.body.name
                                                      }
                                                  }).then(user => {
             if (user != null) {
@@ -35,9 +32,9 @@ export = function (context: RouterContext): Router {
                 return null;
             }
 
-            user = context.Database.Models.User.build({Username: username});
+            user = context.Database.Models.User.build({Username: req.body.name});
 
-            return Authentication.setPassword(user, password).then(user => {
+            return Authentication.setPassword(user, req.body.password).then(user => {
                 res.status(201).json({
                                          name: user.Username,
                                          id:   user.id

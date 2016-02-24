@@ -7,6 +7,8 @@ import {Authentication} from "../../../util/Authentication";
 import * as winston from "winston";
 import * as Promise from "bluebird";
 
+let paperwork = require("paperwork");
+
 let promiseRouter = require("express-promise-router");
 let jwt = require("jsonwebtoken");
 
@@ -16,23 +18,18 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const JWT_SECRET = config.get<string>("web.jwt.secret");
 const JWT_EXPIRES_IN = config.get<string>("web.jwt.expires_in");
 
+let LOGIN_MODEL = {
+    name: String,
+    password: String
+};
+
 export = function (context: RouterContext): Router {
     let router = promiseRouter();
 
-    router.post("/", (req, res, next) => {
-        let username = req.body.name;
-        let password = req.body.password;
-
-        if (typeof username !== "string" || typeof password !== "string") {
-            res.status(400).json({
-                                     err: "Invalid parameters"
-                                 });
-            return Promise.resolve();
-        }
-
+    router.post("/", paperwork.accept(LOGIN_MODEL), (req, res, next) => {
         return context.Database.Models.User.find({
                                               where: {
-                                                  Username: username
+                                                  Username: req.body.name
                                               }
                                           }).then(user => {
             if (user == null) {
@@ -42,7 +39,7 @@ export = function (context: RouterContext): Router {
                 return;
             }
 
-            return Authentication.verifyPassword(user, password).then(valid => {
+            return Authentication.verifyPassword(user, req.body.password).then(valid => {
                 if (!valid) {
                     res.status(401).json({
                                              err: "Invalid authentication"
