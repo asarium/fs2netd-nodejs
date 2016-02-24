@@ -1,0 +1,1108 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0",
+        "title": "fs2netd REST API"
+    },
+    "basePath": "/api/v1",
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "user_token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "paths": {
+        "/authenticate": {
+            "post": {
+                "description": "Authenticates this application as a certain user\n",
+                "parameters": [
+                    {
+                        "name": "login",
+                        "in": "body",
+                        "description": "The login of the user",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully authenticated",
+                        "schema": {
+                            "$ref": "#/definitions/APIToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed body",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "The login in invalid",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ip_bans": {
+            "get": {
+                "description": "Gets a list of all currently active IP bans\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/IPBan"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed body",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Adds a new IP ban\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ban",
+                        "in": "body",
+                        "description": "The new ban to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/IPBan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created a new resource",
+                        "schema": {
+                            "$ref": "#/definitions/IPBan"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed body",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ip_bans/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "The resource id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "description": "Updates an existing ip ban\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ban",
+                        "in": "body",
+                        "description": "The new ban to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/IPBan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated a resource",
+                        "schema": {
+                            "$ref": "#/definitions/IPBan"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes an IP ban\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the resource"
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/missions": {
+            "get": {
+                "description": "Returns a list of all validated missions currently known to the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Mission"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Adds a new mission to the server list\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "$ref": "#/definitions/Mission"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "A mission with the same name already exists",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/missions/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "The resource id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "description": "Updates an existing mission\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ban",
+                        "in": "body",
+                        "description": "The new values of the mission",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Mission"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated a resource",
+                        "schema": {
+                            "$ref": "#/definitions/Mission"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a mission from the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the resource"
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/onlineusers": {
+            "get": {
+                "description": "Returns a list of all currently logged in users\n",
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OnlineUser"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/servers": {
+            "get": {
+                "description": "Returns a list of all currently online servers\n",
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "$ref": "#/definitions/Server"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/servers/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "The resource id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "description": "Returns more detailed informations about the specified server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "$ref": "#/definitions/ExtendedServer"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/tables": {
+            "get": {
+                "description": "Returns a list of all validated tables currently known to the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Table"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Adds a new table to the server list\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "$ref": "#/definitions/Table"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "A table with the same name already exists",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/tables/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "The resource id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "description": "Updates an existing table\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "ban",
+                        "in": "body",
+                        "description": "The new values of the table",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Table"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated a resource",
+                        "schema": {
+                            "$ref": "#/definitions/Table"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "The new name would lead to a conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a table from the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the resource"
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "description": "Returns a list of all registered users\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfull request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Registers a new user.\n",
+                "responses": {
+                    "201": {
+                        "description": "Succesfully registered the user",
+                        "schema": {
+                            "$ref": "#/definitions/RegisteredUser"
+                        }
+                    },
+                    "409": {
+                        "description": "The specified username is already used",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "description": "The resource id",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "description": "Retrieves extended information about a user\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved information",
+                        "schema": {
+                            "$ref": "#/definitions/ExtendedUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a user from the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the resource"
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "UserLogin": {
+            "type": "object",
+            "required": [
+                "name",
+                "password"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "IPBan": {
+            "type": "object",
+            "required": [
+                "ip_mask",
+                "expiration",
+                "comment"
+            ],
+            "properties": {
+                "ip_mask": {
+                    "type": "string"
+                },
+                "expiration": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Mission": {
+            "type": "object",
+            "required": [
+                "filename",
+                "crc32",
+                "mission_type",
+                "max_players",
+                "description"
+            ],
+            "properties": {
+                "filename": {
+                    "type": "string"
+                },
+                "crc32": {
+                    "type": "integer",
+                    "format": "in32"
+                },
+                "mission_type": {
+                    "type": "string"
+                },
+                "max_players": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "OnlineUser": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Server": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "num_players": {
+                    "type": "integer"
+                },
+                "max_players": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ExtendedServer": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "num_players": {
+                    "type": "integer"
+                },
+                "max_players": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Table": {
+            "type": "object",
+            "required": [
+                "filename",
+                "crc32",
+                "description"
+            ],
+            "properties": {
+                "filename": {
+                    "type": "string"
+                },
+                "crc32": {
+                    "type": "integer",
+                    "format": "in32"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "RegisteredUser": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "last_login": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ExtendedUser": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "last_login": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "err": {
+                    "type": "string"
+                }
+            }
+        },
+        "InputError": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "APIToken": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
