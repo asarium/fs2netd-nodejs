@@ -68,7 +68,11 @@ export = function (context: RouterContext): Router {
 
             if (!ban) {
                 res.status(400).json({
-                                         err: "Invalid ID specified"
+                                         status: 'bad_request',
+                                         reason: 'Parameters were invalid',
+                                         errors:  [
+                                             "Invalid ID specified"
+                                         ]
                                      });
                 return;
             }
@@ -102,8 +106,12 @@ export = function (context: RouterContext): Router {
         let ban = await context.Database.Models.IpBan.findById(req.params.id);
 
         if (!ban) {
-            res.status(409).json({
-                                     err: "Invalid ID specified"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }

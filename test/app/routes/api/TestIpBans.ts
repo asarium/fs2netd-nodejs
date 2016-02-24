@@ -200,12 +200,12 @@ describe("REST API: /ip_bans", () => {
 
         it("should reject a request for an invalid id", (done) => {
             supertest.agent(context.WebInterface.App).delete("/api/v1/ip_bans/1000").set("Authorization", ADMIN_JWT)
-                     .expect(409).end((err, res) => {
+                     .expect(400).end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
-                assert.equal(res.status, 409);
+                assert.equal(res.status, 400);
 
                 context.Database.Models.IpBan.count().then(count => {
                     assert.equal(count, 1);
