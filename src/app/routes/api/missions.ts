@@ -76,8 +76,12 @@ export = function (context: RouterContext): Router {
             let mission = await context.Database.Models.Mission.findById(req.params.id);
 
             if (!mission) {
-                res.status(409).json({
-                                         err: "Mission does not exist"
+                res.status(400).json({
+                                         status: 'bad_request',
+                                         reason: 'Parameters were invalid',
+                                         errors:  [
+                                             "Invalid ID specified"
+                                         ]
                                      });
                 return;
             }
@@ -120,8 +124,12 @@ export = function (context: RouterContext): Router {
         let mission = await context.Database.Models.Mission.findById(req.params.id);
 
         if (!mission) {
-            res.status(409).json({
-                                     err: "Mission does not exist"
+            res.status(400).json({
+                                     status: 'bad_request',
+                                     reason: 'Parameters were invalid',
+                                     errors:  [
+                                         "Invalid ID specified"
+                                     ]
                                  });
             return;
         }
