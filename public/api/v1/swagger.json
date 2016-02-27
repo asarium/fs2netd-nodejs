@@ -304,6 +304,17 @@
                         "user_token": []
                     }
                 ],
+                "parameters": [
+                    {
+                        "name": "ban",
+                        "in": "body",
+                        "description": "The new values of the mission",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Mission"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Succesfull request",
