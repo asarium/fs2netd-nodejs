@@ -55,6 +55,19 @@ export = function (context: RouterContext): Router {
         }));
     });
 
+    router.get("/me", authenticate(), async (req, res) => {
+        let roles = await req.user.getRoles();
+
+        let jsonData = {
+            name:       req.user.Username,
+            last_login: req.user.LastLogin,
+            id:         req.user.id,
+            roles:      roles.map(r => r.Name)
+        };
+
+        res.status(200).json(jsonData);
+    });
+
     router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
         let requested = await context.Database.Models.User.findById(req.params.id);
 

@@ -1,13 +1,7 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
 swagger: '2.0'
-
-# This is your document metadata
 info:
-  version: "0.0.0"
+  version: 0.0.0
   title: fs2netd REST API
-
 basePath: /api/v1
 produces:
   - application/json
@@ -16,13 +10,9 @@ securityDefinitions:
     type: apiKey
     name: Authorization
     in: header
-# Describe your paths here
 paths:
-  # This is a path endpoint. Change it.
   /authenticate:
-    # This is a HTTP operation
     post:
-      # Describe this verb here. Note: you can use markdown
       description: |
         Authenticates this application as a certain user
       parameters:
@@ -32,62 +22,66 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/UserLogin'
-      # Expected responses for this operation:
       responses:
-        # Response code
-        200:
+        '200':
           description: Successfully authenticated
           schema:
             $ref: '#/definitions/APIToken'
-        400:
+        '400':
           description: Malformed body
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: The login in invalid
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
   /ip_bans:
     get:
-      description: |
+      description: >
         Gets a list of all currently active IP bans
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
             type: array
             items:
-              $ref: "#/definitions/IPBan"
-        400:
+              $ref: '#/definitions/IPBan'
+        '400':
           description: Malformed body
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     put:
-      description: |
+      description: >
         Adds a new IP ban
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       parameters:
         - name: ban
@@ -97,39 +91,42 @@ paths:
           schema:
             $ref: '#/definitions/IPBan'
       responses:
-        201:
+        '201':
           description: Successfully created a new resource
           schema:
-              $ref: "#/definitions/IPBan"
-        400:
+            $ref: '#/definitions/IPBan'
+        '400':
           description: Malformed body
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
-  /ip_bans/{id}:
+  '/ip_bans/{id}':
     parameters:
-        - name: id
-          in: path
-          description: The resource id
-          required: true
-          type: integer
+      - name: id
+        in: path
+        description: The resource id
+        required: true
+        type: integer
     post:
-      description: |
+      description: >
         Updates an existing ip ban
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       parameters:
         - name: ban
@@ -139,89 +136,98 @@ paths:
           schema:
             $ref: '#/definitions/IPBan'
       responses:
-        200:
+        '200':
           description: Successfully updated a resource
           schema:
-              $ref: "#/definitions/IPBan"
-        400:
+            $ref: '#/definitions/IPBan'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     delete:
-      description: |
+      description: >
         Deletes an IP ban
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Successfully deleted the resource
-        400:
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
   /missions:
     get:
-      description: |
+      description: >
         Returns a list of all validated missions currently known to the server
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
             type: array
             items:
-              $ref: "#/definitions/Mission"
-        400:
+              $ref: '#/definitions/Mission'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     put:
-      description: |
+      description: >
         Adds a new mission to the server list
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       parameters:
         - name: ban
@@ -231,43 +237,46 @@ paths:
           schema:
             $ref: '#/definitions/Mission'
       responses:
-        201:
+        '201':
           description: Succesfull request
           schema:
-            $ref: "#/definitions/Mission"
-        400:
+            $ref: '#/definitions/Mission'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        409:
+            $ref: '#/definitions/Error'
+        '409':
           description: A mission with the same name already exists
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
-  /missions/{id}:
+  '/missions/{id}':
     parameters:
-        - name: id
-          in: path
-          description: The resource id
-          required: true
-          type: integer
+      - name: id
+        in: path
+        description: The resource id
+        required: true
+        type: integer
     post:
-      description: |
+      description: >
         Updates an existing mission
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       parameters:
         - name: ban
@@ -277,49 +286,52 @@ paths:
           schema:
             $ref: '#/definitions/Mission'
       responses:
-        200:
+        '200':
           description: Successfully updated a resource
           schema:
-              $ref: "#/definitions/Mission"
-        400:
+            $ref: '#/definitions/Mission'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     delete:
-      description: |
+      description: >
         Deletes a mission from the server
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Successfully deleted the resource
-        400:
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
@@ -328,13 +340,13 @@ paths:
       description: |
         Returns a list of all currently logged in users
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
             type: array
             items:
-              $ref: "#/definitions/OnlineUser"
-        500:
+              $ref: '#/definitions/OnlineUser'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
@@ -343,123 +355,135 @@ paths:
       description: |
         Returns a list of all currently online servers
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
-            $ref: "#/definitions/Server"
-        500:
+            $ref: '#/definitions/Server'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
-  /servers/{id}:
+  '/servers/{id}':
     parameters:
-        - name: id
-          in: path
-          description: The resource id
-          required: true
-          type: integer
+      - name: id
+        in: path
+        description: The resource id
+        required: true
+        type: integer
     get:
-      description: |
+      description: >
         Returns more detailed informations about the specified server
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
-            $ref: "#/definitions/ExtendedServer"
-        400:
+            $ref: '#/definitions/ExtendedServer'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
   /tables:
     get:
-      description: |
+      description: >
         Returns a list of all validated tables currently known to the server
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
             type: array
             items:
-              $ref: "#/definitions/Table"
-        400:
+              $ref: '#/definitions/Table'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     put:
-      description: |
+      description: >
         Adds a new table to the server list
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        201:
+        '201':
           description: Succesfull request
           schema:
-            $ref: "#/definitions/Table"
-        400:
+            $ref: '#/definitions/Table'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        409:
+            $ref: '#/definitions/Error'
+        '409':
           description: A table with the same name already exists
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
-  /tables/{id}:
+  '/tables/{id}':
     parameters:
-        - name: id
-          in: path
-          description: The resource id
-          required: true
-          type: integer
+      - name: id
+        in: path
+        description: The resource id
+        required: true
+        type: integer
     post:
-      description: |
+      description: >
         Updates an existing table
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       parameters:
         - name: ban
@@ -469,84 +493,90 @@ paths:
           schema:
             $ref: '#/definitions/Table'
       responses:
-        200:
+        '200':
           description: Successfully updated a resource
           schema:
-              $ref: "#/definitions/Table"
-        400:
+            $ref: '#/definitions/Table'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        409:
+            $ref: '#/definitions/Error'
+        '409':
           description: The new name would lead to a conflict
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     delete:
-      description: |
+      description: >
         Deletes a table from the server
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Successfully deleted the resource
-        400:
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
   /users:
     get:
-      description: |
+      description: >
         Returns a list of all registered users
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Succesfull request
           schema:
             type: array
             items:
-              $ref: "#/definitions/User"
-        400:
+              $ref: '#/definitions/User'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
@@ -554,81 +584,116 @@ paths:
       description: |
         Registers a new user.
       responses:
-        201:
+        '201':
           description: Succesfully registered the user
           schema:
-            $ref: "#/definitions/RegisteredUser"
-        409:
+            $ref: '#/definitions/RegisteredUser'
+        '409':
           description: The specified username is already used
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
-  /users/{id}:
-    parameters:
-        - name: id
-          in: path
-          description: The resource id
-          required: true
-          type: integer
+  '/users/me':
     get:
-      description: |
-        Retrieves extended information about a user
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+      description: >
+        Retrieves extended information about the user of the used API token
+
+
+
+        **Note:** A valid API token is required for this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Successfully retrieved information
           schema:
-              $ref: "#/definitions/ExtendedUser"
-        400:
+            $ref: '#/definitions/ExtendedUser'
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
+          description: A server error occured
+          schema:
+            $ref: '#/definitions/Error'
+  '/users/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The resource id
+        required: true
+        type: integer
+    get:
+      description: >
+        Retrieves extended information about a user
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
+        - user_token: []
+      responses:
+        '200':
+          description: Successfully retrieved information
+          schema:
+            $ref: '#/definitions/ExtendedUser'
+        '400':
+          description: Malformed input
+          schema:
+            $ref: '#/definitions/InputError'
+        '401':
+          description: No or invalid API token specified
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: The user of the token has insufficient rights
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
     delete:
-      description: |
+      description: >
         Deletes a user from the server
-        
-        **Note:** The user referenced by the token needs to have administrator rights to execute this function
-      security: 
+
+
+
+        **Note:** The user referenced by the token needs to have administrator
+        rights to execute this function
+      security:
         - user_token: []
       responses:
-        200:
+        '200':
           description: Successfully deleted the resource
-        400:
+        '400':
           description: Malformed input
           schema:
             $ref: '#/definitions/InputError'
-        401:
+        '401':
           description: No or invalid API token specified
           schema:
-            $ref: "#/definitions/Error"
-        403:
+            $ref: '#/definitions/Error'
+        '403':
           description: The user of the token has insufficient rights
           schema:
-            $ref: "#/definitions/Error"
-        500:
+            $ref: '#/definitions/Error'
+        '500':
           description: A server error occured
           schema:
             $ref: '#/definitions/Error'
-    
-
 definitions:
   UserLogin:
     type: object
@@ -756,7 +821,6 @@ definitions:
         type: array
         items:
           type: string
-
   Error:
     type: object
     properties:

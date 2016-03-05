@@ -60,7 +60,7 @@
         },
         "/ip_bans": {
             "get": {
-                "description": "Gets a list of all currently active IP bans\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Gets a list of all currently active IP bans\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -103,7 +103,7 @@
                 }
             },
             "put": {
-                "description": "Adds a new IP ban\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Adds a new IP ban\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -165,7 +165,7 @@
                 }
             ],
             "post": {
-                "description": "Updates an existing ip ban\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Updates an existing ip ban\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -216,7 +216,7 @@
                 }
             },
             "delete": {
-                "description": "Deletes an IP ban\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Deletes an IP ban\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -255,7 +255,7 @@
         },
         "/missions": {
             "get": {
-                "description": "Returns a list of all validated missions currently known to the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Returns a list of all validated missions currently known to the server\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -298,7 +298,7 @@
                 }
             },
             "put": {
-                "description": "Adds a new mission to the server list\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Adds a new mission to the server list\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -366,7 +366,7 @@
                 }
             ],
             "post": {
-                "description": "Updates an existing mission\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Updates an existing mission\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -417,7 +417,7 @@
                 }
             },
             "delete": {
-                "description": "Deletes a mission from the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Deletes a mission from the server\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -506,7 +506,7 @@
                 }
             ],
             "get": {
-                "description": "Returns more detailed informations about the specified server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Returns more detailed informations about the specified server\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "responses": {
                     "200": {
                         "description": "Succesfull request",
@@ -543,7 +543,7 @@
         },
         "/tables": {
             "get": {
-                "description": "Returns a list of all validated tables currently known to the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Returns a list of all validated tables currently known to the server\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -586,7 +586,7 @@
                 }
             },
             "put": {
-                "description": "Adds a new table to the server list\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Adds a new table to the server list\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -643,7 +643,7 @@
                 }
             ],
             "post": {
-                "description": "Updates an existing table\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Updates an existing table\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -700,7 +700,7 @@
                 }
             },
             "delete": {
-                "description": "Deletes a table from the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Deletes a table from the server\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -739,7 +739,7 @@
         },
         "/users": {
             "get": {
-                "description": "Returns a list of all registered users\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Returns a list of all registered users\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -805,6 +805,48 @@
                 }
             }
         },
+        "/users/me": {
+            "get": {
+                "description": "Retrieves extended information about the user of the used API token\n\n\n**Note:** A valid API token is required for this function\n",
+                "security": [
+                    {
+                        "user_token": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved information",
+                        "schema": {
+                            "$ref": "#/definitions/ExtendedUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Malformed input",
+                        "schema": {
+                            "$ref": "#/definitions/InputError"
+                        }
+                    },
+                    "401": {
+                        "description": "No or invalid API token specified",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "The user of the token has insufficient rights",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "A server error occured",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "parameters": [
                 {
@@ -816,7 +858,7 @@
                 }
             ],
             "get": {
-                "description": "Retrieves extended information about a user\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Retrieves extended information about a user\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
@@ -856,7 +898,7 @@
                 }
             },
             "delete": {
-                "description": "Deletes a user from the server\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
+                "description": "Deletes a user from the server\n\n\n**Note:** The user referenced by the token needs to have administrator rights to execute this function\n",
                 "security": [
                     {
                         "user_token": []
