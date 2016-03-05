@@ -7,11 +7,17 @@ import {Request} from "express";
 import {Response} from "express";
 import {NextFunction} from "express";
 
+let cors = require("cors");
+
 export = function (context: RouterContext): Router {
     let router = express.Router();
 
     router.use(bodyParser.urlencoded({extended: true}));
     router.use(bodyParser.json());
+
+    // Enable CORS for all API routes
+    router.options("*", cors());
+    router.use(cors());
 
     router.use("/authenticate", require("./authenticate")(context));
 

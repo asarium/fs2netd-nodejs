@@ -11,6 +11,7 @@
     "bluebird": "~3.2.2",
     "body-parser": "^1.15.0",
     "config": "~1.19.0",
+    "cors": "^2.7.1",
     "dissolve": "^0.3.3",
     "express": "^4.13.4",
     "express-promise-router": "^1.0.0",
