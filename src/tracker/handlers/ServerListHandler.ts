@@ -8,7 +8,7 @@ import {ServerUpdateMessage} from "../packets/Messages";
 import * as Promise from "bluebird";
 import {ChannelCountRequest} from "../packets/Messages";
 import {ChannelCountReply} from "../packets/Messages";
-import {ServerPojo} from "../../db/models/Server";
+import {IServerPojo} from "../../db/models/Server";
 
 export function handleServerListMessage(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Client has requested the server list");
@@ -37,7 +37,7 @@ export function handleServerStartMessage(message: Message, context: IHandlerCont
     let msg = <ServerStartMessage>message;
 
     // Convert message data to pojo data
-    let data: ServerPojo = {
+    let data: IServerPojo = {
         Name: msg.Properties.name,
         MissionName: msg.Properties.mission_name,
         Title: msg.Properties.title,

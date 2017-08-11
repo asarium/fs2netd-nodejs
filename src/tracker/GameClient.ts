@@ -26,19 +26,19 @@ import {PingMessage} from "./packets/Messages";
 import {getTimeMilliseconds} from "./Utils";
 import {LoggerInstance} from "winston";
 import {IUserInstance} from "../db/models/User";
-import {OnlineUserInstance} from "../db/models/OnlineUser";
-import {OnlineUserPojo} from "../db/models/OnlineUser";
+import {IOnlineUserInstance} from "../db/models/OnlineUser";
+import {IOnlineUserPojo} from "../db/models/OnlineUser";
 
 export interface IGameClient {
     sendToClient:(msg: ClientMessage) => Promise<void>;
-    getOnlineUserData:() => OnlineUserPojo;
+    getOnlineUserData:() => IOnlineUserPojo;
 
     RemoteAddress: string;
     RemotePort: number;
     Authenticated: boolean;
     User: IUserInstance;
     Session: Session;
-    OnlineUser: OnlineUserInstance;
+    OnlineUser: IOnlineUserInstance;
     LastPing: number;
     IsServer: boolean;
 }
@@ -58,7 +58,7 @@ export class GameClient implements IGameClient {
 
     private _session: Session;
     private _user: IUserInstance;
-    private _onlineUser: OnlineUserInstance;
+    private _onlineUser: IOnlineUserInstance;
 
     private _lastPing: number;
 
@@ -134,11 +134,11 @@ export class GameClient implements IGameClient {
         this._authenticated = value;
     }
 
-    get OnlineUser(): OnlineUserInstance {
+    get OnlineUser(): IOnlineUserInstance {
         return this._onlineUser;
     }
 
-    set OnlineUser(value: OnlineUserInstance) {
+    set OnlineUser(value: IOnlineUserInstance) {
         this._onlineUser = value;
     }
 
@@ -184,7 +184,7 @@ export class GameClient implements IGameClient {
         return this.sendToClient(new PingMessage(getTimeMilliseconds()));
     }
 
-    public getOnlineUserData(): OnlineUserPojo {
+    public getOnlineUserData(): IOnlineUserPojo {
         return {
             ClientIp: this._remoteAddress,
             ClientPort: this._remotePort,

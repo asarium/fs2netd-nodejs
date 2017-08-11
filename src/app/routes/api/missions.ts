@@ -1,7 +1,7 @@
 import {Router} from "express";
 import * as promiseRouter from "express-promise-router";
 import * as paperwork from "paperwork";
-import {MissionPojo} from "../../../db/models/Mission";
+import {IMissionPojo} from "../../../db/models/Mission";
 import {ADMIN_ROLE} from "../../../db/models/Role";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
@@ -50,7 +50,7 @@ export = (context: IRouterContext): Router => {
                 return;
             }
 
-            const missionInfo: MissionPojo = {
+            const missionInfo: IMissionPojo = {
                 Filename:    req.body.filename,
                 CRC32:       req.body.crc32,
                 MissionType: req.body.mission_type,

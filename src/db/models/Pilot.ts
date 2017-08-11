@@ -1,9 +1,9 @@
-
-import sequelize = require("sequelize");
-import {IUserInstance} from "./User";
+import * as sequelize from "sequelize";
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
-export interface PilotPojo {
+import {IUserInstance} from "./User";
+
+export interface IPilotPojo {
     PilotName?: string;
 
     Score?: number;
@@ -30,39 +30,41 @@ export interface PilotPojo {
     NumMedals?: number;
     MedalsPacked?: string;
 }
-export interface PilotInstance extends sequelize.Instance<PilotPojo>, PilotPojo {
-    getUser:() => Promise<IUserInstance>
-    setUser:(UserInstance) => Promise<void>
+
+export interface IPilotInstance extends sequelize.Instance<IPilotPojo>, IPilotPojo {
+    getUser: () => Promise<IUserInstance>;
+    setUser: (user: IUserInstance) => Promise<void>;
 }
-export interface PilotModel extends sequelize.Model<PilotInstance, PilotPojo> {
+
+export interface IPilotModel extends sequelize.Model<IPilotInstance, IPilotPojo> {
 }
 
-export function definePilot(sequelize: Sequelize, DataType: DataTypes): PilotModel {
-    return sequelize.define<PilotInstance, PilotPojo>("Pilot", {
-        "PilotName": DataType.STRING,
+export function definePilot(sequ: Sequelize, types: DataTypes): IPilotModel {
+    return sequ.define<IPilotInstance, IPilotPojo>("Pilot", {
+        PilotName: types.STRING,
 
-        "Score": DataType.INTEGER,
-        "MissionsFlown": DataType.INTEGER,
-        "FlightTime": DataType.INTEGER,
-        "LastFlown": DataType.INTEGER,
-        "KillCount": DataType.INTEGER,
-        "KillCountOk": DataType.INTEGER,
-        "Assists": DataType.INTEGER,
+        Score:         types.INTEGER,
+        MissionsFlown: types.INTEGER,
+        FlightTime:    types.INTEGER,
+        LastFlown:     types.INTEGER,
+        KillCount:     types.INTEGER,
+        KillCountOk:   types.INTEGER,
+        Assists:       types.INTEGER,
 
-        "PrimaryShotsFired": DataType.INTEGER,
-        "PrimaryShotsHits": DataType.INTEGER,
-        "PrimaryBoneheadHits": DataType.INTEGER,
+        PrimaryShotsFired:   types.INTEGER,
+        PrimaryShotsHits:    types.INTEGER,
+        PrimaryBoneheadHits: types.INTEGER,
 
-        "SecondaryShotsFired": DataType.INTEGER,
-        "SecondaryShotsHits": DataType.INTEGER,
-        "SecondaryBoneheadHits": DataType.INTEGER,
+        SecondaryShotsFired:   types.INTEGER,
+        SecondaryShotsHits:    types.INTEGER,
+        SecondaryBoneheadHits: types.INTEGER,
 
-        "Rank": DataType.INTEGER,
+        Rank: types.INTEGER,
 
-        "NumShipKills": DataType.INTEGER,
-        "ShipKillsPacked": DataType.TEXT,
+        NumShipKills:    types.INTEGER,
+        ShipKillsPacked: types.TEXT,
 
-        "NumMedals": DataType.INTEGER,
-        "MedalsPacked": DataType.TEXT
+        NumMedals:    types.INTEGER,
+        MedalsPacked: types.TEXT,
     });
 }

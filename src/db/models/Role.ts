@@ -5,21 +5,23 @@ import {IUserInstance} from "./User";
 
 export const ADMIN_ROLE: string = "Admin";
 
-export interface RolePojo {
+export interface IRolePojo {
     Name?: string;
 }
-export interface RoleInstance extends sequelize.Instance<RolePojo>, RolePojo {
-    getUsers:(options?: any) => Promise<IUserInstance[]>
-}
-export interface RoleModel extends sequelize.Model<RoleInstance, RolePojo> {
+
+export interface IRoleInstance extends sequelize.Instance<IRolePojo>, IRolePojo {
+    getUsers: (options?: any) => Promise<IUserInstance[]>;
 }
 
-export function defineRole(sequelize: Sequelize, DataTypes: DataTypes): RoleModel {
-    return sequelize.define<RoleInstance, RolePojo>("Role", {
-        "Name": {
-            type: DataTypes.STRING,
+export interface IRoleModel extends sequelize.Model<IRoleInstance, IRolePojo> {
+}
+
+export function defineRole(sequ: Sequelize, types: DataTypes): IRoleModel {
+    return sequ.define<IRoleInstance, IRolePojo>("Role", {
+        Name: {
+            type:       types.STRING,
             primaryKey: true,
-            unique: true
+            unique:     true,
         },
     });
 }

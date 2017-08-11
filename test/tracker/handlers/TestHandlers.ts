@@ -1,9 +1,9 @@
 import {IGameClient} from "../../../src/tracker/GameClient";
 import {ClientMessage} from "../../../src/tracker/packets/Messages";
-import {OnlineUserPojo} from "../../../src/db/models/OnlineUser";
+import {IOnlineUserPojo} from "../../../src/db/models/OnlineUser";
 import {IUserInstance} from "../../../src/db/models/User";
 import {Session} from "../../../src/tracker/Session";
-import {OnlineUserInstance} from "../../../src/db/models/OnlineUser";
+import {IOnlineUserInstance} from "../../../src/db/models/OnlineUser";
 import * as Promise from "bluebird";
 import {IHandlerContext} from "../../../src/tracker/handlers/Handlers";
 import {Database} from "../../../src/db/Database";
@@ -20,7 +20,7 @@ export class TestClient implements IGameClient {
         return Promise.resolve();
     }
 
-    getOnlineUserData(): OnlineUserPojo {
+    getOnlineUserData(): IOnlineUserPojo {
         return {};
     }
 
@@ -28,12 +28,12 @@ export class TestClient implements IGameClient {
 
     RemoteAddress: string;
     RemotePort: number;
-    Authenticated: boolean = false;
+    Authenticated: boolean          = false;
     User: IUserInstance;
-    Session: Session = new Session(42);
-    OnlineUser: OnlineUserInstance = null;
+    Session: Session                = new Session(42);
+    OnlineUser: IOnlineUserInstance = null;
     LastPing: number;
-    IsServer: boolean = false;
+    IsServer: boolean               = false;
 }
 
 export class TestServer implements IGameServer {

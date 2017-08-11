@@ -1,27 +1,28 @@
-
 import * as sequelize from "sequelize";
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 import {IUserInstance} from "./User";
 
-export interface OnlineUserPojo {
+export interface IOnlineUserPojo {
     ClientIp?: string;
     ClientPort?: number;
     PilotName?: string;
     SessionId?: number;
 }
-export interface OnlineUserInstance extends sequelize.Instance<OnlineUserPojo>, OnlineUserPojo {
-    getUser:() => Promise<IUserInstance>
-    setUser:(UserInstance) => Promise<void>
-}
-export interface OnlineUserModel extends sequelize.Model<OnlineUserInstance, OnlineUserPojo> {
+
+export interface IOnlineUserInstance extends sequelize.Instance<IOnlineUserPojo>, IOnlineUserPojo {
+    getUser: () => Promise<IUserInstance>;
+    setUser: (user: IUserInstance) => Promise<void>;
 }
 
-export function defineOnlineUser(sequelize: Sequelize, DataType: DataTypes): OnlineUserModel {
-    return sequelize.define<OnlineUserInstance, OnlineUserPojo>("OnlineUser", {
-        "ClientIp": DataType.STRING,
-        "ClientPort": DataType.INTEGER,
-        "PilotName": DataType.STRING,
-        "SessionId": DataType.INTEGER,
+export interface IOnlineUserModel extends sequelize.Model<IOnlineUserInstance, IOnlineUserPojo> {
+}
+
+export function defineOnlineUser(sequ: Sequelize, types: DataTypes): IOnlineUserModel {
+    return sequ.define<IOnlineUserInstance, IOnlineUserPojo>("OnlineUser", {
+        ClientIp:   types.STRING,
+        ClientPort: types.INTEGER,
+        PilotName:  types.STRING,
+        SessionId:  types.INTEGER,
     });
 }

@@ -1,17 +1,17 @@
 import * as Promise from "bluebird";
 import {Database} from "../db/Database";
-import {ServerInstance} from "../db/models/Server";
-import {ServerPojo} from "../db/models/Server";
+import {IServerInstance} from "../db/models/Server";
+import {IServerPojo} from "../db/models/Server";
 
 interface ServerEntry {
-    Server: ServerInstance;
+    Server: IServerInstance;
 
     LastUpdate: Date;
 }
 
 let SERVER_TIMEOUT = 5 * 60 * 1000; // 5 Minute timeout
 
-function isSameServer(entry: ServerEntry, instance: ServerInstance): boolean {
+function isSameServer(entry: ServerEntry, instance: IServerInstance): boolean {
     return entry.Server.Ip === instance.Ip && entry.Server.Port === instance.Port;
 }
 
@@ -33,18 +33,18 @@ export class ServerList {
         });
     }
 
-    get Servers(): ServerInstance[] {
+    get Servers(): IServerInstance[] {
         return this._list.map(entry => entry.Server);
     }
 
-    private addInstance(server: ServerInstance): void {
+    private addInstance(server: IServerInstance): void {
         this._list.push({
                             Server: server,
                             LastUpdate: new Date()
                         });
     }
 
-    addServer(server: ServerPojo): Promise<ServerInstance> {
+    addServer(server: IServerPojo): Promise<IServerInstance> {
         let instance = this._db.createServer(server);
 
         return instance.save().then(saved => {
@@ -54,7 +54,7 @@ export class ServerList {
         });
     }
 
-    getServer(address: string, port: number): ServerInstance {
+    getServer(address: string, port: number): IServerInstance {
         for (let entry of this._list) {
             if (entry.Server.Ip === address && entry.Server.Port === port) {
                 return entry.Server;
@@ -64,7 +64,7 @@ export class ServerList {
         return null;
     }
 
-    updateServer(server: ServerInstance): Promise<void> {
+    updateServer(server: IServerInstance): Promise<void> {
         return server.save().then(() => {
             for (let i = 0; i < this._list.length; ++i) {
                 let entry = this._list[i];
@@ -76,7 +76,7 @@ export class ServerList {
         });
     }
 
-    removeServer(server: ServerInstance): Promise<void> {
+    removeServer(server: IServerInstance): Promise<void> {
         return server.destroy().then(() => {
             for (let i = 0; i < this._list.length; ++i) {
                 let entry = this._list[i];

@@ -1,28 +1,31 @@
 import {DataTypes} from "sequelize";
 import {Sequelize} from "sequelize";
-import {HasId} from "./index";
-import sequelize = require("sequelize");
+import * as sequelize from "sequelize";
+import {IHasId} from "./index";
 
-export interface MissionPojo extends HasId {
+export interface IMissionPojo extends IHasId {
     Filename?: string;
     CRC32?: number;
     MissionType?: string;
     MaxPlayers?: number;
     Description?: string;
 }
-export interface MissionInstance extends sequelize.Instance<MissionPojo>, MissionPojo {
+
+export interface IMissionInstance extends sequelize.Instance<IMissionPojo>, IMissionPojo {
 }
-export interface MissionModel extends sequelize.Model<MissionInstance, MissionPojo> {
+
+export interface IMissionModel extends sequelize.Model<IMissionInstance, IMissionPojo> {
 }
-export function defineMission(sequelize: Sequelize, DataType: DataTypes): MissionModel {
-    return sequelize.define<MissionInstance, MissionPojo>("Mission", {
-        "Filename": {
-            type: DataType.STRING,
-            unique: true
+
+export function defineMission(sequ: Sequelize, types: DataTypes): IMissionModel {
+    return sequ.define<IMissionInstance, IMissionPojo>("Mission", {
+        Filename:    {
+            type:   types.STRING,
+            unique: true,
         },
-        "CRC32": DataType.INTEGER,
-        "MissionType": DataType.STRING,
-        "MaxPlayers": DataType.INTEGER,
-        "Description": DataType.TEXT,
+        CRC32:       types.INTEGER,
+        MissionType: types.STRING,
+        MaxPlayers:  types.INTEGER,
+        Description: types.TEXT,
     });
 }

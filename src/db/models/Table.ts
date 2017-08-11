@@ -1,27 +1,28 @@
 
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
-import sequelize = require("sequelize");
-import {HasId} from "./index";
-export interface TablePojo extends HasId {
+import * as sequelize from "sequelize";
+import {IHasId} from "./index";
+
+export interface ITablePojo extends IHasId {
     Filename?: string;
 
     CRC32?: number;
     Description?: string;
 }
-export interface TableInstance extends sequelize.Instance<TablePojo>, TablePojo {
+export interface ITableInstance extends sequelize.Instance<ITablePojo>, ITablePojo {
 }
-export interface TableModel extends sequelize.Model<TableInstance, TablePojo> {
+export interface ITableModel extends sequelize.Model<ITableInstance, ITablePojo> {
 }
 
-export function defineTable(sequelize: Sequelize, DataTypes: DataTypes): TableModel {
-    return sequelize.define<TableInstance, TablePojo>("Table", {
-        "Filename": {
-            type: DataTypes.STRING,
-            unique: true
+export function defineTable(sequ: Sequelize, types: DataTypes): ITableModel {
+    return sequ.define<ITableInstance, ITablePojo>("Table", {
+        Filename: {
+            type: types.STRING,
+            unique: true,
         },
 
-        "CRC32": DataTypes.INTEGER,
-        "Description": DataTypes.TEXT,
+        CRC32: types.INTEGER,
+        Description: types.TEXT,
     });
 }

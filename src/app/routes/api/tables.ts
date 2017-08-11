@@ -2,7 +2,7 @@ import * as express from "express";
 import {Router} from "express";
 import {RequestHandler} from "express";
 import {ADMIN_ROLE} from "../../../db/models/Role";
-import {TablePojo} from "../../../db/models/Table";
+import {ITablePojo} from "../../../db/models/Table";
 import {IUserInstance} from "../../../db/models/User";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
@@ -41,7 +41,7 @@ export = (context: IRouterContext): Router => {
             return;
         }
 
-        const data: TablePojo = {
+        const data: ITablePojo = {
             Filename:    req.body.filename,
             CRC32:       req.body.crc32,
             Description: req.body.description,

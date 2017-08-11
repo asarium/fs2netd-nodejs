@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as Promise from "bluebird";
 import {getHandlerContext} from "./TestHandlers";
 import {TestContext} from "./TestHandlers";
-import {ServerPojo} from "../../../src/db/models/Server";
+import {IServerPojo} from "../../../src/db/models/Server";
 import {handleServerListMessage} from "../../../src/tracker/handlers/ServerListHandler";
 import {ServerListMessage} from "../../../src/tracker/packets/Messages";
 import {ServerListReply} from "../../../src/tracker/packets/Messages";
@@ -26,7 +26,7 @@ describe("ServerListHandler", () => {
 
     describe("#handleServerListMessage()", () => {
         beforeEach(() => {
-            let servers: ServerPojo[] = [
+            let servers: IServerPojo[] = [
                 {
                     Name: "test1",
                     TrackerChannel: "test"
@@ -159,7 +159,7 @@ describe("ServerListHandler", () => {
 
     describe("#handleChannelCountRequest()", () => {
         beforeEach(() => {
-            let servers: ServerPojo[] = [
+            let servers: IServerPojo[] = [
                 {
                     Name: "test1",
                     TrackerChannel: "test"

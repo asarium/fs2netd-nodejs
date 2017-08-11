@@ -26,7 +26,7 @@ import {DuplicateLoginRequest} from "./Messages";
 import {UpdatePilotMessage} from "./Messages";
 import {packString} from "../Utils";
 import {ChannelCountRequest} from "./Messages";
-import {PilotPojo} from "../../db/models/Pilot";
+import {IPilotPojo} from "../../db/models/Pilot";
 
 function convertData(data: any): Message {
     switch (data.id) {
@@ -38,7 +38,7 @@ function convertData(data: any): Message {
         case Identifiers.PCKT_PILOT_GET:
             return new GetPilotMessage(data.sid, data.pilotname, data.create != 0);
         case Identifiers.PCKT_PILOT_UPDATE:
-            let pilotData: PilotPojo = {
+            let pilotData: IPilotPojo = {
                 PilotName: data.pilot_name,
                 Score:data.score,
                 MissionsFlown:data.missions_flown,

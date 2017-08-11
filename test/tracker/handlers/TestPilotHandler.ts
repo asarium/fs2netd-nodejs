@@ -4,7 +4,7 @@ import {TestContext} from "./TestHandlers";
 import {GetPilotMessage} from "../../../src/tracker/packets/Messages";
 import * as assert from "assert";
 import {PilotReply} from "../../../src/tracker/packets/Messages";
-import {PilotPojo} from "../../../src/db/models/Pilot";
+import {IPilotPojo} from "../../../src/db/models/Pilot";
 import {handleUpdatePilotMessage} from "../../../src/tracker/handlers/PilotHandler";
 import {UpdatePilotMessage} from "../../../src/tracker/packets/Messages";
 import {PilotUpdateReply} from "../../../src/tracker/packets/Messages";
@@ -65,7 +65,7 @@ describe("PilotHandler", () => {
         });
 
         it("should send the pilot data ", () => {
-            let pilotData: PilotPojo = {
+            let pilotData: IPilotPojo = {
                 PilotName: "test-pilot",
                 Score: 42
             };
@@ -94,7 +94,7 @@ describe("PilotHandler", () => {
     });
 
     describe("#handleUpdatePilotMessage()", () => {
-        let pilotData: PilotPojo = {
+        let pilotData: IPilotPojo = {
             PilotName: "test-pilot",
             Score: 42
         };
@@ -120,7 +120,7 @@ describe("PilotHandler", () => {
                 });
             });
 
-            let oldData: PilotPojo = {
+            let oldData: IPilotPojo = {
                 PilotName: "test-pilot",
                 Score: 120
             };

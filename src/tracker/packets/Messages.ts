@@ -1,9 +1,9 @@
 "use strict";
 
-import {PilotPojo} from "../../db/models/Pilot";
-import {PilotInstance} from "../../db/models/Pilot";
-import {ServerInstance} from "../../db/models/Server";
-import {ServerPojo} from "../../db/models/Server";
+import {IPilotPojo} from "../../db/models/Pilot";
+import {IPilotInstance} from "../../db/models/Pilot";
+import {IServerInstance} from "../../db/models/Server";
+import {IServerPojo} from "../../db/models/Server";
 import {parsePackedString} from "./../Utils";
 import {Identifiers} from "./PacketIdentifiers";
 
@@ -89,18 +89,18 @@ export class GetPilotMessage extends Message {
 }
 
 export class UpdatePilotMessage extends Message {
-    private _pilotData: PilotPojo;
+    private _pilotData: IPilotPojo;
     private _sid: number;
     private _userName: string;
 
-    constructor(sid: number, userName: string, params: PilotPojo) {
+    constructor(sid: number, userName: string, params: IPilotPojo) {
         super(Identifiers.PCKT_PILOT_UPDATE);
         this._sid = sid;
         this._userName = userName;
         this._pilotData = params;
     }
 
-    get PilotData(): PilotPojo {
+    get PilotData(): IPilotPojo {
         return this._pilotData;
     }
 
@@ -334,9 +334,9 @@ export class LoginReply extends ClientMessage {
 
 export class PilotReply extends ClientMessage {
     private _replytype: number;
-    private _pilot: PilotPojo;
+    private _pilot: IPilotPojo;
 
-    constructor(replytype: number, pilot?: PilotPojo) {
+    constructor(replytype: number, pilot?: IPilotPojo) {
         super(Identifiers.PCKT_PILOT_REPLY);
         this._replytype = replytype;
         this._pilot = pilot;
@@ -346,7 +346,7 @@ export class PilotReply extends ClientMessage {
         return this._replytype;
     }
 
-    get PilotData(): PilotPojo {
+    get PilotData(): IPilotPojo {
         return this._pilot;
     }
 
@@ -457,14 +457,14 @@ export class PongMessage extends ClientMessage {
 }
 
 export class ServerListReply extends ClientMessage {
-    private _list: ServerPojo[];
+    private _list: IServerPojo[];
 
-    constructor(list: ServerPojo[]) {
+    constructor(list: IServerPojo[]) {
         super(Identifiers.PCKT_SLIST_REPLY);
         this._list = list;
     }
 
-    get List(): ServerPojo[] {
+    get List(): IServerPojo[] {
         return this._list;
     }
 

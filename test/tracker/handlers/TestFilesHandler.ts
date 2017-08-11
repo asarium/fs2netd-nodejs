@@ -2,12 +2,12 @@ import * as Promise from "bluebird";
 import * as assert from "assert";
 import {TestContext} from "./TestHandlers";
 import {getHandlerContext} from "./TestHandlers";
-import {TablePojo} from "../../../src/db/models/Table";
+import {ITablePojo} from "../../../src/db/models/Table";
 import {TableRequestMessage} from "../../../src/tracker/packets/Messages";
 import {handleTableValidation} from "../../../src/tracker/handlers/FilesHandler";
 import {TablesReply} from "../../../src/tracker/packets/Messages";
 import {NameCRC} from "../../../src/tracker/packets/Messages";
-import {MissionPojo} from "../../../src/db/models/Mission";
+import {IMissionPojo} from "../../../src/db/models/Mission";
 import {handleMissionListRequest} from "../../../src/tracker/handlers/FilesHandler";
 import {MissionListRequest} from "../../../src/tracker/packets/Messages";
 import {MissionListReply} from "../../../src/tracker/packets/Messages";
@@ -16,8 +16,8 @@ describe("FilesHandler", () => {
     let context: TestContext;
     beforeEach(() => {
         return getHandlerContext().then(ctx => {
-            context = ctx;
-            let data: TablePojo[] = [
+            context                = ctx;
+            let data: ITablePojo[] = [
                 {
                     Filename: "weapons.tbl",
                     CRC32: 20
@@ -34,7 +34,7 @@ describe("FilesHandler", () => {
 
             return Promise.all(data.map(tbl => ctx.Database.Models.Table.create(tbl)));
         }).then(() => {
-            let data: MissionPojo[] = [
+            let data: IMissionPojo[] = [
                 {
                     Filename: "test1.fs2",
                     CRC32: 5

@@ -6,7 +6,7 @@ import * as assert from "assert";
 import * as Promise from "bluebird";
 import {DuplicateLoginReply} from "../../../src/tracker/packets/Messages";
 import {IUserInstance} from "../../../src/db/models/User";
-import {OnlineUserPojo} from "../../../src/db/models/OnlineUser";
+import {IOnlineUserPojo} from "../../../src/db/models/OnlineUser";
 import {handleLoginMessage} from "../../../src/tracker/handlers/LoginHandler";
 import {LoginMessage} from "../../../src/tracker/packets/Messages";
 import {LoginReply} from "../../../src/tracker/packets/Messages";
@@ -147,7 +147,7 @@ describe("LoginHandler", () => {
         });
 
         it("should identify a duplicate login as invalid", () => {
-            let data: OnlineUserPojo[] = [
+            let data: IOnlineUserPojo[] = [
                 {
                     SessionId: 42,
                 },

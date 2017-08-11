@@ -1,21 +1,24 @@
 import {DataTypes} from "sequelize";
 import {Sequelize} from "sequelize";
 import sequelize = require("sequelize");
-import {HasId} from "./index";
+import {IHasId} from "./index";
 
-export interface IpBanPojo extends HasId {
+export interface IpBanPojo extends IHasId {
     IpMask?: string;
     Expiration?: Date;
     Comment?: string;
 }
+
 export interface IpBanInstance extends sequelize.Instance<IpBanPojo>, IpBanPojo {
 }
+
 export interface IpBanModel extends sequelize.Model<IpBanInstance, IpBanPojo> {
 }
-export function defineIpBan(sequelize: Sequelize, DataTypes: DataTypes): IpBanModel {
-    return sequelize.define<IpBanInstance, IpBanPojo>("IpBan", {
-        "IpMask": DataTypes.STRING,
-        "Expiration": DataTypes.DATE,
-        "Comment": DataTypes.TEXT,
+
+export function defineIpBan(sequ: Sequelize, types: DataTypes): IpBanModel {
+    return sequ.define<IpBanInstance, IpBanPojo>("IpBan", {
+        IpMask:     types.STRING,
+        Expiration: types.DATE,
+        Comment:    types.TEXT,
     });
 }

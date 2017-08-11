@@ -6,17 +6,17 @@ import {Options} from "sequelize";
 import {Sequelize} from "sequelize";
 import * as winston from "winston";
 import {defineModels} from "./models/index";
-import {Models} from "./models/index";
+import {IModels} from "./models/index";
 import {IpBanInstance} from "./models/IpBan";
-import {MissionInstance} from "./models/Mission";
-import {OnlineUserPojo} from "./models/OnlineUser";
-import {OnlineUserInstance} from "./models/OnlineUser";
-import {PilotInstance} from "./models/Pilot";
-import {PilotPojo} from "./models/Pilot";
+import {IMissionInstance} from "./models/Mission";
+import {IOnlineUserPojo} from "./models/OnlineUser";
+import {IOnlineUserInstance} from "./models/OnlineUser";
+import {IPilotInstance} from "./models/Pilot";
+import {IPilotPojo} from "./models/Pilot";
 import {ADMIN_ROLE} from "./models/Role";
-import {ServerInstance} from "./models/Server";
-import {ServerPojo} from "./models/Server";
-import {TableInstance} from "./models/Table";
+import {IServerInstance} from "./models/Server";
+import {IServerPojo} from "./models/Server";
+import {ITableInstance} from "./models/Table";
 import {IUserPojo} from "./models/User";
 import {IUserInstance} from "./models/User";
 
@@ -45,10 +45,10 @@ export interface IDatabaseOptions {
 
 export class Database {
     private _sequelize: Sequelize;
-    private _models: Models;
+    private _models: IModels;
     private _options: IDatabaseOptions;
 
-    get Models(): Models {
+    get Models(): IModels {
         return this._models;
     }
 
@@ -102,11 +102,11 @@ export class Database {
                            });
     }
 
-    public createOnlineUser(data: OnlineUserPojo): OnlineUserInstance {
+    public createOnlineUser(data: IOnlineUserPojo): IOnlineUserInstance {
         return this._models.OnlineUser.build(data);
     }
 
-    public getPilot(user: IUserInstance, pilotname: string): Promise<PilotInstance> {
+    public getPilot(user: IUserInstance, pilotname: string): Promise<IPilotInstance> {
         return user.getPilots({
                                   where: {
                                       PilotName: pilotname,
@@ -120,7 +120,7 @@ export class Database {
         });
     }
 
-    public createPilot(values: PilotPojo): PilotInstance {
+    public createPilot(values: IPilotPojo): IPilotInstance {
         return this._models.Pilot.build(values);
     }
 
@@ -128,7 +128,7 @@ export class Database {
         return this._models.OnlineUser.truncate();
     }
 
-    public createServer(values: ServerPojo): ServerInstance {
+    public createServer(values: IServerPojo): IServerInstance {
         return this._models.Server.build(values);
     }
 
@@ -136,11 +136,11 @@ export class Database {
         return this._models.Server.truncate();
     }
 
-    public getTables(): Promise<TableInstance[]> {
+    public getTables(): Promise<ITableInstance[]> {
         return this._models.Table.findAll();
     }
 
-    public getMissions(): Promise<MissionInstance[]> {
+    public getMissions(): Promise<IMissionInstance[]> {
         return this._models.Mission.findAll();
     }
 

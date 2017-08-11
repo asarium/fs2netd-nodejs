@@ -1,9 +1,9 @@
-
 import {DataTypes} from "sequelize";
 import {Sequelize} from "sequelize";
-import sequelize = require("sequelize");
-import {HasId} from "./index";
-export interface ServerPojo extends HasId {
+import * as sequelize from "sequelize";
+import {IHasId} from "./index";
+
+export interface IServerPojo extends IHasId {
     Name?: string;
     MissionName?: string;
     Title?: string;
@@ -31,37 +31,39 @@ export interface ServerPojo extends HasId {
     Port?: number;
 
 }
-export interface ServerInstance extends sequelize.Instance<ServerPojo>, ServerPojo {
+
+export interface IServerInstance extends sequelize.Instance<IServerPojo>, IServerPojo {
 }
-export interface ServerModel extends sequelize.Model<ServerInstance, ServerPojo> {
+
+export interface IServerModel extends sequelize.Model<IServerInstance, IServerPojo> {
 }
 
-export function defineServer(sequelize: Sequelize, DataTypes: DataTypes): ServerModel {
-    return sequelize.define<ServerInstance, ServerPojo>("Server", {
-        "Name": DataTypes.STRING,
-        "MissionName": DataTypes.STRING,
-        "Title": DataTypes.STRING,
+export function defineServer(sequ: Sequelize, types: DataTypes): IServerModel {
+    return sequ.define<IServerInstance, IServerPojo>("Server", {
+        Name:        types.STRING,
+        MissionName: types.STRING,
+        Title:       types.STRING,
 
-        "CampaignName": DataTypes.STRING,
-        "CampaignMode": DataTypes.INTEGER,
+        CampaignName: types.STRING,
+        CampaignMode: types.INTEGER,
 
-        "Flags": DataTypes.INTEGER,
-        "TypeFlags": DataTypes.INTEGER,
+        Flags:     types.INTEGER,
+        TypeFlags: types.INTEGER,
 
-        "NumPlayers": DataTypes.INTEGER,
-        "MaxPlayers": DataTypes.INTEGER,
+        NumPlayers: types.INTEGER,
+        MaxPlayers: types.INTEGER,
 
-        "Mode": DataTypes.INTEGER,
+        Mode: types.INTEGER,
 
-        "RankBase": DataTypes.INTEGER,
+        RankBase: types.INTEGER,
 
-        "GameState": DataTypes.INTEGER,
+        GameState: types.INTEGER,
 
-        "ConnectionSpeed": DataTypes.INTEGER,
+        ConnectionSpeed: types.INTEGER,
 
-        "TrackerChannel": DataTypes.STRING,
+        TrackerChannel: types.STRING,
 
-        "Ip": DataTypes.STRING,
-        "Port": DataTypes.INTEGER,
+        Ip:   types.STRING,
+        Port: types.INTEGER,
     });
 }

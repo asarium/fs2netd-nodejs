@@ -1,40 +1,40 @@
-import {defineTable} from "./Table";
 import {definePilot} from "./Pilot";
+import {defineTable} from "./Table";
 
-import {Sequelize} from "sequelize";
-import {IpBanModel} from "./IpBan";
-import {MissionModel} from "./Mission";
-import {TableModel} from "./Table";
-import {ServerModel} from "./Server";
-import {PilotModel} from "./Pilot";
-import {IUserModel} from "./User";
-import {OnlineUserModel} from "./OnlineUser";
 import sequelize = require("sequelize");
+import {Sequelize} from "sequelize";
 import {defineIpBan} from "./IpBan";
-import {defineOnlineUser} from "./OnlineUser";
+import {IpBanModel} from "./IpBan";
 import {defineMission} from "./Mission";
-import {defineServer} from "./Server";
-import {defineUser} from "./User";
-import {RoleModel} from "./Role";
+import {IMissionModel} from "./Mission";
+import {IOnlineUserModel} from "./OnlineUser";
+import {defineOnlineUser} from "./OnlineUser";
+import {IPilotModel} from "./Pilot";
+import {IRoleModel} from "./Role";
 import {defineRole} from "./Role";
+import {IServerModel} from "./Server";
+import {defineServer} from "./Server";
+import {ITableModel} from "./Table";
+import {IUserModel} from "./User";
+import {defineUser} from "./User";
 
-export interface HasId {
+export interface IHasId {
     id?: number;
 }
 
-export interface Models {
-    OnlineUser: OnlineUserModel,
-    User: IUserModel,
-    Pilot: PilotModel,
-    Server: ServerModel,
-    Table: TableModel,
-    Mission: MissionModel,
-    IpBan: IpBanModel,
-    Role: RoleModel,
+export interface IModels {
+    OnlineUser: IOnlineUserModel;
+    User: IUserModel;
+    Pilot: IPilotModel;
+    Server: IServerModel;
+    Table: ITableModel;
+    Mission: IMissionModel;
+    IpBan: IpBanModel;
+    Role: IRoleModel;
 }
 
-export function defineModels(sequ: Sequelize): Models {
-    let models: Models = {
+export function defineModels(sequ: Sequelize): IModels {
+    const models: IModels = {
         OnlineUser: defineOnlineUser(sequ, sequelize),
         User: defineUser(sequ, sequelize),
         Pilot: definePilot(sequ, sequelize),
