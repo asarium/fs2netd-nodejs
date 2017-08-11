@@ -1,84 +1,82 @@
-import {GameServer} from "../GameServer";
-import {Database} from "../../db/Database";
-import {Message} from "../packets/Messages";
-import {LoginMessage} from "../packets/Messages";
-import {handleLoginMessage} from "./LoginHandler";
 
 import * as Promise from "bluebird";
-import {UnknownMessageError} from "../Exceptions";
-import {handleGetPilotMessage} from "./PilotHandler";
-import {GetPilotMessage} from "../packets/Messages";
-import {ValidSessionIDRequest} from "../packets/Messages";
-import {handleValidSessionIDRequest} from "./MinorHandlers";
-import {PingMessage} from "../packets/Messages";
-import {handlePing} from "./MinorHandlers";
-import {PongMessage} from "../packets/Messages";
-import {handlePong} from "./MinorHandlers";
-import {ServerListMessage} from "../packets/Messages";
-import {handleServerListMessage} from "./ServerListHandler";
 import {LoggerInstance} from "winston";
-import {TableRequestMessage} from "../packets/Messages";
-import {handleTableValidation} from "./FilesHandler";
-import {MissionListRequest} from "../packets/Messages";
-import {handleMissionListRequest} from "./FilesHandler";
-import {IpBanListRequest} from "../packets/Messages";
-import {handleIpBanListRequest} from "./MinorHandlers";
-import {ServerStartMessage} from "../packets/Messages";
-import {ServerUpdateMessage} from "../packets/Messages";
-import {ServerDisconnectMessage} from "../packets/Messages";
-import {handleServerStartMessage} from "./ServerListHandler";
-import {handleServerDisconnectMessage} from "./ServerListHandler";
-import {handleServerUpdateMessage} from "./ServerListHandler";
-import {DuplicateLoginRequest} from "../packets/Messages";
-import {handleDuplicateLoginMessage} from "./LoginHandler";
-import {UpdatePilotMessage} from "../packets/Messages";
-import {handleUpdatePilotMessage} from "./PilotHandler";
-import {ChannelCountRequest} from "../packets/Messages";
-import {handleChannelCountRequest} from "./ServerListHandler";
+import {Database} from "../../db/Database";
+import {UnknownMessageError} from "../Exceptions";
 import {IGameClient} from "../GameClient";
 import {IGameServer} from "../GameServer";
+import {Message} from "../packets/Messages";
+import {LoginMessage} from "../packets/Messages";
+import {ServerUpdateMessage} from "../packets/Messages";
+import {TableRequestMessage} from "../packets/Messages";
+import {ServerStartMessage} from "../packets/Messages";
+import {PongMessage} from "../packets/Messages";
+import {UpdatePilotMessage} from "../packets/Messages";
+import {ServerListMessage} from "../packets/Messages";
+import {DuplicateLoginRequest} from "../packets/Messages";
+import {ValidSessionIDRequest} from "../packets/Messages";
+import {ChannelCountRequest} from "../packets/Messages";
+import {MissionListRequest} from "../packets/Messages";
+import {GetPilotMessage} from "../packets/Messages";
+import {IpBanListRequest} from "../packets/Messages";
+import {ServerDisconnectMessage} from "../packets/Messages";
+import {PingMessage} from "../packets/Messages";
+import {handleTableValidation} from "./FilesHandler";
+import {handleMissionListRequest} from "./FilesHandler";
+import {handleLoginMessage} from "./LoginHandler";
+import {handleDuplicateLoginMessage} from "./LoginHandler";
+import {handlePong} from "./MinorHandlers";
+import {handlePing} from "./MinorHandlers";
+import {handleIpBanListRequest} from "./MinorHandlers";
+import {handleValidSessionIDRequest} from "./MinorHandlers";
+import {handleUpdatePilotMessage} from "./PilotHandler";
+import {handleGetPilotMessage} from "./PilotHandler";
+import {handleServerListMessage} from "./ServerListHandler";
+import {handleServerUpdateMessage} from "./ServerListHandler";
+import {handleServerStartMessage} from "./ServerListHandler";
+import {handleServerDisconnectMessage} from "./ServerListHandler";
+import {handleChannelCountRequest} from "./ServerListHandler";
 
-export interface HandlerContext {
+export interface IHandlerContext {
     Server: IGameServer;
     Database: Database;
     Client: IGameClient;
     Logger: LoggerInstance;
 }
 
-export interface MessageHandlerCallback { (message: Message, context: HandlerContext): Promise<void>
+export type IMessageHandlerCallback = (message: Message, context: IHandlerContext) => Promise<void>;
+
+interface IHandlerDefinition {
+    MessageType: any;
+    Handler: IMessageHandlerCallback;
 }
 
-interface HandlerDefinition {
-    MessageType;
-    Handler: MessageHandlerCallback;
-}
+const handlers: IHandlerDefinition[] = [
+    {MessageType: typeof(LoginMessage), Handler: handleLoginMessage},
+    {MessageType: typeof(DuplicateLoginRequest), Handler: handleDuplicateLoginMessage},
 
-let handlers: HandlerDefinition[] = [
-    {MessageType: LoginMessage, Handler: handleLoginMessage},
-    {MessageType: DuplicateLoginRequest, Handler: handleDuplicateLoginMessage},
+    {MessageType: typeof(GetPilotMessage), Handler: handleGetPilotMessage},
+    {MessageType: typeof(UpdatePilotMessage), Handler: handleUpdatePilotMessage},
 
-    {MessageType: GetPilotMessage, Handler: handleGetPilotMessage},
-    {MessageType: UpdatePilotMessage, Handler: handleUpdatePilotMessage},
+    {MessageType: typeof(ValidSessionIDRequest), Handler: handleValidSessionIDRequest},
 
-    {MessageType: ValidSessionIDRequest, Handler: handleValidSessionIDRequest},
+    {MessageType: typeof(PingMessage), Handler: handlePing},
+    {MessageType: typeof(PongMessage), Handler: handlePong},
 
-    {MessageType: PingMessage, Handler: handlePing},
-    {MessageType: PongMessage, Handler: handlePong},
+    {MessageType: typeof(TableRequestMessage), Handler: handleTableValidation},
+    {MessageType: typeof(MissionListRequest), Handler: handleMissionListRequest},
 
-    {MessageType: TableRequestMessage, Handler: handleTableValidation},
-    {MessageType: MissionListRequest, Handler: handleMissionListRequest},
+    {MessageType: typeof(IpBanListRequest), Handler: handleIpBanListRequest},
 
-    {MessageType: IpBanListRequest, Handler: handleIpBanListRequest},
-
-    {MessageType: ServerListMessage, Handler: handleServerListMessage},
-    {MessageType: ServerStartMessage, Handler: handleServerStartMessage},
-    {MessageType: ServerUpdateMessage, Handler: handleServerUpdateMessage},
-    {MessageType: ServerDisconnectMessage, Handler: handleServerDisconnectMessage},
-    {MessageType: ChannelCountRequest, Handler: handleChannelCountRequest},
+    {MessageType: typeof(ServerListMessage), Handler: handleServerListMessage},
+    {MessageType: typeof(ServerStartMessage), Handler: handleServerStartMessage},
+    {MessageType: typeof(ServerUpdateMessage), Handler: handleServerUpdateMessage},
+    {MessageType: typeof(ServerDisconnectMessage), Handler: handleServerDisconnectMessage},
+    {MessageType: typeof(ChannelCountRequest), Handler: handleChannelCountRequest},
 ];
 
-export function handleMessage(msg: Message, context: HandlerContext): Promise<void> {
-    for (let def of handlers) {
+export function handleMessage(msg: Message, context: IHandlerContext): Promise<void> {
+    for (const def of handlers) {
         if (msg instanceof def.MessageType) {
             return def.Handler(msg, context) || Promise.resolve();
         }

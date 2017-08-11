@@ -1,4 +1,4 @@
-import {HandlerContext} from "../../../src/tracker/handlers/Handlers";
+import {IHandlerContext} from "../../../src/tracker/handlers/Handlers";
 import {TestContext} from "./TestHandlers";
 import {getHandlerContext} from "./TestHandlers";
 import {handleValidSessionIDRequest} from "../../../src/tracker/handlers/MinorHandlers";

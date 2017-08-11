@@ -7,7 +7,7 @@ import {MissionModel} from "./Mission";
 import {TableModel} from "./Table";
 import {ServerModel} from "./Server";
 import {PilotModel} from "./Pilot";
-import {UserModel} from "./User";
+import {IUserModel} from "./User";
 import {OnlineUserModel} from "./OnlineUser";
 import sequelize = require("sequelize");
 import {defineIpBan} from "./IpBan";
@@ -24,7 +24,7 @@ export interface HasId {
 
 export interface Models {
     OnlineUser: OnlineUserModel,
-    User: UserModel,
+    User: IUserModel,
     Pilot: PilotModel,
     Server: ServerModel,
     Table: TableModel,

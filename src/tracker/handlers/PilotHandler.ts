@@ -1,13 +1,13 @@
-import {HandlerContext} from "./Handlers";
+import * as Promise from "bluebird";
 import {Message} from "../packets/Messages";
 import {PilotReply} from "../packets/Messages";
-import {GameClient} from "../GameClient";
 import {GetPilotMessage} from "../packets/Messages";
 import {UpdatePilotMessage} from "../packets/Messages";
 import {PilotUpdateReply} from "../packets/Messages";
+import {IHandlerContext} from "./Handlers";
 
-export function handleGetPilotMessage(message: Message, context: HandlerContext): Promise<void> {
-    let msg = <GetPilotMessage>message;
+export function handleGetPilotMessage(message: Message, context: IHandlerContext): Promise<void> {
+    const msg = message as GetPilotMessage;
 
     context.Logger.info("Client has requested pilot data");
 
@@ -15,7 +15,7 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
     let sessId = msg.SessionId;
 
     // -2 means we are looking for another player
-    if (sessId == -2) {
+    if (sessId === -2) {
         client = context.Server.getClientFromPilot(msg.Pilotname);
 
         if (client != null) {
@@ -35,17 +35,17 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
         client.Session.ActivePilot = msg.Pilotname;
     }
 
-    return context.Database.getPilot(client.User, msg.Pilotname).then(pilot => {
+    return context.Database.getPilot(client.User, msg.Pilotname).then((pilot) => {
         if (pilot) {
             return context.Client.sendToClient(new PilotReply(0, pilot));
         } else if (msg.CreatePilot) {
-            let pilot = context.Database.createPilot({
-                                                         PilotName: msg.Pilotname
+            const dbPilot = context.Database.createPilot({
+                                                         PilotName: msg.Pilotname,
                                                      });
 
-            return pilot.save().then(_ => {
-                return pilot.setUser(client.User);
-            }).then(_ => {
+            return dbPilot.save().then(() => {
+                return dbPilot.setUser(client.User);
+            }).then(() => {
                 return context.Client.sendToClient(new PilotReply(1));
             });
         } else {
@@ -53,16 +53,16 @@ export function handleGetPilotMessage(message: Message, context: HandlerContext)
             // This probably can't happen but a status of 5 should signify an error for FSO
             return context.Client.sendToClient(new PilotReply(5));
         }
-    }).catch(err => {
+    }).catch((err) => {
         context.Logger.error("Error while retrieving pilot!", err);
         return context.Client.sendToClient(new PilotReply(4));
     });
 }
 
-export function handleUpdatePilotMessage(message: Message, context: HandlerContext): Promise<void> {
+export function handleUpdatePilotMessage(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Client wants to update pilot data");
 
-    let msg = <UpdatePilotMessage>message;
+    const msg = message as UpdatePilotMessage;
 
     if (!context.Client.Session.isValid(msg.SessionId)) {
         return context.Client.sendToClient(new PilotUpdateReply(2)); // Session not valid
@@ -73,7 +73,7 @@ export function handleUpdatePilotMessage(message: Message, context: HandlerConte
     }
 
     // The original fs2netd uses the user name from the message but that seems like a bad idea...
-    return context.Database.getPilot(context.Client.User, msg.PilotData.PilotName).then(pilot => {
+    return context.Database.getPilot(context.Client.User, msg.PilotData.PilotName).then((pilot) => {
         if (!pilot) {
             return context.Client.sendToClient(new PilotUpdateReply(1)); // No such pilot
         }

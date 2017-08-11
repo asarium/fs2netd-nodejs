@@ -1,18 +1,18 @@
 import {RequestHandler} from "express";
 import * as passport from "passport";
-import {HandlerContext} from "../../../tracker/handlers/Handlers";
-import {RouterContext} from "../../WebInterface";
+import {IHandlerContext} from "../../../tracker/handlers/Handlers";
+import {IRouterContext} from "../../WebInterface";
 
 export function authenticate(): RequestHandler {
-    return passport.authenticate('jwt', {session: false});
+    return passport.authenticate("jwt", {session: false});
 }
 
 export function checkUserRole(validRoles: string[]): RequestHandler {
     return (req, res, next) => {
-        return req.user.getRoles().then(roles => {
+        return req.user.getRoles().then((roles) => {
             let result = false;
-            for (let role of roles) {
-                for (let valid of validRoles) {
+            for (const role of roles) {
+                for (const valid of validRoles) {
                     if (role.Name === valid) {
                         result = true;
                         break;
@@ -26,9 +26,9 @@ export function checkUserRole(validRoles: string[]): RequestHandler {
             }
 
             res.status(403).json({
-                                     err: "Insufficient user rights"
+                                     err: "Insufficient user rights",
                                  });
             return null;
         });
-    }
+    };
 }

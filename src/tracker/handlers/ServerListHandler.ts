@@ -1,5 +1,5 @@
 import {Message} from "../packets/Messages";
-import {HandlerContext} from "./Handlers";
+import {IHandlerContext} from "./Handlers";
 import {ServerListMessage} from "../packets/Messages";
 import {ServerListReply} from "../packets/Messages";
 import {ServerStartMessage} from "../packets/Messages";
@@ -10,7 +10,7 @@ import {ChannelCountRequest} from "../packets/Messages";
 import {ChannelCountReply} from "../packets/Messages";
 import {ServerPojo} from "../../db/models/Server";
 
-export function handleServerListMessage(message: Message, context: HandlerContext): Promise<void> {
+export function handleServerListMessage(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Client has requested the server list");
 
     let msg = <ServerListMessage>message;
@@ -31,7 +31,7 @@ export function handleServerListMessage(message: Message, context: HandlerContex
     });
 }
 
-export function handleServerStartMessage(message: Message, context: HandlerContext): Promise<void> {
+export function handleServerStartMessage(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Client has started a server.");
 
     let msg = <ServerStartMessage>message;
@@ -65,7 +65,7 @@ export function handleServerStartMessage(message: Message, context: HandlerConte
     });
 }
 
-export function handleServerUpdateMessage(message: Message, context: HandlerContext): Promise<void> {
+export function handleServerUpdateMessage(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Updating server.");
     let msg = <ServerUpdateMessage>message;
 
@@ -88,7 +88,7 @@ export function handleServerUpdateMessage(message: Message, context: HandlerCont
     });
 }
 
-export function handleServerDisconnectMessage(message: Message, context: HandlerContext): Promise<void> {
+export function handleServerDisconnectMessage(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Removing server.");
 
     let server = context.Server.ServerList.getServer(context.Client.RemoteAddress, context.Client.RemotePort);
@@ -99,7 +99,7 @@ export function handleServerDisconnectMessage(message: Message, context: Handler
     });
 }
 
-export function handleChannelCountRequest(message: Message, context: HandlerContext): Promise<void> {
+export function handleChannelCountRequest(message: Message, context: IHandlerContext): Promise<void> {
     context.Logger.info("Client requesting channel count.");
 
     let msg = <ChannelCountRequest>message;

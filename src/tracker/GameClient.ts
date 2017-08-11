@@ -25,7 +25,7 @@ import {UnknownMessageError} from "./Exceptions";
 import {PingMessage} from "./packets/Messages";
 import {getTimeMilliseconds} from "./Utils";
 import {LoggerInstance} from "winston";
-import {UserInstance} from "../db/models/User";
+import {IUserInstance} from "../db/models/User";
 import {OnlineUserInstance} from "../db/models/OnlineUser";
 import {OnlineUserPojo} from "../db/models/OnlineUser";
 
@@ -36,7 +36,7 @@ export interface IGameClient {
     RemoteAddress: string;
     RemotePort: number;
     Authenticated: boolean;
-    User: UserInstance;
+    User: IUserInstance;
     Session: Session;
     OnlineUser: OnlineUserInstance;
     LastPing: number;
@@ -57,7 +57,7 @@ export class GameClient implements IGameClient {
     private _remotePort: number;
 
     private _session: Session;
-    private _user: UserInstance;
+    private _user: IUserInstance;
     private _onlineUser: OnlineUserInstance;
 
     private _lastPing: number;
@@ -110,11 +110,11 @@ export class GameClient implements IGameClient {
         return this._onDisconnected;
     }
 
-    get User(): UserInstance {
+    get User(): IUserInstance {
         return this._user;
     }
 
-    set User(value: UserInstance) {
+    set User(value: IUserInstance) {
         this._user = value;
     }
 

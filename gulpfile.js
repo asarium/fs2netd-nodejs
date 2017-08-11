@@ -1,27 +1,29 @@
 "use strict";
 
-var gulp = require('gulp');
-var ts = require('gulp-typescript');
-var mocha = require('gulp-mocha');
-var gulpTypings = require("gulp-typings");
+const gulp = require('gulp');
+const ts = require('gulp-typescript');
+const mocha = require('gulp-mocha');
 
+const tslint = require("gulp-tslint");
 
-gulp.task('typings', function () {
-    return gulp.src("./typings.json").pipe(gulpTypings());
-});
-
-var tsProject = ts.createProject('tsconfig.json');
-gulp.task('tsc', ["typings"], function () {
-    var tsResult = tsProject.src().pipe(ts(tsProject));
+const tsProject = ts.createProject('tsconfig.json');
+gulp.task('tsc', () => {
+    const tsResult = tsProject.src().pipe(tsProject());
 
     return tsResult.js.pipe(gulp.dest('build'));
 });
 
-gulp.task("tests", ["tsc"], function () {
+gulp.task("tslint", () =>
+    tsProject.src().pipe(tslint({
+        formatter: "verbose"
+    })).pipe(tslint.report())
+);
+
+gulp.task("test", ["tsc"], () => {
     return gulp.src('build/test/**/*.js', {read: false}).pipe(mocha());
 });
 
-gulp.task("deploy", ["tsc"], function () {
+gulp.task("deploy", ["tsc"], () => {
     return [
         gulp.src("build/src/**/*.js").pipe(gulp.dest("deploy/src")),
         gulp.src("config/**/*").pipe(gulp.dest("deploy/config")),
@@ -29,3 +31,5 @@ gulp.task("deploy", ["tsc"], function () {
         gulp.src("node_modules/**/*").pipe(gulp.dest("deploy/node_modules"))
     ];
 });
+
+gulp.task("default", ["tsc", "test", "deploy"]);

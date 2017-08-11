@@ -1,14 +1,14 @@
-import {RouterContext} from "../../../../src/app/WebInterface";
+import {IRouterContext} from "../../../../src/app/WebInterface";
 import {initializeTestWeb} from "../../TestWebInterface";
 
 import * as supertest from "supertest";
 import * as assert from "assert";
 
 describe("REST API: /authenticate", () => {
-    let context: RouterContext;
+    let context: IRouterContext;
     beforeEach(() => {
-        return initializeTestWeb().then(test_ctx=> {
-            context = test_ctx;
+        return initializeTestWeb().then((testCtx) => {
+            context = testCtx;
         });
     });
 
@@ -16,7 +16,7 @@ describe("REST API: /authenticate", () => {
         it("should authorize a valid login", (done) => {
             supertest.agent(context.WebInterface.App).post("/api/v1/authenticate").send({
                                                                                             name:     "test_user",
-                                                                                            password: "test"
+                                                                                            password: "test",
                                                                                         })
                      .expect("Content-type", /json/).expect(200).end((err, res) => {
                 if (err) {
@@ -32,7 +32,7 @@ describe("REST API: /authenticate", () => {
         it("should not authorize an invalid login", (done) => {
             supertest.agent(context.WebInterface.App).post("/api/v1/authenticate").send({
                                                                                             name:     "test_user",
-                                                                                            password: "nottest"
+                                                                                            password: "nottest",
                                                                                         })
                      .expect("Content-type", /json/).expect(401).end((err, res) => {
                 if (err) {

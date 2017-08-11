@@ -1,6 +1,6 @@
 
 import sequelize = require("sequelize");
-import {UserInstance} from "./User";
+import {IUserInstance} from "./User";
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 export interface PilotPojo {
@@ -31,7 +31,7 @@ export interface PilotPojo {
     MedalsPacked?: string;
 }
 export interface PilotInstance extends sequelize.Instance<PilotPojo>, PilotPojo {
-    getUser:() => Promise<UserInstance>
+    getUser:() => Promise<IUserInstance>
     setUser:(UserInstance) => Promise<void>
 }
 export interface PilotModel extends sequelize.Model<PilotInstance, PilotPojo> {

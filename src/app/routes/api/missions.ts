@@ -1,4 +1,4 @@
-import {RouterContext} from "../../WebInterface";
+import {IRouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {authenticate} from "./authentication";
 import {MissionPojo} from "../../../db/models/Mission";
@@ -18,7 +18,7 @@ const MISSION_TEMPLATE = {
     id:           paperwork.optional(Number),
 };
 
-export = function (context: RouterContext): Router {
+export = function (context: IRouterContext): Router {
     let router = promiseRouter();
 
     router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {

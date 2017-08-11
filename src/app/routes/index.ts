@@ -4,10 +4,10 @@ import * as path from "path";
 
 import api = require("./api");
 import content = require("./content");
-import {RouterContext} from "../WebInterface";
+import {IRouterContext} from "../WebInterface";
 import {Router} from "express";
 
-export = function(context: RouterContext): Router {
+export = function(context: IRouterContext): Router {
     let router = express.Router();
 
     router.use("/api/v1", api(context));

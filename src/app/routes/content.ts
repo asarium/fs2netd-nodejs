@@ -1,10 +1,10 @@
 
 import * as express from "express";
 import * as path from "path";
-import {RouterContext} from "../WebInterface";
+import {IRouterContext} from "../WebInterface";
 import {Router} from "express";
 
-export = function(context: RouterContext): Router {
+export = function(context: IRouterContext): Router {
     let router = express.Router();
 
     router.get("/", (req, res, next) => {

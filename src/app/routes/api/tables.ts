@@ -1,8 +1,8 @@
 import * as express from "express";
-import {RouterContext} from "../../WebInterface";
+import {IRouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {authenticate} from "./authentication";
-import {UserInstance} from "../../../db/models/User";
+import {IUserInstance} from "../../../db/models/User";
 import {TablePojo} from "../../../db/models/Table";
 import {RequestHandler} from "express";
 import {ADMIN_ROLE} from "../../../db/models/Role";
@@ -10,7 +10,7 @@ import {checkUserRole} from "./authentication";
 
 let promiseRouter = require("express-promise-router");
 
-export = function (context: RouterContext): Router {
+export = function (context: IRouterContext): Router {
     let router = promiseRouter();
 
     router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {

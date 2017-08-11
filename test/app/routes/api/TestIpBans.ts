@@ -1,4 +1,4 @@
-import {RouterContext} from "../../../../src/app/WebInterface";
+import {IRouterContext} from "../../../../src/app/WebInterface";
 import {initializeTestWeb} from "../../TestWebInterface";
 
 import * as supertest from "supertest";

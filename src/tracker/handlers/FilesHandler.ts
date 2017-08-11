@@ -1,13 +1,14 @@
-import {HandlerContext} from "./Handlers";
+
+import * as Promise from "bluebird";
 import {Message} from "../packets/Messages";
 import {TableRequestMessage} from "../packets/Messages";
 import {TablesReply} from "../packets/Messages";
-import {MissionListRequest} from "../packets/Messages";
 import {NameCRC} from "../packets/Messages";
 import {MissionListReply} from "../packets/Messages";
+import {IHandlerContext} from "./Handlers";
 
-export function handleTableValidation(message: Message, context: HandlerContext): Promise<void> {
-    let msg = <TableRequestMessage>message;
+export function handleTableValidation(message: Message, context: IHandlerContext): Promise<void> {
+    const msg = message as TableRequestMessage;
 
     context.Logger.info("Validating client tables");
 
@@ -15,15 +16,15 @@ export function handleTableValidation(message: Message, context: HandlerContext)
         return context.Client.sendToClient(new TablesReply([]));
     }
 
-    return context.Database.getTables().then(tables => {
-        let result: boolean[] = [];
+    return context.Database.getTables().then((tables) => {
+        const result: boolean[] = [];
 
         // Ugh! O(n^2) is not good but there will never be too many tables anyway so it doesn't matter
-        for (let clientCRC of msg.CRCs) {
+        for (const clientCRC of msg.CRCs) {
             let found = false;
-            for (let table of tables) {
+            for (const table of tables) {
                 if (table.Filename.toUpperCase() === clientCRC.Name.toUpperCase()) {
-                    result.push(table.CRC32 == clientCRC.CRC32);
+                    result.push(table.CRC32 === clientCRC.CRC32);
                     found = true;
                     break;
                 }
@@ -38,11 +39,11 @@ export function handleTableValidation(message: Message, context: HandlerContext)
     });
 }
 
-export function handleMissionListRequest(message: Message, context: HandlerContext): Promise<void> {
-    return context.Database.getMissions().then(missions => {
-        let crcs: NameCRC[] = [];
+export function handleMissionListRequest(message: Message, context: IHandlerContext): Promise<void> {
+    return context.Database.getMissions().then((missions) => {
+        const crcs: NameCRC[] = [];
 
-        for (let mission of missions) {
+        for (const mission of missions) {
             crcs.push({
                 Name: mission.Filename,
                 CRC32: mission.CRC32,

@@ -2,7 +2,7 @@
 import * as sequelize from "sequelize";
 import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
-import {UserInstance} from "./User";
+import {IUserInstance} from "./User";
 
 export interface OnlineUserPojo {
     ClientIp?: string;
@@ -11,7 +11,7 @@ export interface OnlineUserPojo {
     SessionId?: number;
 }
 export interface OnlineUserInstance extends sequelize.Instance<OnlineUserPojo>, OnlineUserPojo {
-    getUser:() => Promise<UserInstance>
+    getUser:() => Promise<IUserInstance>
     setUser:(UserInstance) => Promise<void>
 }
 export interface OnlineUserModel extends sequelize.Model<OnlineUserInstance, OnlineUserPojo> {

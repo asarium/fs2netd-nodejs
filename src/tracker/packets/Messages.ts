@@ -1,10 +1,11 @@
-import {Identifiers} from "./PacketIdentifiers";
-import {parsePackedString} from "./../Utils";
+"use strict";
+
 import {PilotPojo} from "../../db/models/Pilot";
 import {PilotInstance} from "../../db/models/Pilot";
 import {ServerInstance} from "../../db/models/Server";
 import {ServerPojo} from "../../db/models/Server";
-'use strict';
+import {parsePackedString} from "./../Utils";
+import {Identifiers} from "./PacketIdentifiers";
 
 export abstract class Message {
     private _id: number;
@@ -47,7 +48,6 @@ export class DuplicateLoginRequest extends Message {
     private _sid: number;
     private _ids: number[];
 
-
     constructor(sid: number, ids: number[]) {
         super(Identifiers.PCKT_DUP_LOGIN_RQST);
         this._sid = sid;
@@ -74,7 +74,6 @@ export class GetPilotMessage extends Message {
         this._pilotname = pilotname;
         this._create = create;
     }
-
 
     get SessionId(): number {
         return this._sessionId;
@@ -141,39 +140,39 @@ class BufferWriter {
         this._buffer = new Buffer(BufferWriter.DEFAULT_BUFFER_SIZE);
     }
 
-    finalize(): Buffer {
+    public finalize(): Buffer {
         // Write the size of the buffer
         this._buffer.writeInt32LE(this._offset, 1);
 
         return this._buffer.slice(0, this._offset);
     }
 
-    writeUInt8(x: number): void {
+    public writeUInt8(x: number): void {
         this._buffer.writeUInt8(x, this._offset);
         this._offset += 1;
     }
 
-    writeInt16(x: number): void {
+    public writeInt16(x: number): void {
         this._buffer.writeInt16LE(x, this._offset);
         this._offset += 2;
     }
 
-    writeUInt16(x: number): void {
+    public writeUInt16(x: number): void {
         this._buffer.writeUInt16LE(x, this._offset);
         this._offset += 2;
     }
 
-    writeInt32(x: number): void {
+    public writeInt32(x: number): void {
         this._buffer.writeInt32LE(x, this._offset);
         this._offset += 4;
     }
 
-    writeUInt32(x: number): void {
+    public writeUInt32(x: number): void {
         this._buffer.writeUInt32LE(x, this._offset);
         this._offset += 4;
     }
 
-    writeString(x: string): void {
+    public writeString(x: string): void {
         // write length
         this.writeInt32(x.length);
         this._offset += this._buffer.write(x, this._offset, x.length, "utf-8");
@@ -211,7 +210,7 @@ export interface NameCRC {
 }
 
 export class TableRequestMessage extends Message {
-    CRCs: NameCRC[];
+    public CRCs: NameCRC[];
 
     constructor(CRCs: NameCRC[]) {
         super(Identifiers.PCKT_TABLES_RQST);
@@ -233,7 +232,7 @@ export class IpBanListRequest extends Message {
 
 export interface ServerProperties {
     name?: string;
-    mission_name?: string
+    mission_name?: string;
     title?: string;
     campaign_name?: string;
     campaign_mode?: number;
@@ -249,7 +248,7 @@ export interface ServerProperties {
 }
 
 export class ServerStartMessage extends Message {
-    Properties: ServerProperties;
+    public Properties: ServerProperties;
 
     constructor(props: ServerProperties) {
         super(Identifiers.PCKT_SERVER_START);
@@ -258,7 +257,7 @@ export class ServerStartMessage extends Message {
 }
 
 export class ServerUpdateMessage extends Message {
-    Properties: ServerProperties;
+    public Properties: ServerProperties;
 
     constructor(props: ServerProperties) {
         super(Identifiers.PCKT_SERVER_START);
@@ -289,7 +288,7 @@ export abstract class ClientMessage extends Message {
     public abstract serialize(): Buffer;
 
     protected createBuffer(): BufferWriter {
-        let writer: BufferWriter = new BufferWriter();
+        const writer: BufferWriter = new BufferWriter();
         writer.writeUInt8(this.Id);
         writer.writeInt32(0); // Dummy field which will be initialized later
 
@@ -301,7 +300,6 @@ export class LoginReply extends ClientMessage {
     private _login_status: boolean;
     private _session_id: number;
     private _num_pilots: number;
-
 
     constructor(login_status: boolean, session_id: number, num_pilots: number) {
         super(Identifiers.PCKT_LOGIN_REPLY);
@@ -322,8 +320,8 @@ export class LoginReply extends ClientMessage {
         return this._num_pilots;
     }
 
-    serialize(): Buffer {
-        var buffer = this.createBuffer();
+    public serialize(): Buffer {
+        const buffer = this.createBuffer();
 
         buffer.writeUInt8(this._login_status ? 1 : 0);
         buffer.writeInt32(this._session_id);
@@ -352,8 +350,8 @@ export class PilotReply extends ClientMessage {
         return this._pilot;
     }
 
-    serialize(): Buffer {
-        var buffer = this.createBuffer();
+    public serialize(): Buffer {
+        const buffer = this.createBuffer();
         buffer.writeUInt8(this._replytype);
 
         if (this._pilot != null) {
@@ -380,16 +378,16 @@ export class PilotReply extends ClientMessage {
 
             buffer.writeInt32(this._pilot.Rank);
 
-            let shipKills = parsePackedString(this._pilot.ShipKillsPacked);
+            const shipKills = parsePackedString(this._pilot.ShipKillsPacked);
             buffer.writeInt16(shipKills.length);
-            for (let entry of shipKills) {
+            for (const entry of shipKills) {
                 buffer.writeString(entry.Name);
                 buffer.writeUInt16(entry.Count);
             }
 
-            let medals = parsePackedString(this._pilot.MedalsPacked);
+            const medals = parsePackedString(this._pilot.MedalsPacked);
             buffer.writeInt16(medals.length);
-            for (let entry of medals) {
+            for (const entry of medals) {
                 buffer.writeUInt16(entry.Count);
             }
         }
@@ -411,7 +409,7 @@ export class ValidSidReply extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
         buffer.writeUInt8(this._valid ? 1 : 0);
 
         return buffer.finalize();
@@ -431,7 +429,7 @@ export class PingMessage extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
         buffer.writeInt32(this._time);
 
         return buffer.finalize();
@@ -451,7 +449,7 @@ export class PongMessage extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
         buffer.writeInt32(this._time);
 
         return buffer.finalize();
@@ -470,11 +468,11 @@ export class ServerListReply extends ClientMessage {
         return this._list;
     }
 
-    serialize(): Buffer {
-        var buffer = this.createBuffer();
+    public serialize(): Buffer {
+        const buffer = this.createBuffer();
 
         buffer.writeUInt16(this._list.length);
-        for (let server of this._list) {
+        for (const server of this._list) {
             buffer.writeInt32(server.Flags);
             buffer.writeUInt16(server.Port);
             buffer.writeString(server.Ip);
@@ -496,11 +494,11 @@ export class TablesReply extends ClientMessage {
         return this._valids;
     }
 
-    serialize(): Buffer {
-        var buffer = this.createBuffer();
+    public serialize(): Buffer {
+        const buffer = this.createBuffer();
 
         buffer.writeUInt16(this._valids.length);
-        for (let valid of this._valids) {
+        for (const valid of this._valids) {
             buffer.writeUInt16(valid ? 1 : 0);
         }
 
@@ -520,11 +518,11 @@ export class MissionListReply extends ClientMessage {
         return this._missionList;
     }
 
-    serialize(): Buffer {
-        var buffer = this.createBuffer();
+    public serialize(): Buffer {
+        const buffer = this.createBuffer();
 
         buffer.writeInt32(this._missionList.length);
-        for (let crc of this._missionList) {
+        for (const crc of this._missionList) {
             buffer.writeString(crc.Name);
             buffer.writeUInt32(crc.CRC32);
         }
@@ -546,10 +544,10 @@ export class IpBanListReply extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
 
         buffer.writeInt32(this._list.length);
-        for (let entry of this._list) {
+        for (const entry of this._list) {
             buffer.writeString(entry);
         }
 
@@ -570,7 +568,7 @@ export class DuplicateLoginReply extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
 
         buffer.writeUInt8(this._invalid ? 1 : 0);
 
@@ -588,7 +586,7 @@ export class PilotUpdateReply extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
 
         buffer.writeUInt8(this._reply);
 
@@ -615,7 +613,7 @@ export class ChannelCountReply extends ClientMessage {
     }
 
     public serialize(): Buffer {
-        var buffer = this.createBuffer();
+        const buffer = this.createBuffer();
 
         buffer.writeString(this._channel);
         buffer.writeInt32(this._count);

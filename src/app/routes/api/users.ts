@@ -1,9 +1,9 @@
 import * as express from "express";
-import {RouterContext} from "../../WebInterface";
+import {IRouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {Authentication} from "../../../util/Authentication";
 import {authenticate} from "./authentication";
-import {UserInstance} from "../../../db/models/User";
+import {IUserInstance} from "../../../db/models/User";
 import {ADMIN_ROLE} from "../../../db/models/Role";
 import {checkUserRole} from "./authentication";
 
@@ -16,7 +16,7 @@ let LOGIN_MODEL = {
     password: String
 };
 
-export = function (context: RouterContext): Router {
+export = function (context: IRouterContext): Router {
     let router = promiseRouter();
 
     router.put("/", paperwork.accept(LOGIN_MODEL), (req, res) => {

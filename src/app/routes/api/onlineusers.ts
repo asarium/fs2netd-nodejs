@@ -1,11 +1,11 @@
 import * as express from "express";
-import {RouterContext} from "../../WebInterface";
+import {IRouterContext} from "../../WebInterface";
 import {Router} from "express";
 import {json} from "sequelize";
 
 let promiseRouter = require("express-promise-router");
 
-export = function (context: RouterContext): Router {
+export = function (context: IRouterContext): Router {
     let router = promiseRouter();
 
     router.get("/", (req, res) => {

@@ -1,11 +1,11 @@
 import {IGameClient} from "../../../src/tracker/GameClient";
 import {ClientMessage} from "../../../src/tracker/packets/Messages";
 import {OnlineUserPojo} from "../../../src/db/models/OnlineUser";
-import {UserInstance} from "../../../src/db/models/User";
+import {IUserInstance} from "../../../src/db/models/User";
 import {Session} from "../../../src/tracker/Session";
 import {OnlineUserInstance} from "../../../src/db/models/OnlineUser";
 import * as Promise from "bluebird";
-import {HandlerContext} from "../../../src/tracker/handlers/Handlers";
+import {IHandlerContext} from "../../../src/tracker/handlers/Handlers";
 import {Database} from "../../../src/db/Database";
 import {initializeTestDatabase} from "../../db/TestDatabase";
 import {IGameServer} from "../../../src/tracker/GameServer";
@@ -29,7 +29,7 @@ export class TestClient implements IGameClient {
     RemoteAddress: string;
     RemotePort: number;
     Authenticated: boolean = false;
-    User: UserInstance;
+    User: IUserInstance;
     Session: Session = new Session(42);
     OnlineUser: OnlineUserInstance = null;
     LastPing: number;
@@ -49,7 +49,7 @@ export class TestServer implements IGameServer {
     ServerList: ServerList;
 }
 
-export interface TestContext extends HandlerContext {
+export interface TestContext extends IHandlerContext {
     Server: TestServer;
     Client: TestClient;
 }

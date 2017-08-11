@@ -5,7 +5,7 @@ import {DuplicateLoginRequest} from "../../../src/tracker/packets/Messages";
 import * as assert from "assert";
 import * as Promise from "bluebird";
 import {DuplicateLoginReply} from "../../../src/tracker/packets/Messages";
-import {UserInstance} from "../../../src/db/models/User";
+import {IUserInstance} from "../../../src/db/models/User";
 import {OnlineUserPojo} from "../../../src/db/models/OnlineUser";
 import {handleLoginMessage} from "../../../src/tracker/handlers/LoginHandler";
 import {LoginMessage} from "../../../src/tracker/packets/Messages";

@@ -1,11 +1,11 @@
 import {WebInterface} from "../../src/app/WebInterface";
-import {RouterContext} from "../../src/app/WebInterface";
+import {IRouterContext} from "../../src/app/WebInterface";
 import {Database} from "../../src/db/Database";
 import {initializeTestDatabase} from "../db/TestDatabase";
 import * as winston from "winston";
 import {ADMIN_ROLE} from "../../src/db/models/Role";
 import * as config from "config";
-import {UserInstance} from "../../src/db/models/User";
+import {IUserInstance} from "../../src/db/models/User";
 
 let jwt = require("jsonwebtoken");
 
@@ -20,9 +20,9 @@ export const USER_JWT = "JWT " + <string>jwt.sign({
                                                       id: 2
                                                   }, config.get<string>("web.jwt.secret"), {});
 
-export interface TestWebContext extends RouterContext {
-    TestAdmin: UserInstance;
-    TestUser: UserInstance;
+export interface TestWebContext extends IRouterContext {
+    TestAdmin: IUserInstance;
+    TestUser: IUserInstance;
 }
 
 export async function initializeTestWeb(): Promise<TestWebContext> {

@@ -1,22 +1,22 @@
 import * as Promise from "bluebird";
 import * as config from "config";
-import * as https from "https";
-import * as http from "http";
-import * as fs from "fs";
 import * as express from "express";
-import routes = require("./routes");
-import * as winston from "winston";
-import {ServerOptions} from "https";
 import {Express} from "express";
+import * as fs from "fs";
+import * as http from "http";
+import * as https from "https";
+import {ServerOptions} from "https";
+import * as winston from "winston";
 import {Database} from "../db/Database";
 import {GameServer} from "../tracker/GameServer";
+import routes = require("./routes");
 
-export interface RouterContext {
+export interface IRouterContext {
     Database: Database;
     WebInterface: WebInterface;
 }
 
-export interface WebOptions {
+export interface IWebOptions {
     logging?: boolean;
 }
 
@@ -24,42 +24,25 @@ export class WebInterface {
     private _server;
     private _db: Database;
     private _app: Express;
-    private _options: WebOptions;
+    private _options: IWebOptions;
 
-    constructor(db: Database, options: WebOptions) {
-        this._db = db;
+    constructor(db: Database, options: IWebOptions) {
+        this._db      = db;
         this._options = options;
-        this._app = this.initializeExpress();
+        this._app     = this.initializeExpress();
     }
 
     get App(): Express {
         return this._app;
     }
 
-    private initializeExpress(): Express {
-        let app = express();
-
-        if (this._options.logging) {
-            app.use(require("morgan")("dev"));
-        }
-
-        let ctx: RouterContext = {
-            Database: this._db,
-            WebInterface: this
-        };
-
-        app.use(routes(ctx));
-
-        return app;
-    }
-
-    start(): Promise<void> {
-        let port = config.get<number>("web.port");
+    public start(): Promise<void> {
+        const port = config.get<number>("web.port");
 
         if (config.has("web.tls.key") && config.has("web.tls.cert")) {
             // Set up a https server
-            let options: ServerOptions = {
-                key: fs.readFileSync(config.get<string>("web.tls.key")),
+            const options: ServerOptions = {
+                key:  fs.readFileSync(config.get<string>("web.tls.key")),
                 cert: fs.readFileSync(config.get<string>("web.tls.cert")),
             };
 
@@ -70,7 +53,7 @@ export class WebInterface {
         }
         this._server.setTimeout(4000);
 
-        return new Promise<void>(done => {
+        return new Promise<void>((done) => {
             this._server.listen(port, () => {
                 winston.info("Webserver listening on port " + port);
                 done();
@@ -78,7 +61,7 @@ export class WebInterface {
         });
     }
 
-    stop(): Promise<void> {
+    public stop(): Promise<void> {
         winston.info("Shutting down webserver...");
 
         if (!this._server) {
@@ -88,5 +71,22 @@ export class WebInterface {
                 this._server.close(() => done());
             });
         }
+    }
+
+    private initializeExpress(): Express {
+        const app = express();
+
+        if (this._options.logging) {
+            app.use(require("morgan")("dev"));
+        }
+
+        const ctx: IRouterContext = {
+            Database:     this._db,
+            WebInterface: this,
+        };
+
+        app.use(routes(ctx));
+
+        return app;
     }
 }

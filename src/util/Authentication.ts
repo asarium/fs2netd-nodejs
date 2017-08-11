@@ -1,40 +1,16 @@
-
 import * as bcrypt from "bcryptjs";
-import * as Promise from "bluebird";
-import {UserPojo} from "../db/models/User";
-import {UserInstance} from "../db/models/User";
+import {IUserPojo} from "../db/models/User";
+import {IUserInstance} from "../db/models/User";
 
 export class Authentication {
-    static verifyPassword(user: UserPojo, password: string): Promise<boolean> {
-        return new Promise<boolean>((done, reject) => {
-            bcrypt.compare(password, user.PasswordHash, (err, res) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    done(res);
-                }
-            });
-        });
+    public static async verifyPassword(user: IUserPojo, password: string): Promise<boolean> {
+        return await bcrypt.compare(password, user.PasswordHash);
     }
 
-    static setPassword(user:UserInstance, password: string): Promise<UserInstance> {
-        return new Promise<string>((done, reject) => {
-            bcrypt.genSalt(10, (err, salt) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    bcrypt.hash(password, salt, (err, hash) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            done(hash);
-                        }
-                    });
-                }
-            });
-        }).then(hash => {
-            user.PasswordHash = hash;
-            return user.save();
-        });
+    public static async setPassword(user: IUserInstance, password: string): Promise<IUserInstance> {
+        const salt = await bcrypt.genSalt(10);
+
+        user.PasswordHash = await bcrypt.hash(password, salt);
+        return await user.save();
     }
 }
