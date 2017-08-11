@@ -4,7 +4,6 @@ import {IOnlineUserPojo} from "../../../src/db/models/OnlineUser";
 import {IUserInstance} from "../../../src/db/models/User";
 import {Session} from "../../../src/tracker/Session";
 import {IOnlineUserInstance} from "../../../src/db/models/OnlineUser";
-import * as Promise from "bluebird";
 import {IHandlerContext} from "../../../src/tracker/handlers/Handlers";
 import {Database} from "../../../src/db/Database";
 import {initializeTestDatabase} from "../../db/TestDatabase";
@@ -54,13 +53,13 @@ export interface TestContext extends IHandlerContext {
     Client: TestClient;
 }
 
-export function getHandlerContext(): Promise<TestContext> {
-    return initializeTestDatabase().then(db => {
-        return {
-            Client: new TestClient(),
-            Database: db,
-            Server: new TestServer(db),
-            Logger: new winston.Logger(),
-        }
-    });
+export async function getHandlerContext(): Promise<TestContext> {
+    const db = await initializeTestDatabase();
+
+    return {
+        Client:   new TestClient(),
+        Database: db,
+        Server:   new TestServer(db),
+        Logger:   new winston.Logger(),
+    };
 }

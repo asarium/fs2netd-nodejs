@@ -1,37 +1,28 @@
-import {ClientMessage} from "./packets/Messages";
-'use strict';
+"use strict";
 
 import {Socket} from "net";
-import {PacketHandler} from "./packets/PacketHandler";
-import {GameServer} from "./GameServer";
-import {ILiteEvent} from "./Events";
-import {LiteEvent} from "./Events";
-import {Message} from "./packets/Messages";
-import {LoginMessage} from "./packets/Messages";
-import * as winston from "winston";
-import {LoginReply} from "./packets/Messages";
-import {Session} from "./Session";
 import * as util from "util";
-import {GetPilotMessage} from "./packets/Messages";
-import {NoSuchUserError} from "./Exceptions";
-import {AuthenticationError} from "./Exceptions";
-import * as Promise from "bluebird";
-import {PilotReply} from "./packets/Messages";
-import {ValidSessionIDRequest} from "./packets/Messages";
-import {ValidSidReply} from "./packets/Messages";
-import {Authentication} from "./../util/Authentication";
-import {handleMessage} from "./handlers/Handlers";
-import {UnknownMessageError} from "./Exceptions";
-import {PingMessage} from "./packets/Messages";
-import {getTimeMilliseconds} from "./Utils";
 import {LoggerInstance} from "winston";
-import {IUserInstance} from "../db/models/User";
+import * as winston from "winston";
 import {IOnlineUserInstance} from "../db/models/OnlineUser";
 import {IOnlineUserPojo} from "../db/models/OnlineUser";
+import {IUserInstance} from "../db/models/User";
+import {LiteEvent} from "./Events";
+import {ILiteEvent} from "./Events";
+import {UnknownMessageError} from "./Exceptions";
+import {GameServer} from "./GameServer";
+import {handleMessage} from "./handlers/Handlers";
+import {LoginMessage} from "./packets/Messages";
+import {PingMessage} from "./packets/Messages";
+import {Message} from "./packets/Messages";
+import {ClientMessage} from "./packets/Messages";
+import {PacketHandler} from "./packets/PacketHandler";
+import {Session} from "./Session";
+import {getTimeMilliseconds} from "./Utils";
 
 export interface IGameClient {
-    sendToClient:(msg: ClientMessage) => Promise<void>;
-    getOnlineUserData:() => IOnlineUserPojo;
+    sendToClient: (msg: ClientMessage) => Promise<void>;
+    getOnlineUserData: () => IOnlineUserPojo;
 
     RemoteAddress: string;
     RemotePort: number;
@@ -78,25 +69,25 @@ export class GameClient implements IGameClient {
         this._socket = socket;
 
         this._remoteAddress = socket.remoteAddress;
-        this._remotePort = socket.remotePort;
+        this._remotePort    = socket.remotePort;
 
         this._logger = new winston.Logger({
-            transports: [
-                new (winston.transports.Console)(),
-            ],
-            filters: [
-                (level, msg, meta) => {
-                    return `[${this.toString()}] ${msg}`;
-                }
-            ]
-        });
+                                              transports: [
+                                                  new (winston.transports.Console)(),
+                                              ],
+                                              filters:    [
+                                                  (level, msg) => {
+                                                      return `[${this.toString()}] ${msg}`;
+                                                  },
+                                              ],
+                                          });
 
-        socket.on("close", _ => this._onDisconnected.trigger());
+        socket.on("close", () => this._onDisconnected.trigger());
 
         this._handler = new PacketHandler(socket);
-        this._handler.Message.on(msg => this.messageHandler(msg));
+        this._handler.Message.on((msg) => this.messageHandler(msg));
 
-        this.Disconnected.on(_ => {
+        this.Disconnected.on(() => {
             if (this._onlineUser) {
                 this._onlineUser.destroy();
             }
@@ -157,6 +148,7 @@ export class GameClient implements IGameClient {
     get RemotePort(): number {
         return this._remotePort;
     }
+
     set RemotePort(value: number) {
         this._remotePort = value;
     }
@@ -164,6 +156,7 @@ export class GameClient implements IGameClient {
     get IsServer(): boolean {
         return this._isServer;
     }
+
     set IsServer(value: boolean) {
         this._isServer = value;
     }
@@ -173,7 +166,7 @@ export class GameClient implements IGameClient {
      * @param msg The message to send
      */
     public sendToClient(msg: ClientMessage): Promise<void> {
-        return new Promise<void>((done, _) => {
+        return new Promise<void>((done) => {
             this._socket.write(msg.serialize(), () => {
                 done();
             });
@@ -186,47 +179,25 @@ export class GameClient implements IGameClient {
 
     public getOnlineUserData(): IOnlineUserPojo {
         return {
-            ClientIp: this._remoteAddress,
+            ClientIp:   this._remoteAddress,
             ClientPort: this._remotePort,
-            PilotName: this._session.ActivePilot,
-            SessionId: this._session.Id
+            PilotName:  this._session.ActivePilot,
+            SessionId:  this._session.Id,
         };
-    }
-
-    /**
-     * Handles all messages received from the client
-     * @param message The message to handle
-     */
-    private messageHandler(message: Message) {
-        if (this.Authenticated || message instanceof LoginMessage) {
-            // Only handle messages when authenticated or if it's a login message
-            let context = {
-                Server: this._server,
-                Database: this._server.Database,
-                Client: this,
-                Logger: this._logger
-            };
-            handleMessage(message, context).catch(UnknownMessageError, () => {
-                this._logger.info("Unknown message typ received: %s", typeof(message));
-            }).catch(err => {
-                this._logger.error("Uncaught error while handling message!", err);
-            });
-        }
     }
 
     /**
      * Disconnects the socket
      */
-    disconnect() {
+    public disconnect() {
         this._socket.end();
     }
 
-    toString(): string {
+    public toString(): string {
         let msg: string = "";
         if (this._user != null) {
             msg += this._user.Username;
-        }
-        else {
+        } else {
             msg += "Unknown user";
         }
 
@@ -241,5 +212,31 @@ export class GameClient implements IGameClient {
         }
 
         return msg;
+    }
+
+    /**
+     * Handles all messages received from the client
+     * @param message The message to handle
+     */
+    private async messageHandler(message: Message) {
+        if (this.Authenticated || message instanceof LoginMessage) {
+            // Only handle messages when authenticated or if it's a login message
+            const context = {
+                Server:   this._server,
+                Database: this._server.Database,
+                Client:   this,
+                Logger:   this._logger,
+            };
+
+            try {
+                await handleMessage(message, context);
+            } catch (err) {
+                if (err instanceof UnknownMessageError) {
+                    this._logger.info("Unknown message typ received: %s", typeof(message));
+                } else {
+                    this._logger.error("Uncaught error while handling message!", err);
+                }
+            }
+        }
     }
 }

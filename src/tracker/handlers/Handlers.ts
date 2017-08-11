@@ -1,5 +1,4 @@
 
-import * as Promise from "bluebird";
 import {LoggerInstance} from "winston";
 import {Database} from "../../db/Database";
 import {UnknownMessageError} from "../Exceptions";

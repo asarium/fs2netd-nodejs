@@ -1,7 +1,27 @@
 import * as crypto from "crypto";
-import * as Promise from "bluebird";
 
 export class Session {
+    public static createSession(): Promise<Session> {
+        return new Promise<Session>((done, reject) => {
+            crypto.randomBytes(4, (ex, buf) => {
+                if (ex) {
+                    reject(ex);
+                    return;
+                }
+
+                const hex    = buf.toString("hex");
+                let randomId = parseInt(hex, 16);
+
+                // We need a signed integer so clear the top bit
+                if (randomId > 2147483647) {
+                    randomId -= 2147483647;
+                }
+
+                done(new Session(randomId));
+            });
+        });
+    }
+
     private _id: number;
     private _activePilot: string = null;
 
@@ -21,28 +41,7 @@ export class Session {
         this._activePilot = value;
     }
 
-    isValid(sid: number): boolean {
+    public isValid(sid: number): boolean {
         return this._id === sid;
-    }
-
-    static createSession(): Promise<Session> {
-        return new Promise<Session>((done, reject) => {
-            crypto.randomBytes(4, function (ex, buf) {
-                if (ex) {
-                    reject(ex);
-                    return;
-                }
-
-                var hex = buf.toString('hex');
-                var randomId = parseInt(hex, 16);
-
-                // We need a signed integer so clear the top bit
-                if (randomId > 2147483647) {
-                    randomId -= 2147483647;
-                }
-
-                done(new Session(randomId));
-            });
-        });
     }
 }

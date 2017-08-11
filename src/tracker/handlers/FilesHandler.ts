@@ -1,55 +1,55 @@
-
-import * as Promise from "bluebird";
 import {Message} from "../packets/Messages";
 import {TableRequestMessage} from "../packets/Messages";
 import {TablesReply} from "../packets/Messages";
-import {NameCRC} from "../packets/Messages";
+import {INameCRC} from "../packets/Messages";
 import {MissionListReply} from "../packets/Messages";
 import {IHandlerContext} from "./Handlers";
 
-export function handleTableValidation(message: Message, context: IHandlerContext): Promise<void> {
+export async function handleTableValidation(message: Message, context: IHandlerContext): Promise<void> {
     const msg = message as TableRequestMessage;
 
     context.Logger.info("Validating client tables");
 
-    if (msg.CRCs.length <= 0) {
-        return context.Client.sendToClient(new TablesReply([]));
+    if (msg.crcs.length <= 0) {
+        await context.Client.sendToClient(new TablesReply([]));
+        return;
     }
 
-    return context.Database.getTables().then((tables) => {
-        const result: boolean[] = [];
+    const tables = await context.Database.getTables();
 
-        // Ugh! O(n^2) is not good but there will never be too many tables anyway so it doesn't matter
-        for (const clientCRC of msg.CRCs) {
-            let found = false;
-            for (const table of tables) {
-                if (table.Filename.toUpperCase() === clientCRC.Name.toUpperCase()) {
-                    result.push(table.CRC32 === clientCRC.CRC32);
-                    found = true;
-                    break;
-                }
-            }
+    const result: boolean[] = [];
 
-            if (!found) {
-                result.push(false); // Unknown table is not valid!
+    // Ugh! O(n^2) is not good but there will never be too many tables anyway so it doesn't matter
+    for (const clientCRC of msg.crcs) {
+        let found = false;
+        for (const table of tables) {
+            if (table.Filename.toUpperCase() === clientCRC.Name.toUpperCase()) {
+                result.push(table.CRC32 === clientCRC.CRC32);
+                found = true;
+                break;
             }
         }
 
-        return context.Client.sendToClient(new TablesReply(result));
-    });
+        if (!found) {
+            result.push(false); // Unknown table is not valid!
+        }
+    }
+
+    await context.Client.sendToClient(new TablesReply(result));
+    return;
 }
 
-export function handleMissionListRequest(message: Message, context: IHandlerContext): Promise<void> {
-    return context.Database.getMissions().then((missions) => {
-        const crcs: NameCRC[] = [];
+export async function handleMissionListRequest(message: Message, context: IHandlerContext): Promise<void> {
+    const missions = await context.Database.getMissions();
 
-        for (const mission of missions) {
-            crcs.push({
-                Name: mission.Filename,
-                CRC32: mission.CRC32,
-            });
-        }
+    const crcs: INameCRC[] = [];
 
-        return context.Client.sendToClient(new MissionListReply(crcs));
-    });
+    for (const mission of missions) {
+        crcs.push({
+                      Name:  mission.Filename,
+                      CRC32: mission.CRC32,
+                  });
+    }
+
+    await context.Client.sendToClient(new MissionListReply(crcs));
 }

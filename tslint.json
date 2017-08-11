@@ -14,7 +14,7 @@
     "object-literal-sort-keys": false,
     "no-empty-interface": false,
     "max-classes-per-file": [],
-    "no-trailing-whitespace": []
+    "no-trailing-whitespace": false
   },
   "rulesDirectory": []
 }

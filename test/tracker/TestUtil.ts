@@ -1,7 +1,7 @@
 
 import {parsePackedString} from "../../src/tracker/Utils";
 import {packString} from "../../src/tracker/Utils";
-import {NameCount} from "../../src/tracker/Utils";
+import {INameCount} from "../../src/tracker/Utils";
 import * as assert from "assert";
 
 describe("Util", () => {
@@ -33,7 +33,7 @@ describe("Util", () => {
 
     describe("#packString()", () => {
         it("should return an empty string for an empty list", () => {
-            let parameter: NameCount[] = [];
+            let parameter: INameCount[] = [];
 
             let result = packString(parameter);
 
@@ -41,7 +41,7 @@ describe("Util", () => {
         });
 
         it("should handle a list properly", () => {
-            let parameter: NameCount[] = [
+            let parameter: INameCount[] = [
                 {
                     Name: "Test1",
                     Count: 5
@@ -58,7 +58,7 @@ describe("Util", () => {
         });
 
         it("should handle empty names properly", () => {
-            let parameter: NameCount[] = [
+            let parameter: INameCount[] = [
                 {
                     Name: "",
                     Count: 5

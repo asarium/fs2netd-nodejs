@@ -5,8 +5,8 @@ import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
 
-const paperwork     = require("paperwork");
-const promiseRouter = require("express-promise-router");
+import * as promiseRouter from "express-promise-router";
+import * as paperwork from "paperwork";
 
 // This could also be done with JSON schemas but currently this simple template is enough
 const IPBAN_TEMPLATE = {

@@ -6,7 +6,7 @@ import {ITablePojo} from "../../../src/db/models/Table";
 import {TableRequestMessage} from "../../../src/tracker/packets/Messages";
 import {handleTableValidation} from "../../../src/tracker/handlers/FilesHandler";
 import {TablesReply} from "../../../src/tracker/packets/Messages";
-import {NameCRC} from "../../../src/tracker/packets/Messages";
+import {INameCRC} from "../../../src/tracker/packets/Messages";
 import {IMissionPojo} from "../../../src/db/models/Mission";
 import {handleMissionListRequest} from "../../../src/tracker/handlers/FilesHandler";
 import {MissionListRequest} from "../../../src/tracker/packets/Messages";
@@ -73,7 +73,7 @@ describe("FilesHandler", () => {
         });
 
         it("should validate tables correctly", () => {
-            let crcs: NameCRC[] = [
+            let crcs: INameCRC[] = [
                 {
                     Name: "ships.tbl",
                     CRC32: 10

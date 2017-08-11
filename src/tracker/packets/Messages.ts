@@ -1,10 +1,8 @@
 "use strict";
 
 import {IPilotPojo} from "../../db/models/Pilot";
-import {IPilotInstance} from "../../db/models/Pilot";
-import {IServerInstance} from "../../db/models/Server";
 import {IServerPojo} from "../../db/models/Server";
-import {parsePackedString} from "./../Utils";
+import {parsePackedString} from "../Utils";
 import {Identifiers} from "./PacketIdentifiers";
 
 export abstract class Message {
@@ -28,7 +26,7 @@ export class LoginMessage extends Message {
         super(Identifiers.PCKT_LOGIN_AUTH);
         this._username = username;
         this._password = password;
-        this._port = port;
+        this._port     = port;
     }
 
     get Username(): string {
@@ -72,7 +70,7 @@ export class GetPilotMessage extends Message {
         super(Identifiers.PCKT_PILOT_GET);
         this._sessionId = sessionId;
         this._pilotname = pilotname;
-        this._create = create;
+        this._create    = create;
     }
 
     get SessionId(): number {
@@ -95,8 +93,8 @@ export class UpdatePilotMessage extends Message {
 
     constructor(sid: number, userName: string, params: IPilotPojo) {
         super(Identifiers.PCKT_PILOT_UPDATE);
-        this._sid = sid;
-        this._userName = userName;
+        this._sid       = sid;
+        this._userName  = userName;
         this._pilotData = params;
     }
 
@@ -186,7 +184,7 @@ export class ServerListMessage extends Message {
 
     constructor(type: number, status: number, filter?: string) {
         super(Identifiers.PCKT_SLIST_REQUEST_FILTER);
-        this._type = type;
+        this._type   = type;
         this._status = status;
         this._filter = filter;
     }
@@ -204,17 +202,17 @@ export class ServerListMessage extends Message {
     }
 }
 
-export interface NameCRC {
+export interface INameCRC {
     Name: string;
     CRC32: number;
 }
 
 export class TableRequestMessage extends Message {
-    public CRCs: NameCRC[];
+    public crcs: INameCRC[];
 
-    constructor(CRCs: NameCRC[]) {
+    constructor(_crcs: INameCRC[]) {
         super(Identifiers.PCKT_TABLES_RQST);
-        this.CRCs = CRCs;
+        this.crcs = _crcs;
     }
 }
 
@@ -230,7 +228,7 @@ export class IpBanListRequest extends Message {
     }
 }
 
-export interface ServerProperties {
+export interface IServerProperties {
     name?: string;
     mission_name?: string;
     title?: string;
@@ -248,20 +246,20 @@ export interface ServerProperties {
 }
 
 export class ServerStartMessage extends Message {
-    public Properties: ServerProperties;
+    public properties: IServerProperties;
 
-    constructor(props: ServerProperties) {
+    constructor(props: IServerProperties) {
         super(Identifiers.PCKT_SERVER_START);
-        this.Properties = props;
+        this.properties = props;
     }
 }
 
 export class ServerUpdateMessage extends Message {
-    public Properties: ServerProperties;
+    public properties: IServerProperties;
 
-    constructor(props: ServerProperties) {
+    constructor(props: IServerProperties) {
         super(Identifiers.PCKT_SERVER_START);
-        this.Properties = props;
+        this.properties = props;
     }
 }
 
@@ -297,35 +295,35 @@ export abstract class ClientMessage extends Message {
 }
 
 export class LoginReply extends ClientMessage {
-    private _login_status: boolean;
-    private _session_id: number;
-    private _num_pilots: number;
+    private _loginStatus: boolean;
+    private _sessionId: number;
+    private _numPilots: number;
 
-    constructor(login_status: boolean, session_id: number, num_pilots: number) {
+    constructor(loginStatus: boolean, sessionId: number, numPilots: number) {
         super(Identifiers.PCKT_LOGIN_REPLY);
-        this._login_status = login_status;
-        this._session_id = session_id;
-        this._num_pilots = num_pilots;
+        this._loginStatus = loginStatus;
+        this._sessionId   = sessionId;
+        this._numPilots   = numPilots;
     }
 
     get LoginStatus(): boolean {
-        return this._login_status;
+        return this._loginStatus;
     }
 
     get SessionId(): number {
-        return this._session_id;
+        return this._sessionId;
     }
 
     get NumPilots(): number {
-        return this._num_pilots;
+        return this._numPilots;
     }
 
     public serialize(): Buffer {
         const buffer = this.createBuffer();
 
-        buffer.writeUInt8(this._login_status ? 1 : 0);
-        buffer.writeInt32(this._session_id);
-        buffer.writeInt16(this._num_pilots);
+        buffer.writeUInt8(this._loginStatus ? 1 : 0);
+        buffer.writeInt32(this._sessionId);
+        buffer.writeInt16(this._numPilots);
 
         return buffer.finalize();
     }
@@ -339,7 +337,7 @@ export class PilotReply extends ClientMessage {
     constructor(replytype: number, pilot?: IPilotPojo) {
         super(Identifiers.PCKT_PILOT_REPLY);
         this._replytype = replytype;
-        this._pilot = pilot;
+        this._pilot     = pilot;
     }
 
     get Replytype(): number {
@@ -507,14 +505,14 @@ export class TablesReply extends ClientMessage {
 }
 
 export class MissionListReply extends ClientMessage {
-    private _missionList: NameCRC[];
+    private _missionList: INameCRC[];
 
-    constructor(missionList: NameCRC[]) {
+    constructor(missionList: INameCRC[]) {
         super(Identifiers.PCKT_MISSIONS_REPLY);
         this._missionList = missionList;
     }
 
-    get MissionList(): NameCRC[] {
+    get MissionList(): INameCRC[] {
         return this._missionList;
     }
 
@@ -601,7 +599,7 @@ export class ChannelCountReply extends ClientMessage {
     constructor(channel: string, count: number) {
         super(Identifiers.PCKT_CHAT_CHAN_COUNT_RQST);
         this._channel = channel;
-        this._count = count;
+        this._count   = count;
     }
 
     get Channel(): string {
