@@ -1,12 +1,11 @@
-import {IRouterContext} from "../../WebInterface";
 import {Router} from "express";
-import {authenticate} from "./authentication";
+import * as promiseRouter from "express-promise-router";
+import * as paperwork from "paperwork";
 import {MissionPojo} from "../../../db/models/Mission";
 import {ADMIN_ROLE} from "../../../db/models/Role";
+import {IRouterContext} from "../../WebInterface";
+import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
-
-let paperwork     = require("paperwork");
-let promiseRouter = require("express-promise-router");
 
 // This could also be done with JSON schemas but currently this simple template is enough
 const MISSION_TEMPLATE = {
@@ -18,48 +17,48 @@ const MISSION_TEMPLATE = {
     id:           paperwork.optional(Number),
 };
 
-export = function (context: IRouterContext): Router {
-    let router = promiseRouter();
+export = (context: IRouterContext): Router => {
+    const router = promiseRouter();
 
     router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
-        let missions = await context.Database.Models.Mission.findAll();
+        const missions = await context.Database.Models.Mission.findAll();
 
-        res.status(200).json(missions.map(mission => {
+        res.status(200).json(missions.map((mission) => {
             return {
                 filename:     mission.Filename,
                 crc32:        mission.CRC32,
                 mission_type: mission.MissionType,
                 max_players:  mission.MaxPlayers,
                 description:  mission.Description,
-                id:           mission.id
-            }
+                id:           mission.id,
+            };
         }));
     });
 
     router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]),
                paperwork.accept(MISSION_TEMPLATE), async (req, res) => {
-            let count = await context.Database.Models.Mission.count({
-                                                                        where: {
-                                                                            Filename: req.body.filename
-                                                                        }
-                                                                    });
+            const count = await context.Database.Models.Mission.count({
+                                                                          where: {
+                                                                              Filename: req.body.filename,
+                                                                          },
+                                                                      });
 
-            if (count != 0) {
+            if (count !== 0) {
                 res.status(409).json({
-                                         err: "Mission with specified name already exists"
+                                         err: "Mission with specified name already exists",
                                      });
                 return;
             }
 
-            let mission_info: MissionPojo = {
+            const missionInfo: MissionPojo = {
                 Filename:    req.body.filename,
                 CRC32:       req.body.crc32,
                 MissionType: req.body.mission_type,
                 MaxPlayers:  req.body.max_players,
-                Description: req.body.description
+                Description: req.body.description,
             };
 
-            let mission = await context.Database.Models.Mission.create(mission_info);
+            const mission = await context.Database.Models.Mission.create(missionInfo);
 
             res.status(201).json({
                                      filename:     mission.Filename,
@@ -67,7 +66,7 @@ export = function (context: IRouterContext): Router {
                                      mission_type: mission.MissionType,
                                      max_players:  mission.MaxPlayers,
                                      description:  mission.Description,
-                                     id:           mission.id
+                                     id:           mission.id,
                                  });
         });
 
@@ -77,26 +76,26 @@ export = function (context: IRouterContext): Router {
 
             if (!mission) {
                 res.status(400).json({
-                                         status: 'bad_request',
-                                         reason: 'Parameters were invalid',
-                                         errors:  [
-                                             "Invalid ID specified"
-                                         ]
+                                         status: "bad_request",
+                                         reason: "Parameters were invalid",
+                                         errors: [
+                                             "Invalid ID specified",
+                                         ],
                                      });
                 return;
             }
 
             if (mission.Filename !== req.body.filename) {
                 // Name change, check if unique
-                let count = await context.Database.Models.Mission.count({
-                                                                            where: {
-                                                                                Filename: req.body.filename
-                                                                            }
-                                                                        });
+                const count = await context.Database.Models.Mission.count({
+                                                                              where: {
+                                                                                  Filename: req.body.filename,
+                                                                              },
+                                                                          });
 
-                if (count != 0) {
+                if (count !== 0) {
                     res.status(409).json({
-                                             err: "Mission with specified name already exists"
+                                             err: "Mission with specified name already exists",
                                          });
                     return;
                 }
@@ -116,20 +115,20 @@ export = function (context: IRouterContext): Router {
                                      mission_type: mission.MissionType,
                                      max_players:  mission.MaxPlayers,
                                      description:  mission.Description,
-                                     id:           mission.id
+                                     id:           mission.id,
                                  });
         });
 
     router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
-        let mission = await context.Database.Models.Mission.findById(req.params.id);
+        const mission = await context.Database.Models.Mission.findById(req.params.id);
 
         if (!mission) {
             res.status(400).json({
-                                     status: 'bad_request',
-                                     reason: 'Parameters were invalid',
-                                     errors:  [
-                                         "Invalid ID specified"
-                                     ]
+                                     status: "bad_request",
+                                     reason: "Parameters were invalid",
+                                     errors: [
+                                         "Invalid ID specified",
+                                     ],
                                  });
             return;
         }
@@ -140,4 +139,4 @@ export = function (context: IRouterContext): Router {
     });
 
     return router;
-}
+};

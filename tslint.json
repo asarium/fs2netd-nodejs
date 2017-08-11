@@ -13,7 +13,8 @@
     ],
     "object-literal-sort-keys": false,
     "no-empty-interface": false,
-    "max-classes-per-file": []
+    "max-classes-per-file": [],
+    "no-trailing-whitespace": []
   },
   "rulesDirectory": []
 }

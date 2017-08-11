@@ -1,27 +1,25 @@
-import * as express from "express";
-import {IRouterContext} from "../../WebInterface";
 import {Router} from "express";
-import {json} from "sequelize";
+import {IRouterContext} from "../../WebInterface";
 
-let promiseRouter = require("express-promise-router");
+import * as promiseRouter from "express-promise-router";
 
-export = function (context: IRouterContext): Router {
-    let router = promiseRouter();
+export = (context: IRouterContext): Router => {
+    const router = promiseRouter();
 
-    router.get("/", (req, res) => {
+    router.get("/", async (req, res) => {
         // TODO: Returns duplicate values when a user is logged in twice
-        return context.Database.Models.OnlineUser.findAll().then(online_users => {
-            return Promise.all(online_users.map(user => {
-                return user.getUser().then(user => {
-                    return {
-                        name: user.Username
-                    }
-                });
-            }));
-        }).then(array => {
-            res.status(200).json(array);
-        })
+        const onlineUsers = await context.Database.Models.OnlineUser.findAll();
+
+        const users = await Promise.all(onlineUsers.map((user) => {
+            return user.getUser().then((dbUser) => {
+                return {
+                    name: dbUser.Username,
+                };
+            });
+        }));
+
+        res.status(200).json(users);
     });
 
     return router;
-}
+};

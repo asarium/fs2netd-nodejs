@@ -8,7 +8,6 @@ import * as https from "https";
 import {ServerOptions} from "https";
 import * as winston from "winston";
 import {Database} from "../db/Database";
-import {GameServer} from "../tracker/GameServer";
 import routes = require("./routes");
 
 export interface IRouterContext {
@@ -67,7 +66,7 @@ export class WebInterface {
         if (!this._server) {
             return Promise.resolve();
         } else {
-            return new Promise<void>((done, _) => {
+            return new Promise<void>((done) => {
                 this._server.close(() => done());
             });
         }

@@ -7,7 +7,7 @@ import {NextFunction} from "express";
 import * as winston from "winston";
 import {IRouterContext} from "../../WebInterface";
 
-const cors = require("cors");
+import * as cors from "cors";
 
 export = (context: IRouterContext): Router => {
     const router = express.Router();
