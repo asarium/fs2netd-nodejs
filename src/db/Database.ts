@@ -1,6 +1,5 @@
 import * as Promise from "bluebird";
 import * as config from "config";
-import * as mysql from "mysql";
 import * as sequelize from "sequelize";
 import {Options} from "sequelize";
 import {Sequelize} from "sequelize";
