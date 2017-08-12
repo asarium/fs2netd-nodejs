@@ -6,7 +6,9 @@ const mocha = require('gulp-mocha');
 
 const tslint = require("gulp-tslint");
 
-const tsProject = ts.createProject('tsconfig.json');
+const tsProject = ts.createProject('tsconfig.json', {
+    "rootDir": "."
+});
 gulp.task('tsc', () => {
     const tsResult = tsProject.src().pipe(tsProject());
 

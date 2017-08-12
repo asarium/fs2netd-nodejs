@@ -1,9 +1,8 @@
 db:
   dialect: 'mysql'
-  host: 'localhost'
-  #port: 1234 # Uncomment if non-default port should be used
+  host: 'db'
   user: 'root'
-  pass: ''
+  pass: 'root'
   database: 'fs2netd-sequelize'
   connectionLimit: 100
 
@@ -11,7 +10,7 @@ game_server:
   port: 5000
 
 web:
-  port: 8080
+  port: 80
   host: 0.0.0.0
   jwt: # Options for REST API JWT tokens
     secret: 'my secret' # Replace with proper secret in production

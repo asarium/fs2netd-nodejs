@@ -4,8 +4,8 @@ import * as express from "express";
 import {Express} from "express";
 import * as fs from "fs";
 import * as http from "http";
-import * as https from "https";
 import {ServerOptions} from "https";
+import * as https from "https";
 import * as winston from "winston";
 import {Database} from "../db/Database";
 import routes = require("./routes");
@@ -20,7 +20,7 @@ export interface IWebOptions {
 }
 
 export class WebInterface {
-    private _server;
+    private _server: http.Server | https.Server;
     private _db: Database;
     private _app: Express;
     private _options: IWebOptions;
@@ -36,7 +36,8 @@ export class WebInterface {
     }
 
     public start(): Promise<void> {
-        const port = config.get<number>("web.port");
+        const port = config.get<number>("web.port") || 8080;
+        const host = config.get<string>("web.host") || "0.0.0.0";
 
         if (config.has("web.tls.key") && config.has("web.tls.cert")) {
             // Set up a https server
@@ -49,12 +50,12 @@ export class WebInterface {
         } else {
             // Set up a standard http server
             this._server = http.createServer(this._app);
+            this._server.setTimeout(4000, () => {});
         }
-        this._server.setTimeout(4000);
 
         return new Promise<void>((done) => {
-            this._server.listen(port, () => {
-                winston.info("Webserver listening on port " + port);
+            this._server.listen(port, host, () => {
+                winston.info("Webserver listening on " + host + ":" + port);
                 done();
             });
         });
