@@ -13,10 +13,11 @@ export async function handleLoginMessage(message: Message, context: IHandlerCont
     if (context.Client.Authenticated) {
         context.Client.RemotePort = msg.Port; // Update the port using the message
         context.Logger.warn("User %s is already logged in! Tried to log in again.", msg.Username);
-        return context.Client.User.countPilots().then((count) => {
-            // Send a message telling the client that the login was successful
-            return context.Client.sendToClient(new LoginReply(true, context.Client.Session.Id, count));
-        });
+
+        const count = await context.Client.User.countPilots();
+
+        await context.Client.sendToClient(new LoginReply(true, context.Client.Session.Id, count));
+        return;
     }
 
     // This code handles authentication and setup of this client instance based on the data sent to us.
