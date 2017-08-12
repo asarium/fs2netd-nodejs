@@ -1,4 +1,4 @@
-import {Authentication} from "../../util/Authentication";
+import {verifyPassword} from "../../util/Authentication";
 import {Message} from "../packets/Messages";
 import {LoginMessage} from "../packets/Messages";
 import {LoginReply} from "../packets/Messages";
@@ -36,7 +36,7 @@ export async function handleLoginMessage(message: Message, context: IHandlerCont
     }
     try {
         // Check the password we got against the database data
-        const valid = await Authentication.verifyPassword(user, msg.Password);
+        const valid = await verifyPassword(user, msg.Password);
 
         context.Client.Authenticated = valid;
         if (!valid) {

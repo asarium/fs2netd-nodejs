@@ -1,14 +1,11 @@
 import * as config from "config";
 import {Router} from "express";
-import * as passport from "passport";
-import {Authentication} from "../../../util/Authentication";
-import {IRouterContext} from "../../WebInterface";
-
-import * as paperwork from "paperwork";
-
 import * as promiseRouter from "express-promise-router";
-
 import * as jwt from "jsonwebtoken";
+import * as paperwork from "paperwork";
+import * as passport from "passport";
+import {verifyPassword} from "../../../util/Authentication";
+import {IRouterContext} from "../../WebInterface";
 
 import {ExtractJwt, Strategy as JwtStrategy} from "passport-jwt";
 
@@ -37,7 +34,7 @@ export = (context: IRouterContext): Router => {
             return;
         }
 
-        const valid = await Authentication.verifyPassword(user, req.body.password);
+        const valid = await verifyPassword(user, req.body.password);
 
         if (!valid) {
             res.status(401).json({

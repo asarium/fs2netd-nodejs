@@ -1,13 +1,12 @@
 
 import {Router} from "express";
+import * as promiseRouter from "express-promise-router";
+import * as paperwork from "paperwork";
 import {ADMIN_ROLE} from "../../../db/models/Role";
-import {Authentication} from "../../../util/Authentication";
+import {setPassword} from "../../../util/Authentication";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
-
-import * as promiseRouter from "express-promise-router";
-import * as paperwork from "paperwork";
 
 const LOGIN_MODEL = {
     name: String,
@@ -32,7 +31,7 @@ export = (context: IRouterContext): Router => {
 
         user = context.Database.Models.User.build({Username: req.body.name});
 
-        user = await Authentication.setPassword(user, req.body.password);
+        user = await setPassword(user, req.body.password);
 
         res.status(201).json({
                                  name: user.Username,
