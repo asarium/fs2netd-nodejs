@@ -32,4 +32,4 @@ gulp.task("deploy", ["tsc"], () => {
     ];
 });
 
-gulp.task("default", ["tsc", "test", "deploy"]);
+gulp.task("default", ["tsc", "test", "deploy", "tslint"]);

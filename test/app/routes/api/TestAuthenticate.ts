@@ -1,8 +1,7 @@
+import * as assert from "assert";
+import * as supertest from "supertest";
 import {IRouterContext} from "../../../../src/app/WebInterface";
 import {initializeTestWeb} from "../../TestWebInterface";
-
-import * as supertest from "supertest";
-import * as assert from "assert";
 
 describe("REST API: /authenticate", () => {
     let context: IRouterContext;

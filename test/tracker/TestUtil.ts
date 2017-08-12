@@ -1,19 +1,19 @@
 
+import * as assert from "assert";
 import {parsePackedString} from "../../src/tracker/Utils";
 import {packString} from "../../src/tracker/Utils";
 import {INameCount} from "../../src/tracker/Utils";
-import * as assert from "assert";
 
 describe("Util", () => {
     describe("#parsePackedString()", () => {
         it("should return an empty list for an empty string", () => {
-            let result = parsePackedString("");
+            const result = parsePackedString("");
 
             assert.equal(result.length, 0);
         });
 
         it("should handle a packed string correctly", () => {
-            let result = parsePackedString("Test;5;Test1;4");
+            const result = parsePackedString("Test;5;Test1;4");
 
             assert.equal(result.length, 2);
 
@@ -25,7 +25,7 @@ describe("Util", () => {
         });
 
         it("should handle a null string correctly", () => {
-            let result = parsePackedString(null);
+            const result = parsePackedString(null);
 
             assert.equal(result.length, 0);
         });
@@ -33,49 +33,49 @@ describe("Util", () => {
 
     describe("#packString()", () => {
         it("should return an empty string for an empty list", () => {
-            let parameter: INameCount[] = [];
+            const parameter: INameCount[] = [];
 
-            let result = packString(parameter);
+            const result = packString(parameter);
 
             assert.equal(result, "");
         });
 
         it("should handle a list properly", () => {
-            let parameter: INameCount[] = [
+            const parameter: INameCount[] = [
                 {
                     Name: "Test1",
-                    Count: 5
+                    Count: 5,
                 },
                 {
                     Name: "Test2",
-                    Count: 42
-                }
+                    Count: 42,
+                },
             ];
 
-            let result = packString(parameter);
+            const result = packString(parameter);
 
             assert.equal(result, "Test1;5;Test2;42");
         });
 
         it("should handle empty names properly", () => {
-            let parameter: INameCount[] = [
+            const parameter: INameCount[] = [
                 {
                     Name: "",
-                    Count: 5
+                    Count: 5,
                 },
                 {
                     Name: "",
-                    Count: 42
-                }
+                    Count: 42,
+                },
             ];
 
-            let result = packString(parameter);
+            const result = packString(parameter);
 
             assert.equal(result, ";5;;42");
         });
 
         it("should handle a null argument properly", () => {
-            let result = packString(null);
+            const result = packString(null);
 
             assert.equal(result, "");
         });

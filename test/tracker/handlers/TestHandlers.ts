@@ -1,59 +1,58 @@
-import {IGameClient} from "../../../src/tracker/GameClient";
-import {ClientMessage} from "../../../src/tracker/packets/Messages";
-import {IOnlineUserPojo} from "../../../src/db/models/OnlineUser";
-import {IUserInstance} from "../../../src/db/models/User";
-import {Session} from "../../../src/tracker/Session";
-import {IOnlineUserInstance} from "../../../src/db/models/OnlineUser";
-import {IHandlerContext} from "../../../src/tracker/handlers/Handlers";
-import {Database} from "../../../src/db/Database";
-import {initializeTestDatabase} from "../../db/TestDatabase";
-import {IGameServer} from "../../../src/tracker/GameServer";
-import {ServerList} from "../../../src/tracker/ServerList";
-import {GameClient} from "../../../src/tracker/GameClient";
 import * as winston from "winston";
+import {Database} from "../../../src/db/Database";
+import {IOnlineUserPojo} from "../../../src/db/models/OnlineUser";
+import {IOnlineUserInstance} from "../../../src/db/models/OnlineUser";
+import {IUserInstance} from "../../../src/db/models/User";
+import {IGameClient} from "../../../src/tracker/GameClient";
+import {GameClient} from "../../../src/tracker/GameClient";
+import {IGameServer} from "../../../src/tracker/GameServer";
+import {IHandlerContext} from "../../../src/tracker/handlers/Handlers";
+import {ClientMessage} from "../../../src/tracker/packets/Messages";
+import {ServerList} from "../../../src/tracker/ServerList";
+import {Session} from "../../../src/tracker/Session";
+import {initializeTestDatabase} from "../../db/TestDatabase";
 
 export class TestClient implements IGameClient {
-    sendToClient(msg: ClientMessage): Promise<void> {
+    public LastMessage: ClientMessage = null;
+
+    public RemoteAddress: string;
+    public RemotePort: number;
+    public Authenticated: boolean          = false;
+    public User: IUserInstance;
+    public Session: Session                = new Session(42);
+    public OnlineUser: IOnlineUserInstance = null;
+    public LastPing: number;
+    public IsServer: boolean               = false;
+
+    public sendToClient(msg: ClientMessage): Promise<void> {
         this.LastMessage = msg;
 
         return Promise.resolve();
     }
 
-    getOnlineUserData(): IOnlineUserPojo {
+    public getOnlineUserData(): IOnlineUserPojo {
         return {};
     }
-
-    LastMessage: ClientMessage = null;
-
-    RemoteAddress: string;
-    RemotePort: number;
-    Authenticated: boolean          = false;
-    User: IUserInstance;
-    Session: Session                = new Session(42);
-    OnlineUser: IOnlineUserInstance = null;
-    LastPing: number;
-    IsServer: boolean               = false;
 }
 
 export class TestServer implements IGameServer {
+    public ServerList: ServerList;
 
     constructor(db: Database) {
         this.ServerList = new ServerList(db);
     }
 
-    getClientFromPilot(pilot: string): GameClient {
+    public getClientFromPilot(pilot: string): GameClient {
         return null;
     }
-
-    ServerList: ServerList;
 }
 
-export interface TestContext extends IHandlerContext {
+export interface ITestContext extends IHandlerContext {
     Server: TestServer;
     Client: TestClient;
 }
 
-export async function getHandlerContext(): Promise<TestContext> {
+export async function getHandlerContext(): Promise<ITestContext> {
     const db = await initializeTestDatabase();
 
     return {

@@ -1,25 +1,24 @@
+import * as assert from "assert";
+import * as supertest from "supertest";
 import {IRouterContext} from "../../../../src/app/WebInterface";
 import {initializeTestWeb} from "../../TestWebInterface";
-
-import * as supertest from "supertest";
-import * as assert from "assert";
 import {ADMIN_JWT} from "../../TestWebInterface";
 import {USER_JWT} from "../../TestWebInterface";
+import {ITestWebContext} from "../../TestWebInterface";
 import {testAdminAccessControl} from "../../util";
-import {TestWebContext} from "../../TestWebInterface";
 
 describe("REST API: /servers", () => {
-    let context: TestWebContext;
+    let context: ITestWebContext;
     beforeEach(() => {
-        return initializeTestWeb().then(test_ctx=> {
-            context = test_ctx;
+        return initializeTestWeb().then((testCtx) => {
+            context = testCtx;
 
             return context.Database.Models.Server.create({
                                                              Name:       "Test",
                                                              NumPlayers: 8,
                                                              MaxPlayers: 16,
                                                              Ip:         "127.0.0.1",
-                                                             Port:       12345
+                                                             Port:       12345,
                                                          });
         });
     });

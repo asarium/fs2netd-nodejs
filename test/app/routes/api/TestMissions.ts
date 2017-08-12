@@ -1,18 +1,16 @@
-import {IRouterContext} from "../../../../src/app/WebInterface";
-import {initializeTestWeb} from "../../TestWebInterface";
 
-import * as supertest from "supertest";
 import * as assert from "assert";
+import * as supertest from "supertest";
+import {initializeTestWeb} from "../../TestWebInterface";
 import {ADMIN_JWT} from "../../TestWebInterface";
-import {USER_JWT} from "../../TestWebInterface";
+import {ITestWebContext} from "../../TestWebInterface";
 import {testAdminAccessControl} from "../../util";
-import {TestWebContext} from "../../TestWebInterface";
 
 describe("REST API: /missions", () => {
-    let context: TestWebContext;
+    let context: ITestWebContext;
     beforeEach(() => {
-        return initializeTestWeb().then(test_ctx=> {
-            context = test_ctx;
+        return initializeTestWeb().then((testCtx) => {
+            context = testCtx;
 
             return context.Database.Models.Mission.bulkCreate([
                                                                   {
@@ -28,7 +26,7 @@ describe("REST API: /missions", () => {
                                                                       MissionType: "bar",
                                                                       MaxPlayers:  56,
                                                                       Description: "blubb",
-                                                                  }
+                                                                  },
                                                               ]);
         });
     });
@@ -87,7 +85,7 @@ describe("REST API: /missions", () => {
                 assert.equal(res.body.max_players, 16);
                 assert.equal(res.body.description, "Another mission");
 
-                context.Database.Models.Mission.findById(res.body.id).then(mission => {
+                context.Database.Models.Mission.findById(res.body.id).then((mission) => {
                     assert.equal(mission.Filename, res.body.filename);
                     assert.equal(mission.CRC32, res.body.crc32);
                     assert.equal(mission.MissionType, res.body.mission_type);
@@ -95,8 +93,8 @@ describe("REST API: /missions", () => {
                     assert.equal(mission.Description, res.body.description);
 
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -142,7 +140,7 @@ describe("REST API: /missions", () => {
                 assert.equal(res.body.max_players, 16);
                 assert.equal(res.body.description, "Another mission");
 
-                context.Database.Models.Mission.findById(res.body.id).then(mission => {
+                context.Database.Models.Mission.findById(res.body.id).then((mission) => {
                     assert.equal(mission.Filename, res.body.filename);
                     assert.equal(mission.CRC32, res.body.crc32);
                     assert.equal(mission.MissionType, res.body.mission_type);
@@ -150,8 +148,8 @@ describe("REST API: /missions", () => {
                     assert.equal(mission.Description, res.body.description);
 
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -171,7 +169,7 @@ describe("REST API: /missions", () => {
 
                 assert.equal(res.status, 409);
 
-                context.Database.Models.Mission.findById(1).then(mission => {
+                context.Database.Models.Mission.findById(1).then((mission) => {
                     assert.equal(mission.Filename, "test.fs2");
                     assert.equal(mission.CRC32, 12345);
                     assert.equal(mission.MissionType, "Test");
@@ -179,8 +177,8 @@ describe("REST API: /missions", () => {
                     assert.equal(mission.Description, "Test mission");
 
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -216,11 +214,11 @@ describe("REST API: /missions", () => {
 
                 assert.equal(res.status, 200);
 
-                context.Database.Models.Mission.count().then(count => {
+                context.Database.Models.Mission.count().then((count) => {
                     assert.equal(count, 1);
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -235,11 +233,11 @@ describe("REST API: /missions", () => {
 
                 assert.equal(res.status, 400);
 
-                context.Database.Models.Mission.count().then(count => {
+                context.Database.Models.Mission.count().then((count) => {
                     assert.equal(count, 2);
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });

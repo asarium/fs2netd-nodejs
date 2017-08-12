@@ -1,26 +1,25 @@
-import {IRouterContext} from "../../../../src/app/WebInterface";
-import {initializeTestWeb} from "../../TestWebInterface";
-
-import * as supertest from "supertest";
 import * as assert from "assert";
 import * as Promise from "bluebird";
-import {TestWebContext} from "../../TestWebInterface";
+import * as supertest from "supertest";
+import {IRouterContext} from "../../../../src/app/WebInterface";
+import {initializeTestWeb} from "../../TestWebInterface";
+import {ITestWebContext} from "../../TestWebInterface";
 
 describe("REST API: /authenticate", () => {
-    let context: TestWebContext;
+    let context: ITestWebContext;
     beforeEach(() => {
-        return initializeTestWeb().then(test_ctx=> {
-            context = test_ctx;
+        return initializeTestWeb().then((testCtx) => {
+            context = testCtx;
 
             return context.Database.Models.OnlineUser.bulkBuild([
                                                                      {
-                                                                         PilotName: "test"
+                                                                         PilotName: "test",
                                                                      },
                                                                      {
-                                                                         PilotName: "test2"
-                                                                     }
+                                                                         PilotName: "test2",
+                                                                     },
                                                                  ]);
-        }).then(onlineusers => {
+        }).then((onlineusers) => {
             return Promise.all([onlineusers[0].setUser(context.TestAdmin), onlineusers[1].setUser(context.TestUser)]);
         });
     });

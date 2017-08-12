@@ -1,15 +1,15 @@
-import {TestWebContext} from "../../TestWebInterface";
+import * as assert from "assert";
+import * as supertest from "supertest";
+import {ITestWebContext} from "../../TestWebInterface";
 import {initializeTestWeb} from "../../TestWebInterface";
-import supertest = require("supertest");
-import assert = require("assert");
-import {testAdminAccessControl} from "../../util";
 import {ADMIN_JWT} from "../../TestWebInterface";
+import {testAdminAccessControl} from "../../util";
 
 describe("REST API: /users", () => {
-    let context: TestWebContext;
+    let context: ITestWebContext;
     beforeEach(() => {
-        return initializeTestWeb().then(test_ctx=> {
-            context = test_ctx;
+        return initializeTestWeb().then((testCtx) => {
+            context = testCtx;
         });
     });
 
@@ -18,7 +18,7 @@ describe("REST API: /users", () => {
             supertest.agent(context.WebInterface.App).put("/api/v1/users")
                      .expect("Content-type", /json/).expect(201).send({
                                                                           name:     "test",
-                                                                          password: "test"
+                                                                          password: "test",
                                                                       }).end((err, res) => {
                 if (err) {
                     return done(err);
@@ -30,22 +30,22 @@ describe("REST API: /users", () => {
 
                 context.Database.Models.User.count({
                                                        where: {
-                                                           Username: "test"
-                                                       }
-                                                   }).then(count => {
+                                                           Username: "test",
+                                                       },
+                                                   }).then((count) => {
                     assert.equal(count, 1);
 
                     done();
-                }).catch(err => {
-                    done(err);
-                })
+                }).catch((dbErr) => {
+                    done(dbErr);
+                });
             });
         });
         it("should reject a duplicate user", (done) => {
             supertest.agent(context.WebInterface.App).put("/api/v1/users")
                      .expect("Content-type", /json/).expect(409).send({
                                                                           name:     "test_user",
-                                                                          password: "test"
+                                                                          password: "test",
                                                                       }).end((err, res) => {
                 if (err) {
                     return done(err);
@@ -94,8 +94,8 @@ describe("REST API: /users", () => {
                     id:         1,
                     last_login: null,
                     roles:      [
-                        "Admin"
-                    ]
+                        "Admin",
+                    ],
                 });
                 done();
             });
@@ -128,14 +128,14 @@ describe("REST API: /users", () => {
 
                 context.Database.Models.User.count({
                                                        where: {
-                                                           Username: "test_admin"
-                                                       }
-                                                   }).then(count => {
+                                                           Username: "test_admin",
+                                                       },
+                                                   }).then((count) => {
                     assert.equal(count, 0);
                     done();
-                }).catch(err => {
-                    done(err);
-                })
+                }).catch((dbErr) => {
+                    done(dbErr);
+                });
             });
         });
 

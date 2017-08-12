@@ -1,18 +1,17 @@
+import * as assert from "assert";
+import * as supertest from "supertest";
 import {IRouterContext} from "../../../../src/app/WebInterface";
 import {initializeTestWeb} from "../../TestWebInterface";
-
-import * as supertest from "supertest";
-import * as assert from "assert";
 import {ADMIN_JWT} from "../../TestWebInterface";
 import {USER_JWT} from "../../TestWebInterface";
+import {ITestWebContext} from "../../TestWebInterface";
 import {testAdminAccessControl} from "../../util";
-import {TestWebContext} from "../../TestWebInterface";
 
 describe("REST API: /tables", () => {
-    let context: TestWebContext;
+    let context: ITestWebContext;
     beforeEach(() => {
-        return initializeTestWeb().then(test_ctx=> {
-            context = test_ctx;
+        return initializeTestWeb().then((testCtx) => {
+            context = testCtx;
 
             return context.Database.Models.Table.bulkCreate([
                                                                   {
@@ -24,7 +23,7 @@ describe("REST API: /tables", () => {
                                                                       Filename:    "foo.tbl",
                                                                       CRC32:       78543,
                                                                       Description: "blubb",
-                                                                  }
+                                                                  },
                                                               ]);
         });
     });
@@ -75,14 +74,14 @@ describe("REST API: /tables", () => {
                 assert.equal(res.body.crc32, 44543);
                 assert.equal(res.body.description, "Another table");
 
-                context.Database.Models.Table.findById(res.body.id).then(table => {
+                context.Database.Models.Table.findById(res.body.id).then((table) => {
                     assert.equal(table.Filename, res.body.filename);
                     assert.equal(table.CRC32, res.body.crc32);
                     assert.equal(table.Description, res.body.description);
 
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -122,14 +121,14 @@ describe("REST API: /tables", () => {
                 assert.equal(res.body.crc32, 44543);
                 assert.equal(res.body.description, "Another table");
 
-                context.Database.Models.Table.findById(res.body.id).then(table => {
+                context.Database.Models.Table.findById(res.body.id).then((table) => {
                     assert.equal(table.Filename, res.body.filename);
                     assert.equal(table.CRC32, res.body.crc32);
                     assert.equal(table.Description, res.body.description);
 
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -147,14 +146,14 @@ describe("REST API: /tables", () => {
 
                 assert.equal(res.status, 409);
 
-                context.Database.Models.Table.findById(1).then(table => {
+                context.Database.Models.Table.findById(1).then((table) => {
                     assert.equal(table.Filename, "test.tbl");
                     assert.equal(table.CRC32, 12345);
                     assert.equal(table.Description, "Test table");
 
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -188,11 +187,11 @@ describe("REST API: /tables", () => {
 
                 assert.equal(res.status, 200);
 
-                context.Database.Models.Table.count().then(count => {
+                context.Database.Models.Table.count().then((count) => {
                     assert.equal(count, 1);
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });
@@ -207,11 +206,11 @@ describe("REST API: /tables", () => {
 
                 assert.equal(res.status, 400);
 
-                context.Database.Models.Table.count().then(count => {
+                context.Database.Models.Table.count().then((count) => {
                     assert.equal(count, 2);
                     done();
-                }).catch(err => {
-                    done(err);
+                }).catch((dbErr) => {
+                    done(dbErr);
                 });
             });
         });

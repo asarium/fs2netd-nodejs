@@ -9,12 +9,17 @@
       true,
       "ban-keywords",
       "check-format",
-      "allow-leading-underscore"
+      "allow-leading-underscore",
+      "allow-pascal-case",
+      "allow-snake-case"
     ],
     "object-literal-sort-keys": false,
     "no-empty-interface": false,
     "max-classes-per-file": [],
-    "no-trailing-whitespace": false
+    "no-trailing-whitespace": false,
+    "max-line-length": [
+      false
+    ]
   },
   "rulesDirectory": []
 }

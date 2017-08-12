@@ -1,15 +1,15 @@
-import {Database} from "../../src/db/Database";
 import * as Promise from "bluebird";
+import {Database} from "../../src/db/Database";
 import {IDatabaseOptions} from "../../src/db/Database";
 
 export function initializeTestDatabase(): Promise<Database> {
-    let db = new Database();
+    const db = new Database();
 
-    let config: IDatabaseOptions = {
+    const config: IDatabaseOptions = {
         sequelize: {
             dialect: "sqlite",
-            logging: false
-        }
+            logging: false,
+        },
     };
 
     return db.initialize(config).then(() => db);

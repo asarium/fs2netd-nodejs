@@ -1,8 +1,8 @@
-import {Database} from "../../src/db/Database";
-import {initializeTestDatabase} from "../db/TestDatabase";
-import {ServerList} from "../../src/tracker/ServerList";
 import * as assert from "assert";
 import * as sinon from "sinon";
+import {Database} from "../../src/db/Database";
+import {ServerList} from "../../src/tracker/ServerList";
+import {initializeTestDatabase} from "../db/TestDatabase";
 
 describe("ServerList", () => {
     let list: ServerList;
@@ -16,7 +16,7 @@ describe("ServerList", () => {
     });
 
     beforeEach(() => {
-        return initializeTestDatabase().then(testDb => {
+        return initializeTestDatabase().then((testDb) => {
             db = testDb;
             list = new ServerList(testDb);
         });
@@ -28,7 +28,7 @@ describe("ServerList", () => {
 
     it("should initialize with the servers from the database", () => {
         return db.Models.Server.create({
-                                           Name: "TestServer"
+                                           Name: "TestServer",
                                        }).then(() => {
             return list.initialize();
         }).then(() => {
@@ -42,7 +42,7 @@ describe("ServerList", () => {
                                   Name: "Test",
                               }).then(() => {
             return db.Models.Server.findAll();
-        }).then(servers => {
+        }).then((servers) => {
             assert.equal(servers.length, 1);
             assert.equal(servers[0].Name, "Test");
         });
@@ -54,7 +54,7 @@ describe("ServerList", () => {
                                   Ip: "127.0.0.1",
                                   Port: 12345,
                               }).then(() => {
-            let server = list.getServer("127.0.0.1", 12345);
+            const server = list.getServer("127.0.0.1", 12345);
 
             assert.notEqual(server, null);
         });
@@ -67,13 +67,13 @@ describe("ServerList", () => {
                                   Port: 12345,
                               }).then(() => {
             return db.Models.Server.find();
-        }).then(server => {
+        }).then((server) => {
             server.Name = "Test2";
 
             return list.updateServer(server);
         }).then(() => {
             return db.Models.Server.find();
-        }).then(server => {
+        }).then((server) => {
             assert.equal(server.Name, "Test2");
         });
     });
@@ -83,23 +83,23 @@ describe("ServerList", () => {
                                   Name: "Test",
                                   Ip: "127.0.0.1",
                                   Port: 12345,
-                              }).then(server => {
+                              }).then((server) => {
             return list.removeServer(server);
         }).then(() => {
             return db.Models.Server.count();
-        }).then(count => {
+        }).then((count) => {
             assert.equal(count, 0);
         });
     });
 
     it("should expire servers correctly", () => {
         return list.addServer({
-                                  Name: "test1"
+                                  Name: "test1",
                               }).then(() => {
             clock.tick(60 * 1000);
 
             return list.addServer({
-                                      Name: "test2"
+                                      Name: "test2",
                                   });
         }).then(() => {
             clock.tick(4.5 * 60 * 1000);
@@ -110,7 +110,7 @@ describe("ServerList", () => {
             assert.equal(list.Servers[0].Name, "test2");
 
             return db.Models.Server.findAll();
-        }).then(servers => {
+        }).then((servers) => {
             assert.equal(servers.length, 1);
             assert.equal(servers[0].Name, "test2");
         });

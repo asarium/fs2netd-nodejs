@@ -1,56 +1,56 @@
 import * as assert from "assert";
 import * as Promise from "bluebird";
-import {getHandlerContext} from "./TestHandlers";
-import {TestContext} from "./TestHandlers";
 import {IServerPojo} from "../../../src/db/models/Server";
-import {handleServerListMessage} from "../../../src/tracker/handlers/ServerListHandler";
-import {ServerListMessage} from "../../../src/tracker/packets/Messages";
-import {ServerListReply} from "../../../src/tracker/packets/Messages";
+import {handleServerDisconnectMessage} from "../../../src/tracker/handlers/ServerListHandler";
 import {handleServerStartMessage} from "../../../src/tracker/handlers/ServerListHandler";
-import {ServerStartMessage} from "../../../src/tracker/packets/Messages";
+import {handleServerListMessage} from "../../../src/tracker/handlers/ServerListHandler";
 import {handleServerUpdateMessage} from "../../../src/tracker/handlers/ServerListHandler";
+import {handleChannelCountRequest} from "../../../src/tracker/handlers/ServerListHandler";
+import {ServerListReply} from "../../../src/tracker/packets/Messages";
+import {ServerStartMessage} from "../../../src/tracker/packets/Messages";
+import {ServerListMessage} from "../../../src/tracker/packets/Messages";
 import {ServerUpdateMessage} from "../../../src/tracker/packets/Messages";
 import {ServerDisconnectMessage} from "../../../src/tracker/packets/Messages";
-import {handleServerDisconnectMessage} from "../../../src/tracker/handlers/ServerListHandler";
-import {handleChannelCountRequest} from "../../../src/tracker/handlers/ServerListHandler";
 import {ChannelCountRequest} from "../../../src/tracker/packets/Messages";
 import {ChannelCountReply} from "../../../src/tracker/packets/Messages";
+import {ITestContext} from "./TestHandlers";
+import {getHandlerContext} from "./TestHandlers";
 
 describe("ServerListHandler", () => {
-    let context: TestContext;
+    let context: ITestContext;
     beforeEach(() => {
-        return getHandlerContext().then(ctx => {
+        return getHandlerContext().then((ctx) => {
             context = ctx;
         });
     });
 
     describe("#handleServerListMessage()", () => {
         beforeEach(() => {
-            let servers: IServerPojo[] = [
+            const servers: IServerPojo[] = [
                 {
                     Name: "test1",
-                    TrackerChannel: "test"
+                    TrackerChannel: "test",
                 },
                 {
                     Name: "test2",
-                    TrackerChannel: ""
+                    TrackerChannel: "",
                 },
                 {
                     Name: "test3",
-                    TrackerChannel: "foo"
-                }
+                    TrackerChannel: "foo",
+                },
             ];
 
-            return Promise.all(servers.map(data => context.Database.createServer(data).save()))
+            return Promise.all(servers.map((data) => context.Database.createServer(data).save()))
                           .then(() => context.Server.ServerList.initialize());
         });
 
         it("should send all servers for an unfiltered message", () => {
             return handleServerListMessage(new ServerListMessage(0, 0), context).then(() => {
-                let message = context.Client.LastMessage;
+                const message = context.Client.LastMessage;
 
                 assert.equal(message instanceof ServerListReply, true);
-                let msg = <ServerListReply>message;
+                const msg = message as ServerListReply;
 
                 assert.equal(msg.List.length, 3);
 
@@ -67,10 +67,10 @@ describe("ServerListHandler", () => {
 
         it("should send the right servers for a filter message", () => {
             return handleServerListMessage(new ServerListMessage(0, 0, "test"), context).then(() => {
-                let message = context.Client.LastMessage;
+                const message = context.Client.LastMessage;
 
                 assert.equal(message instanceof ServerListReply, true);
-                let msg = <ServerListReply>message;
+                const msg = message as ServerListReply;
 
                 assert.equal(msg.List.length, 2);
 
@@ -86,13 +86,13 @@ describe("ServerListHandler", () => {
     describe("#handleServerStartMessage()", () => {
         it("should add the server to the database", () => {
             return handleServerStartMessage(new ServerStartMessage({
-                name: "test"
+                name: "test",
             }), context).then(() => {
                 assert.equal(context.Client.IsServer, true);
                 assert.equal(context.Client.LastMessage, null);
 
                 return context.Database.Models.Server.findAll();
-            }).then(servers => {
+            }).then((servers) => {
                 assert.equal(servers.length, 1);
 
                 assert.equal(servers[0].Name, "test");
@@ -107,7 +107,7 @@ describe("ServerListHandler", () => {
 
             return handleServerUpdateMessage(new ServerUpdateMessage({}), context).then(() => {
                 return context.Database.Models.Server.findAll();
-            }).then(servers => {
+            }).then((servers) => {
                 assert.equal(servers.length, 0);
             });
         });
@@ -121,12 +121,12 @@ describe("ServerListHandler", () => {
                                                            Name: "test",
                                                            Ip: "::1",
                                                            Port: 12435,
-                                                           MissionName: "test1"
+                                                           MissionName: "test1",
                                                        }).then(() => {
                 return handleServerUpdateMessage(new ServerUpdateMessage({mission_name: "test2"}), context);
             }).then(() => {
                 return context.Database.Models.Server.findAll();
-            }).then(servers => {
+            }).then((servers) => {
                 assert.equal(servers.length, 1);
 
                 assert.equal(servers[0].MissionName, "test2");
@@ -144,14 +144,14 @@ describe("ServerListHandler", () => {
                                                            Name: "test",
                                                            Ip: "::1",
                                                            Port: 12435,
-                                                           MissionName: "test1"
+                                                           MissionName: "test1",
                                                        }).then(() => {
                 return handleServerDisconnectMessage(new ServerDisconnectMessage(), context);
             }).then(() => {
                 assert.equal(context.Client.IsServer, false);
 
                 return context.Database.Models.Server.findAll();
-            }).then(servers => {
+            }).then((servers) => {
                 assert.equal(servers.length, 0);
             });
         });
@@ -159,33 +159,33 @@ describe("ServerListHandler", () => {
 
     describe("#handleChannelCountRequest()", () => {
         beforeEach(() => {
-            let servers: IServerPojo[] = [
+            const servers: IServerPojo[] = [
                 {
                     Name: "test1",
-                    TrackerChannel: "test"
+                    TrackerChannel: "test",
                 },
                 {
                     Name: "test2",
-                    TrackerChannel: ""
+                    TrackerChannel: "",
                 },
                 {
                     Name: "test3",
-                    TrackerChannel: "foo"
-                }
+                    TrackerChannel: "foo",
+                },
             ];
 
-            return Promise.all(servers.map(data => context.Database.createServer(data).save()))
+            return Promise.all(servers.map((data) => context.Database.createServer(data).save()))
                           .then(() => context.Server.ServerList.initialize());
         });
 
         it("should send the correct channel count", () => {
             return handleChannelCountRequest(new ChannelCountRequest("test"), context).then(() => {
-                let message = context.Client.LastMessage;
+                const message = context.Client.LastMessage;
 
                 assert.equal(message instanceof ChannelCountReply, true);
 
-                assert.equal((<ChannelCountReply>message).Channel, "test");
-                assert.equal((<ChannelCountReply>message).Count, 2);
+                assert.equal((message as ChannelCountReply).Channel, "test");
+                assert.equal((message as ChannelCountReply).Count, 2);
             });
         });
     });

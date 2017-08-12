@@ -36,32 +36,32 @@ function convertData(data: any): Message {
             return new GetPilotMessage(data.sid, data.pilotname, data.create !== 0);
         case Identifiers.PCKT_PILOT_UPDATE:
             const pilotData: IPilotPojo = {
-                PilotName: data.pilot_name,
-                Score: data.score,
-                MissionsFlown: data.missions_flown,
-                FlightTime: data.flight_time,
-                LastFlown: new Date(data.last_flown * 1000),
-                KillCount: data.kill_count,
-                KillCountOk: data.kill_count_ok,
-                Assists: data.assists,
-                PrimaryShotsFired: data.p_shots_fired,
-                PrimaryShotsHits: data.p_shots_hit,
-                PrimaryBoneheadHits: data.p_bonehead_hits,
-                SecondaryShotsFired: data.s_shots_fired,
-                SecondaryShotsHits: data.s_shots_hit,
+                PilotName:             data.pilot_name,
+                Score:                 data.score,
+                MissionsFlown:         data.missions_flown,
+                FlightTime:            data.flight_time,
+                LastFlown:             new Date(data.last_flown * 1000),
+                KillCount:             data.kill_count,
+                KillCountOk:           data.kill_count_ok,
+                Assists:               data.assists,
+                PrimaryShotsFired:     data.p_shots_fired,
+                PrimaryShotsHits:      data.p_shots_hit,
+                PrimaryBoneheadHits:   data.p_bonehead_hits,
+                SecondaryShotsFired:   data.s_shots_fired,
+                SecondaryShotsHits:    data.s_shots_hit,
                 SecondaryBoneheadHits: data.s_bonehead_hits,
-                Rank: data.rank,
-                NumShipKills: data.num_ship_kills,
-                ShipKillsPacked: packString(data.ship_kills.map((kill) => {
+                Rank:                  data.rank,
+                NumShipKills:          data.num_ship_kills,
+                ShipKillsPacked:       packString(data.ship_kills.map((kill) => {
                     return {
-                        Name: kill.name,
+                        Name:  kill.name,
                         Count: kill.count,
                     };
                 })),
-                NumMedals: data.num_medals,
-                MedalsPacked: packString(data.medals.map((medal) => {
+                NumMedals:             data.num_medals,
+                MedalsPacked:          packString(data.medals.map((medal) => {
                     return {
-                        Name: "",
+                        Name:  "",
                         Count: medal.count,
                     };
                 })),
@@ -85,7 +85,7 @@ function convertData(data: any): Message {
 
             return new TableRequestMessage(data.files.map((entry) => {
                 return {
-                    Name: entry.name,
+                    Name:  entry.name,
                     CRC32: entry.crc32,
                 };
             }));
@@ -130,13 +130,15 @@ export class PacketHandler {
 
         this._parser = new PacketParser();
         this._parser.on("readable", () => {
-            let e;
-            while (e = this._parser.read()) {
+            let e = this._parser.read();
+            while (e) {
                 const message = convertData(e);
 
                 if (message != null) {
                     this._onMessage.trigger(message);
                 }
+
+                e = this._parser.read();
             }
         });
 
