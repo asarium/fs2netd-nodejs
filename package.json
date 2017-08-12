@@ -6,6 +6,8 @@
     "test": "gulp tests",
     "deploy": "gulp deploy"
   },
+  "repository": "https://github.com/asarium/fs2netd-nodejs",
+  "license": "MIT",
   "dependencies": {
     "@types/bcryptjs": "^2.4.0",
     "@types/bluebird": "^3.5.8",
