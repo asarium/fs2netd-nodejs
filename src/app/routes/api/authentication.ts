@@ -1,7 +1,5 @@
 import {RequestHandler} from "express";
 import * as passport from "passport";
-import {IHandlerContext} from "../../../tracker/handlers/Handlers";
-import {IRouterContext} from "../../WebInterface";
 import {IRoleInstance} from "../../../db/models/Role";
 
 export function authenticate(): RequestHandler {
