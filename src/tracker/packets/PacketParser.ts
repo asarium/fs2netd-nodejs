@@ -117,7 +117,7 @@ export function PacketParser() {
 
 util.inherits(PacketParser, Dissolve);
 
-PacketParser.prototype.string = (name) => {
+PacketParser.prototype.string = (name: any) => {
     const len = [name, "len"].join("_");
 
     return this.int32le(len).tap(() => {

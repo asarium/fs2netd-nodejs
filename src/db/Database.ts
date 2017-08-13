@@ -25,7 +25,7 @@ const defaultOptions: Options = {
     pool:    {
         max: config.get<number>("db.connectionLimit"),
     },
-    logging: (msg) => {
+    logging: (msg: any) => {
         winston.info(msg);
     },
 };

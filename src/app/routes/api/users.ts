@@ -1,8 +1,9 @@
 
 import {Router} from "express";
+import e = require("express");
 import * as promiseRouter from "express-promise-router";
 import * as paperwork from "paperwork";
-import {ADMIN_ROLE} from "../../../db/models/Role";
+import {ADMIN_ROLE, IRoleInstance} from "../../../db/models/Role";
 import {setPassword} from "../../../util/Authentication";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
@@ -16,7 +17,7 @@ const LOGIN_MODEL = {
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.put("/", paperwork.accept(LOGIN_MODEL), async (req, res) => {
+    router.put("/", paperwork.accept(LOGIN_MODEL), async (req: e.Request, res: e.Response) => {
         let user = await context.Database.Models.User.find({
                                                      where: {
                                                          Username: req.body.name,
@@ -26,7 +27,7 @@ export = (context: IRouterContext): Router => {
             res.status(409).json({
                                      err: "User already exists!",
                                  });
-            return null;
+            return;
         }
 
         user = context.Database.Models.User.build({Username: req.body.name});
@@ -39,7 +40,7 @@ export = (context: IRouterContext): Router => {
                              });
     });
 
-    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const users = await context.Database.Models.User.findAll();
 
         res.status(200).send(users.map((user) => {
@@ -51,20 +52,20 @@ export = (context: IRouterContext): Router => {
         }));
     });
 
-    router.get("/me", authenticate(), async (req, res) => {
+    router.get("/me", authenticate(), async (req: e.Request, res: e.Response) => {
         const roles = await req.user.getRoles();
 
         const jsonData = {
             name:       req.user.Username,
             last_login: req.user.LastLogin,
             id:         req.user.id,
-            roles:      roles.map((r) => r.Name),
+            roles:      roles.map((r: IRoleInstance) => r.Name),
         };
 
         res.status(200).json(jsonData);
     });
 
-    router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const requested = await context.Database.Models.User.findById(req.params.id);
 
         if (!requested) {
@@ -90,7 +91,7 @@ export = (context: IRouterContext): Router => {
         res.status(200).json(jsonData);
     });
 
-    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const deleteUser = await context.Database.Models.User.findById(req.params.id);
 
         if (!deleteUser) {

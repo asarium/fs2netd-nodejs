@@ -1,13 +1,13 @@
 import * as config from "config";
 import {Router} from "express";
+import e = require("express");
 import * as promiseRouter from "express-promise-router";
 import * as jwt from "jsonwebtoken";
 import * as paperwork from "paperwork";
 import * as passport from "passport";
+import {ExtractJwt, Strategy as JwtStrategy, VerifiedCallback} from "passport-jwt";
 import {verifyPassword} from "../../../util/Authentication";
 import {IRouterContext} from "../../WebInterface";
-
-import {ExtractJwt, Strategy as JwtStrategy} from "passport-jwt";
 
 const JWT_SECRET     = config.get<string>("web.jwt.secret");
 const JWT_EXPIRES_IN = config.get<string>("web.jwt.expires_in");
@@ -20,7 +20,7 @@ const LOGIN_MODEL = {
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.post("/", paperwork.accept(LOGIN_MODEL), async (req, res): Promise<void> => {
+    router.post("/", paperwork.accept(LOGIN_MODEL), async (req: e.Request, res: e.Response): Promise<void> => {
         const user = await context.Database.Models.User.find({
                                                                  where: {
                                                                      Username: req.body.name,
@@ -60,7 +60,7 @@ export = (context: IRouterContext): Router => {
         jwtFromRequest: ExtractJwt.fromAuthHeader(),
     };
 
-    passport.use(new JwtStrategy(jwtOptions, (payload, done) => {
+    passport.use(new JwtStrategy(jwtOptions, (payload: any, done: VerifiedCallback) => {
         if (typeof payload.id !== "number") {
             return done(null, false);
         }

@@ -1,6 +1,8 @@
 import * as express from "express";
-import {Router} from "express";
+import e = require("express");
 import {RequestHandler} from "express";
+import {Router} from "express";
+import * as promiseRouter from "express-promise-router";
 import {ADMIN_ROLE} from "../../../db/models/Role";
 import {ITablePojo} from "../../../db/models/Table";
 import {IUserInstance} from "../../../db/models/User";
@@ -8,12 +10,10 @@ import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
 
-import * as promiseRouter from "express-promise-router";
-
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const tables = await context.Database.Models.Table.findAll();
 
         const jsondata = tables.map((table) => {
@@ -28,48 +28,49 @@ export = (context: IRouterContext): Router => {
         res.status(200).json(jsondata);
     });
 
-    router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
-        if (typeof req.body.filename !== "string" || typeof req.body.crc32 !== "number" ||
-            typeof req.body.description !== "string") {
-            res.status(400).json({
-                                     status: "bad_request",
-                                     reason: "Parameters were invalid",
-                                     errors: [
-                                         "Invalid ID specified",
-                                     ],
-                                 });
-            return;
-        }
+    router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]),
+               async (req: e.Request, res: e.Response): Promise<void> => {
+                   if (typeof req.body.filename !== "string" || typeof req.body.crc32 !== "number" ||
+                       typeof req.body.description !== "string") {
+                       res.status(400).json({
+                                                status: "bad_request",
+                                                reason: "Parameters were invalid",
+                                                errors: [
+                                                    "Invalid ID specified",
+                                                ],
+                                            });
+                       return;
+                   }
 
-        const data: ITablePojo = {
-            Filename:    req.body.filename,
-            CRC32:       req.body.crc32,
-            Description: req.body.description,
-        };
+                   const data: ITablePojo = {
+                       Filename:    req.body.filename,
+                       CRC32:       req.body.crc32,
+                       Description: req.body.description,
+                   };
 
-        const count = await context.Database.Models.Table.count({
-                                                                    where: {
-                                                                        Filename: req.body.filename,
-                                                                    },
-                                                                });
-        if (count !== 0) {
-            res.status(409).json({
-                                     err: "Table already exists!",
-                                 });
-            return null;
-        }
+                   const count = await context.Database.Models.Table.count({
+                                                                               where: {
+                                                                                   Filename: req.body.filename,
+                                                                               },
+                                                                           });
+                   if (count !== 0) {
+                       res.status(409).json({
+                                                err: "Table already exists!",
+                                            });
+                       return;
+                   }
 
-        const table = await context.Database.Models.Table.create(data);
+                   const table = await context.Database.Models.Table.create(data);
 
-        res.status(201).json({
-                                 filename:    table.Filename,
-                                 crc32:       table.CRC32,
-                                 description: table.Description,
-                                 id:          table.id,
-                             });
-    });
+                   res.status(201).json({
+                                            filename:    table.Filename,
+                                            crc32:       table.CRC32,
+                                            description: table.Description,
+                                            id:          table.id,
+                                        });
+               });
 
-    router.post("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.post("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const table = await context.Database.Models.Table.findById(req.params.id);
 
         if (!table) {
@@ -113,7 +114,7 @@ export = (context: IRouterContext): Router => {
                              });
     });
 
-    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const table = await context.Database.Models.Table.findById(req.params.id);
 
         if (!table) {

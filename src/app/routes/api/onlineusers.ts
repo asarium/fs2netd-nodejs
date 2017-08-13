@@ -1,12 +1,12 @@
 import {Router} from "express";
-import {IRouterContext} from "../../WebInterface";
-
+import e = require("express");
 import * as promiseRouter from "express-promise-router";
+import {IRouterContext} from "../../WebInterface";
 
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.get("/", async (req, res) => {
+    router.get("/", async (req: e.Request, res: e.Response) => {
         // TODO: Returns duplicate values when a user is logged in twice
         const onlineUsers = await context.Database.Models.OnlineUser.findAll();
 

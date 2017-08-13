@@ -30,7 +30,7 @@ function convertData(data: any): Message {
         case Identifiers.PCKT_LOGIN_AUTH:
             return new LoginMessage(data.username, data.password, data.port);
         case Identifiers.PCKT_DUP_LOGIN_RQST:
-            return new DuplicateLoginRequest(data.sid, data.ids.map((entry) => entry.id));
+            return new DuplicateLoginRequest(data.sid, data.ids.map((entry: any) => entry.id));
 
         case Identifiers.PCKT_PILOT_GET:
             return new GetPilotMessage(data.sid, data.pilotname, data.create !== 0);
@@ -52,14 +52,14 @@ function convertData(data: any): Message {
                 SecondaryBoneheadHits: data.s_bonehead_hits,
                 Rank:                  data.rank,
                 NumShipKills:          data.num_ship_kills,
-                ShipKillsPacked:       packString(data.ship_kills.map((kill) => {
+                ShipKillsPacked:       packString(data.ship_kills.map((kill: any) => {
                     return {
                         Name:  kill.name,
                         Count: kill.count,
                     };
                 })),
                 NumMedals:             data.num_medals,
-                MedalsPacked:          packString(data.medals.map((medal) => {
+                MedalsPacked:          packString(data.medals.map((medal: any) => {
                     return {
                         Name:  "",
                         Count: medal.count,
@@ -83,7 +83,7 @@ function convertData(data: any): Message {
             return new ServerListMessage(data.type, data.status, data.filter);
         case Identifiers.PCKT_TABLES_RQST:
 
-            return new TableRequestMessage(data.files.map((entry) => {
+            return new TableRequestMessage(data.files.map((entry: any) => {
                 return {
                     Name:  entry.name,
                     CRC32: entry.crc32,
@@ -118,7 +118,7 @@ function convertData(data: any): Message {
 
 export class PacketHandler {
     private _socket: Socket;
-    private _parser;
+    private _parser: any;
     private _onMessage: LiteEvent<Message> = new LiteEvent<Message>();
 
     public get Message(): ILiteEvent<Message> {

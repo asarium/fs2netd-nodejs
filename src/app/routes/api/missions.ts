@@ -1,4 +1,5 @@
 import {Router} from "express";
+import e = require("express");
 import * as promiseRouter from "express-promise-router";
 import * as paperwork from "paperwork";
 import {IMissionPojo} from "../../../db/models/Mission";
@@ -20,7 +21,7 @@ const MISSION_TEMPLATE = {
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const missions = await context.Database.Models.Mission.findAll();
 
         res.status(200).json(missions.map((mission) => {
@@ -36,7 +37,7 @@ export = (context: IRouterContext): Router => {
     });
 
     router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]),
-               paperwork.accept(MISSION_TEMPLATE), async (req, res) => {
+               paperwork.accept(MISSION_TEMPLATE), async (req: e.Request, res: e.Response) => {
             const count = await context.Database.Models.Mission.count({
                                                                           where: {
                                                                               Filename: req.body.filename,
@@ -71,7 +72,7 @@ export = (context: IRouterContext): Router => {
         });
 
     router.post("/:id", authenticate(), checkUserRole([ADMIN_ROLE]),
-                paperwork.accept(MISSION_TEMPLATE), async (req, res) => {
+                paperwork.accept(MISSION_TEMPLATE), async (req: e.Request, res: e.Response) => {
             let mission = await context.Database.Models.Mission.findById(req.params.id);
 
             if (!mission) {
@@ -119,7 +120,7 @@ export = (context: IRouterContext): Router => {
                                  });
         });
 
-    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req, res) => {
+    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
         const mission = await context.Database.Models.Mission.findById(req.params.id);
 
         if (!mission) {

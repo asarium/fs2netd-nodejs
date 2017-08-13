@@ -32,7 +32,8 @@ export async function handleLoginMessage(message: Message, context: IHandlerCont
 
     if (user == null) {
         // If there is no such user then reject the login
-        return context.Client.sendToClient(new LoginReply(false, -1, -1));
+        await context.Client.sendToClient(new LoginReply(false, -1, -1));
+        return;
     }
     try {
         // Check the password we got against the database data
@@ -73,7 +74,7 @@ export async function handleLoginMessage(message: Message, context: IHandlerCont
         await context.Client.sendToClient(new LoginReply(true, context.Client.Session.Id, pilotCount));
     } catch (err) {
         context.Logger.error("Error while authenticating User!", err);
-        return context.Client.sendToClient(new LoginReply(false, -1, -1));
+        await context.Client.sendToClient(new LoginReply(false, -1, -1));
     }
 }
 
