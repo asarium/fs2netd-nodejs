@@ -51,4 +51,4 @@ test/**/*.map
 build/
 deploy/
 
-typings
+.nyc_output
