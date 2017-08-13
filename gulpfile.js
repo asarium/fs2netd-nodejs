@@ -2,9 +2,6 @@
 
 const gulp = require('gulp');
 const ts = require('gulp-typescript');
-const mocha = require('gulp-mocha');
-
-const tslint = require("gulp-tslint");
 
 const tsProject = ts.createProject('tsconfig.json', {
     "rootDir": "."
@@ -15,13 +12,17 @@ gulp.task('tsc', () => {
     return tsResult.js.pipe(gulp.dest('build'));
 });
 
-gulp.task("tslint", () =>
+gulp.task("tslint", () => {
+    const tslint = require("gulp-tslint");
+
     tsProject.src().pipe(tslint({
         formatter: "verbose"
     })).pipe(tslint.report())
-);
+});
 
 gulp.task("test", ["tsc"], () => {
+    const mocha = require('gulp-mocha');
+
     return gulp.src('build/test/**/*.js', {read: false}).pipe(mocha());
 });
 

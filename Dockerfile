@@ -5,7 +5,7 @@ WORKDIR /app-build
 
 COPY package.json .
 
-RUN npm install
+RUN npm install --production
 
 COPY . .
 
