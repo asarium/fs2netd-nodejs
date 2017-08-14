@@ -48,7 +48,7 @@ export = (context: IRouterContext): Router => {
         };
         jwt.sign(userData, JWT_SECRET, {
             expiresIn: JWT_EXPIRES_IN,
-        }, (token) => {
+        }, (err, token) => {
             res.status(200).json({
                                      token: "JWT " + token,
                                  });

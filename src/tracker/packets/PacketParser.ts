@@ -117,7 +117,9 @@ export function PacketParser() {
 
 util.inherits(PacketParser, Dissolve);
 
-PacketParser.prototype.string = (name: any) => {
+// 'this' works differently when using arrow functions so we need to use a standard function here
+// tslint:disable-next-line
+PacketParser.prototype.string = function (name: any) {
     const len = [name, "len"].join("_");
 
     return this.int32le(len).tap(() => {

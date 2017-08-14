@@ -1,4 +1,4 @@
-import * as Promise from "bluebird";
+
 import {Database} from "../../src/db/Database";
 import {IDatabaseOptions} from "../../src/db/Database";
 

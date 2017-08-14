@@ -1,12 +1,10 @@
 "use strict";
-/// <reference path="../../typings/main.d.ts" />
 
 import {Server} from "net";
 import {Database} from "../db/Database";
 import {GameClient} from "./GameClient";
 import {ServerList} from "./ServerList";
 
-import * as Promise from "bluebird";
 import * as config from "config";
 import * as net from "net";
 import * as util from "util";

@@ -41,6 +41,7 @@ export async function handleLoginMessage(message: Message, context: IHandlerCont
 
         context.Client.Authenticated = valid;
         if (!valid) {
+            context.Logger.info("Rejecting authentication for %s because of a wrong password", msg.Username);
             // Wrong password
             await context.Client.sendToClient(new LoginReply(false, -1, -1));
             return;

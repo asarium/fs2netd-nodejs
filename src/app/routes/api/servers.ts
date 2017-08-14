@@ -18,6 +18,8 @@ export = (context: IRouterContext): Router => {
                     name:        server.Name,
                     num_players: server.NumPlayers,
                     max_players: server.MaxPlayers,
+                    mission:     server.MissionName,
+                    title:       server.Title,
                     id:          server.id,
                 };
             });

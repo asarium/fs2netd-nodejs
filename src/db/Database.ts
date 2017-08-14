@@ -1,4 +1,3 @@
-import * as Promise from "bluebird";
 import * as config from "config";
 import * as sequelize from "sequelize";
 import {Options} from "sequelize";
@@ -51,7 +50,7 @@ export class Database {
         return this._models;
     }
 
-    public initialize(options?: IDatabaseOptions): Promise<void> {
+    public async initialize(options?: IDatabaseOptions): Promise<void> {
         options = options || {};
 
         options.sequelize = options.sequelize || defaultOptions;
@@ -87,30 +86,30 @@ export class Database {
         return this._models.User.build(data);
     }
 
-    public getUserByName(username: string): Promise<IUserInstance> {
-        return this._models.User.find({
-                                          where: {
-                                              Username: username,
-                                          },
-                                      });
+    public async getUserByName(username: string): Promise<IUserInstance> {
+        return await this._models.User.find({
+                                                where: {
+                                                    Username: username,
+                                                },
+                                            });
     }
 
-    public updateLastLogin(user: IUserInstance): Promise<IUserInstance> {
-        return user.update({
-                               LastLogin: this.now(),
-                           });
+    public async updateLastLogin(user: IUserInstance): Promise<IUserInstance> {
+        return await user.update({
+                                     LastLogin: this.now(),
+                                 });
     }
 
     public createOnlineUser(data: IOnlineUserPojo): IOnlineUserInstance {
         return this._models.OnlineUser.build(data);
     }
 
-    public getPilot(user: IUserInstance, pilotname: string): Promise<IPilotInstance> {
-        return user.getPilots({
-                                  where: {
-                                      PilotName: pilotname,
-                                  },
-                              }).then((pilots) => {
+    public async getPilot(user: IUserInstance, pilotname: string): Promise<IPilotInstance> {
+        return await user.getPilots({
+                                        where: {
+                                            PilotName: pilotname,
+                                        },
+                                    }).then((pilots) => {
             if (pilots.length <= 0) {
                 return null;
             } else {
@@ -123,44 +122,44 @@ export class Database {
         return this._models.Pilot.build(values);
     }
 
-    public clearOnlineUsers(): Promise<void> {
-        return this._models.OnlineUser.truncate();
+    public async clearOnlineUsers(): Promise<void> {
+        return await this._models.OnlineUser.truncate();
     }
 
     public createServer(values: IServerPojo): IServerInstance {
         return this._models.Server.build(values);
     }
 
-    public clearServers(): Promise<void> {
-        return this._models.Server.truncate();
+    public async clearServers(): Promise<void> {
+        return await this._models.Server.truncate();
     }
 
-    public getTables(): Promise<ITableInstance[]> {
-        return this._models.Table.findAll();
+    public async getTables(): Promise<ITableInstance[]> {
+        return await this._models.Table.findAll();
     }
 
-    public getMissions(): Promise<IMissionInstance[]> {
-        return this._models.Mission.findAll();
+    public async getMissions(): Promise<IMissionInstance[]> {
+        return await this._models.Mission.findAll();
     }
 
-    public getIpBans(): Promise<IpBanInstance[]> {
-        return this._models.IpBan.findAll({
-                                              where: {
-                                                  Expiration: {
-                                                      $gt: this.now(),
-                                                  },
-                                              },
-                                          });
+    public async getIpBans(): Promise<IpBanInstance[]> {
+        return await this._models.IpBan.findAll({
+                                                    where: {
+                                                        Expiration: {
+                                                            $gt: this.now(),
+                                                        },
+                                                    },
+                                                });
     }
 
-    public trimIpBanList(): Promise<void> {
-        return this.Models.IpBan.destroy({
-                                             where: {
-                                                 Expiration: {
-                                                     $lt: this.now(),
-                                                 },
-                                             },
-                                         }).then(() => {
+    public async trimIpBanList(): Promise<void> {
+        return await this.Models.IpBan.destroy({
+                                                   where: {
+                                                       Expiration: {
+                                                           $lt: this.now(),
+                                                       },
+                                                   },
+                                               }).then(() => {
             return;
         });
     }

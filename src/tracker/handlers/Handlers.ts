@@ -51,27 +51,27 @@ interface IHandlerDefinition {
 }
 
 const handlers: IHandlerDefinition[] = [
-    {MessageType: typeof(LoginMessage), Handler: handleLoginMessage},
-    {MessageType: typeof(DuplicateLoginRequest), Handler: handleDuplicateLoginMessage},
+    {MessageType: LoginMessage, Handler: handleLoginMessage},
+    {MessageType: DuplicateLoginRequest, Handler: handleDuplicateLoginMessage},
 
-    {MessageType: typeof(GetPilotMessage), Handler: handleGetPilotMessage},
-    {MessageType: typeof(UpdatePilotMessage), Handler: handleUpdatePilotMessage},
+    {MessageType: GetPilotMessage, Handler: handleGetPilotMessage},
+    {MessageType: UpdatePilotMessage, Handler: handleUpdatePilotMessage},
 
-    {MessageType: typeof(ValidSessionIDRequest), Handler: handleValidSessionIDRequest},
+    {MessageType: ValidSessionIDRequest, Handler: handleValidSessionIDRequest},
 
-    {MessageType: typeof(PingMessage), Handler: handlePing},
-    {MessageType: typeof(PongMessage), Handler: handlePong},
+    {MessageType: PingMessage, Handler: handlePing},
+    {MessageType: PongMessage, Handler: handlePong},
 
-    {MessageType: typeof(TableRequestMessage), Handler: handleTableValidation},
-    {MessageType: typeof(MissionListRequest), Handler: handleMissionListRequest},
+    {MessageType: TableRequestMessage, Handler: handleTableValidation},
+    {MessageType: MissionListRequest, Handler: handleMissionListRequest},
 
-    {MessageType: typeof(IpBanListRequest), Handler: handleIpBanListRequest},
+    {MessageType: IpBanListRequest, Handler: handleIpBanListRequest},
 
-    {MessageType: typeof(ServerListMessage), Handler: handleServerListMessage},
-    {MessageType: typeof(ServerStartMessage), Handler: handleServerStartMessage},
-    {MessageType: typeof(ServerUpdateMessage), Handler: handleServerUpdateMessage},
-    {MessageType: typeof(ServerDisconnectMessage), Handler: handleServerDisconnectMessage},
-    {MessageType: typeof(ChannelCountRequest), Handler: handleChannelCountRequest},
+    {MessageType: ServerListMessage, Handler: handleServerListMessage},
+    {MessageType: ServerStartMessage, Handler: handleServerStartMessage},
+    {MessageType: ServerUpdateMessage, Handler: handleServerUpdateMessage},
+    {MessageType: ServerDisconnectMessage, Handler: handleServerDisconnectMessage},
+    {MessageType: ChannelCountRequest, Handler: handleChannelCountRequest},
 ];
 
 export function handleMessage(msg: Message, context: IHandlerContext): Promise<void> {
