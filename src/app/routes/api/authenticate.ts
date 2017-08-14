@@ -6,7 +6,6 @@ import * as jwt from "jsonwebtoken";
 import * as paperwork from "paperwork";
 import * as passport from "passport";
 import {ExtractJwt, Strategy as JwtStrategy, VerifiedCallback} from "passport-jwt";
-import {verifyPassword} from "../../../util/Authentication";
 import {IRouterContext} from "../../WebInterface";
 
 const JWT_SECRET     = config.get<string>("web.jwt.secret");
@@ -21,38 +20,24 @@ export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
     router.post("/", paperwork.accept(LOGIN_MODEL), async (req: e.Request, res: e.Response): Promise<void> => {
-        const user = await context.Database.Models.User.find({
-                                                                 where: {
-                                                                     Username: req.body.name,
-                                                                 },
-                                                             });
+        try {
+            const user = await context.ApiFunctions.verifyLogin(req.body.name, req.body.password);
 
-        if (user == null) {
+            const userData = {
+                id: user.get("id"),
+            };
+            jwt.sign(userData, JWT_SECRET, {
+                expiresIn: JWT_EXPIRES_IN,
+            }, (err, token) => {
+                res.status(200).json({
+                                         token: "JWT " + token,
+                                     });
+            });
+        } catch (err) {
             res.status(401).json({
                                      err: "Invalid authentication",
                                  });
-            return;
         }
-
-        const valid = await verifyPassword(user, req.body.password);
-
-        if (!valid) {
-            res.status(401).json({
-                                     err: "Invalid authentication",
-                                 });
-            return;
-        }
-
-        const userData = {
-            id: user.get("id"),
-        };
-        jwt.sign(userData, JWT_SECRET, {
-            expiresIn: JWT_EXPIRES_IN,
-        }, (err, token) => {
-            res.status(200).json({
-                                     token: "JWT " + token,
-                                 });
-        });
     });
 
     const jwtOptions = {

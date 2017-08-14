@@ -9,10 +9,12 @@ import * as https from "https";
 import * as winston from "winston";
 import {Database} from "../db/Database";
 import routes = require("./routes");
+import {ApiFunctions} from "./ApiFunctions";
 
 export interface IRouterContext {
     Database: Database;
     WebInterface: WebInterface;
+    ApiFunctions: ApiFunctions;
 }
 
 export interface IWebOptions {
@@ -50,7 +52,8 @@ export class WebInterface {
         } else {
             // Set up a standard http server
             this._server = http.createServer(this._app);
-            this._server.setTimeout(4000, () => {});
+            this._server.setTimeout(4000, () => {
+            });
         }
 
         return new Promise<void>((done) => {
@@ -83,6 +86,7 @@ export class WebInterface {
         const ctx: IRouterContext = {
             Database:     this._db,
             WebInterface: this,
+            ApiFunctions: new ApiFunctions(this._db),
         };
 
         app.use(routes(ctx));
