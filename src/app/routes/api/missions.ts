@@ -3,7 +3,7 @@ import e = require("express");
 import * as promiseRouter from "express-promise-router";
 import * as paperwork from "paperwork";
 import {IMissionPojo} from "../../../db/models/Mission";
-import {ADMIN_ROLE} from "../../../db/models/Role";
+import {RoleType} from "../../../db/models/Role";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
@@ -21,7 +21,7 @@ const MISSION_TEMPLATE = {
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.get("/", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const missions = await context.Database.Models.Mission.findAll();
 
         res.status(200).json(missions.map((mission) => {
@@ -36,7 +36,7 @@ export = (context: IRouterContext): Router => {
         }));
     });
 
-    router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]),
+    router.put("/", authenticate(), checkUserRole([RoleType.Admin]),
                paperwork.accept(MISSION_TEMPLATE), async (req: e.Request, res: e.Response) => {
             const count = await context.Database.Models.Mission.count({
                                                                           where: {
@@ -71,7 +71,7 @@ export = (context: IRouterContext): Router => {
                                  });
         });
 
-    router.post("/:id", authenticate(), checkUserRole([ADMIN_ROLE]),
+    router.post("/:id", authenticate(), checkUserRole([RoleType.Admin]),
                 paperwork.accept(MISSION_TEMPLATE), async (req: e.Request, res: e.Response) => {
             let mission = await context.Database.Models.Mission.findById(req.params.id);
 
@@ -120,7 +120,7 @@ export = (context: IRouterContext): Router => {
                                  });
         });
 
-    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.delete("/:id", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const mission = await context.Database.Models.Mission.findById(req.params.id);
 
         if (!mission) {

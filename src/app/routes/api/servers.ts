@@ -1,9 +1,7 @@
-import * as express from "express";
 import {Router} from "express";
 import e = require("express");
 import * as promiseRouter from "express-promise-router";
-import {json} from "sequelize";
-import {ADMIN_ROLE} from "../../../db/models/Role";
+import {RoleType} from "../../../db/models/Role";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
@@ -28,7 +26,7 @@ export = (context: IRouterContext): Router => {
         });
     });
 
-    router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.get("/:id", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const server = await context.Database.Models.Server.findById(req.params.id);
 
         if (!server) {

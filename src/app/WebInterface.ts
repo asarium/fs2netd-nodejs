@@ -8,8 +8,8 @@ import {ServerOptions} from "https";
 import * as https from "https";
 import * as winston from "winston";
 import {Database} from "../db/Database";
-import routes = require("./routes");
 import {ApiFunctions} from "./ApiFunctions";
+import routes = require("./routes");
 
 export interface IRouterContext {
     Database: Database;

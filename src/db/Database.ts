@@ -1,7 +1,7 @@
 import * as config from "config";
-import * as sequelize from "sequelize";
 import {Options} from "sequelize";
 import {Sequelize} from "sequelize";
+import * as sequelize from "sequelize";
 import * as winston from "winston";
 import {defineModels} from "./models/index";
 import {IModels} from "./models/index";
@@ -11,7 +11,7 @@ import {IOnlineUserPojo} from "./models/OnlineUser";
 import {IOnlineUserInstance} from "./models/OnlineUser";
 import {IPilotInstance} from "./models/Pilot";
 import {IPilotPojo} from "./models/Pilot";
-import {ADMIN_ROLE} from "./models/Role";
+import {RoleType} from "./models/Role";
 import {IServerInstance} from "./models/Server";
 import {IServerPojo} from "./models/Server";
 import {ITableInstance} from "./models/Table";
@@ -74,7 +74,7 @@ export class Database {
 
             return this._models.Role.bulkCreate([
                                                     {
-                                                        Name: ADMIN_ROLE,
+                                                        Name: RoleType.Admin,
                                                     },
                                                 ]);
         }).then(() => {

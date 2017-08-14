@@ -3,7 +3,9 @@ import {Sequelize} from "sequelize";
 import {DataTypes} from "sequelize";
 import {IUserInstance} from "./User";
 
-export const ADMIN_ROLE: string = "Admin";
+export enum RoleType {
+    Admin = "Admin",
+}
 
 export interface IRolePojo {
     Name?: string;

@@ -1,12 +1,12 @@
 import * as config from "config";
 import * as jwt from "jsonwebtoken";
 import * as winston from "winston";
+import {ApiFunctions} from "../../src/app/ApiFunctions";
 import {WebInterface} from "../../src/app/WebInterface";
 import {IRouterContext} from "../../src/app/WebInterface";
-import {ADMIN_ROLE} from "../../src/db/models/Role";
+import {RoleType} from "../../src/db/models/Role";
 import {IUserInstance} from "../../src/db/models/User";
 import {initializeTestDatabase} from "../db/TestDatabase";
-import {ApiFunctions} from "../../src/app/ApiFunctions";
 
 // Disable logging while testing
 winston.clear();
@@ -32,7 +32,7 @@ export async function initializeTestWeb(): Promise<ITestWebContext> {
                                                   Username:     "test_admin",
                                                   PasswordHash: "$2a$10$YZyuPWiSasB/5bGVHd88DOMCBf.JbKfhtR9Y7wojlXtHxCyrd3ygm",
                                               });
-    await admin.addRole(await db.Models.Role.findById(ADMIN_ROLE));
+    await admin.addRole(await db.Models.Role.findById(RoleType.Admin));
 
     // Add a test user
     const user = await db.Models.User.create({

@@ -3,7 +3,7 @@ import e = require("express");
 import * as promiseRouter from "express-promise-router";
 import * as paperwork from "paperwork";
 import {IpBanPojo} from "../../../db/models/IpBan";
-import {ADMIN_ROLE} from "../../../db/models/Role";
+import {RoleType} from "../../../db/models/Role";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
@@ -19,7 +19,7 @@ const IPBAN_TEMPLATE = {
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
 
-    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.get("/", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const bans = await context.Database.Models.IpBan.findAll();
 
         res.status(200).json(bans.map((ban) => {
@@ -32,7 +32,7 @@ export = (context: IRouterContext): Router => {
         }));
     });
 
-    router.put("/", authenticate(), checkUserRole([ADMIN_ROLE]), paperwork.accept(IPBAN_TEMPLATE),
+    router.put("/", authenticate(), checkUserRole([RoleType.Admin]), paperwork.accept(IPBAN_TEMPLATE),
                async (req: e.Request, res: e.Response) => {
                    const expiration = Date.parse(req.body.expiration);
                    if (expiration !== expiration) { // Check for NaN
@@ -62,7 +62,7 @@ export = (context: IRouterContext): Router => {
                                         });
                });
 
-    router.post("/:id", authenticate(), checkUserRole([ADMIN_ROLE]),
+    router.post("/:id", authenticate(), checkUserRole([RoleType.Admin]),
                 paperwork.accept(IPBAN_TEMPLATE), async (req: e.Request, res: e.Response): Promise<void> => {
             let ban = await context.Database.Models.IpBan.findById(req.params.id);
 
@@ -102,7 +102,7 @@ export = (context: IRouterContext): Router => {
                                  });
         });
 
-    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]),
+    router.delete("/:id", authenticate(), checkUserRole([RoleType.Admin]),
                   async (req: e.Request, res: e.Response): Promise<void> => {
                       const ban = await context.Database.Models.IpBan.findById(req.params.id);
 

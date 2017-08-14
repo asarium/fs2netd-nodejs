@@ -1,16 +1,15 @@
-
 import {Router} from "express";
 import e = require("express");
 import * as promiseRouter from "express-promise-router";
 import * as paperwork from "paperwork";
-import {ADMIN_ROLE, IRoleInstance} from "../../../db/models/Role";
+import {IRoleInstance, RoleType} from "../../../db/models/Role";
 import {setPassword} from "../../../util/Authentication";
 import {IRouterContext} from "../../WebInterface";
 import {authenticate} from "./authentication";
 import {checkUserRole} from "./authentication";
 
 const LOGIN_MODEL = {
-    name: String,
+    name:     String,
     password: String,
 };
 
@@ -19,10 +18,10 @@ export = (context: IRouterContext): Router => {
 
     router.put("/", paperwork.accept(LOGIN_MODEL), async (req: e.Request, res: e.Response) => {
         let user = await context.Database.Models.User.find({
-                                                     where: {
-                                                         Username: req.body.name,
-                                                     },
-                                                 });
+                                                               where: {
+                                                                   Username: req.body.name,
+                                                               },
+                                                           });
         if (user != null) {
             res.status(409).json({
                                      err: "User already exists!",
@@ -40,7 +39,7 @@ export = (context: IRouterContext): Router => {
                              });
     });
 
-    router.get("/", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.get("/", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const users = await context.Database.Models.User.findAll();
 
         res.status(200).send(users.map((user) => {
@@ -65,14 +64,14 @@ export = (context: IRouterContext): Router => {
         res.status(200).json(jsonData);
     });
 
-    router.get("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.get("/:id", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const requested = await context.Database.Models.User.findById(req.params.id);
 
         if (!requested) {
             res.status(400).json({
                                      status: "bad_request",
                                      reason: "Parameters were invalid",
-                                     errors:  [
+                                     errors: [
                                          "Invalid ID specified",
                                      ],
                                  });
@@ -91,14 +90,14 @@ export = (context: IRouterContext): Router => {
         res.status(200).json(jsonData);
     });
 
-    router.delete("/:id", authenticate(), checkUserRole([ADMIN_ROLE]), async (req: e.Request, res: e.Response) => {
+    router.delete("/:id", authenticate(), checkUserRole([RoleType.Admin]), async (req: e.Request, res: e.Response) => {
         const deleteUser = await context.Database.Models.User.findById(req.params.id);
 
         if (!deleteUser) {
             res.status(400).json({
                                      status: "bad_request",
                                      reason: "Parameters were invalid",
-                                     errors:  [
+                                     errors: [
                                          "Invalid ID specified",
                                      ],
                                  });
