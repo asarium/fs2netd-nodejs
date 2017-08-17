@@ -43,7 +43,6 @@ export = (context: IRouterContext): Router => {
     });
 
     router.post("/register", async (req, res) => {
-        winston.info("Start register");
         if (req.session && req.session.user_id) {
             res.render("index", {
                 success_message: "You need to log out before registering a new user!",
@@ -53,7 +52,6 @@ export = (context: IRouterContext): Router => {
         }
 
         const username = req.body.username;
-        winston.info("Check user");
         const existing = await context.Database.getUserByName(username);
 
         if (existing !== null) {
@@ -68,7 +66,6 @@ export = (context: IRouterContext): Router => {
         const password = req.body.password;
         const confirm  = req.body.confirm;
 
-        winston.info("Check password");
         if (password !== confirm) {
             // Because relying on client side validation is stupid.
             res.render("index", {
@@ -78,16 +75,13 @@ export = (context: IRouterContext): Router => {
             return;
         }
 
-        winston.info("Build user");
         let user = context.Database.Models.User.build({Username: username});
 
-        winston.info("Set password");
         user = await setPassword(user, req.body.password);
 
         // Registration successful. Automatically log in as this user
         req.session.user_id = user.id;
 
-        winston.info("Render view " + user.Username);
         const options = {
             success_message: "The user \"" + user.Username + "\" has been successfully registered!",
             redirect:        "/",
