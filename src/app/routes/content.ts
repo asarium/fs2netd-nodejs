@@ -23,23 +23,28 @@ export = (context: IRouterContext): Router => {
                        }));
     router.use(bodyParser.urlencoded({extended: true}));
 
-    router.get("/", async (req, res) => {
-        // Index always needs the server list
-        const servers = await context.Database.Models.Server.findAll();
-
+    router.use(async (req, res, next) => {
         if (req.session && req.session.user_id) {
             const user = await context.Database.Models.User.findById(req.session.user_id);
 
             if (user === null) {
                 // User not found in database
                 req.session.reset();
-                res.render("index", {servers});
             } else {
-                res.render("index", {user, servers});
+                req.user        = user;
+                res.locals.user = user;
             }
+            next();
         } else {
-            res.render("index", {servers});
+            next();
         }
+    });
+
+    router.get("/", async (req, res) => {
+        // Index always needs the server list
+        const servers = await context.Database.Models.Server.findAll();
+
+        res.render("index", {servers});
     });
 
     router.post("/register", async (req, res) => {
@@ -82,12 +87,11 @@ export = (context: IRouterContext): Router => {
         // Registration successful. Automatically log in as this user
         req.session.user_id = user.id;
 
-        const options = {
+        res.render("index", {
             success_message: "The user \"" + user.Username + "\" has been successfully registered!",
             redirect:        "/",
             user,
-        };
-        res.render("index", options);
+        });
     });
 
     router.post("/login", async (req, res) => {
@@ -101,6 +105,7 @@ export = (context: IRouterContext): Router => {
             res.render("index", {
                 success_message: "Successfully logged in as " + user.Username,
                 redirect:        "/",
+                user,
             });
         } catch (err) {
             res.render("index", {
@@ -113,6 +118,9 @@ export = (context: IRouterContext): Router => {
     router.post("/logout", async (req, res) => {
         if (req.session && req.session.user_id) {
             req.session.reset();
+
+            // Remove the user that was previously set from the session
+            delete res.locals.user;
             res.render("index", {
                 success_message: "You have been logged out!",
                 redirect:        "/",
