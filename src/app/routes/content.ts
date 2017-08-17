@@ -3,9 +3,9 @@ import session = require("client-sessions");
 import * as config from "config";
 import {Router} from "express";
 import * as promiseRouter from "express-promise-router";
+import * as winston from "winston";
 import {setPassword} from "../../util/Authentication";
 import {IRouterContext} from "../WebInterface";
-import * as winston from "winston";
 
 export = (context: IRouterContext): Router => {
     const router = promiseRouter();
