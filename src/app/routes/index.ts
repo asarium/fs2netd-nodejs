@@ -11,10 +11,11 @@ export = (context: IRouterContext): Router => {
 
     router.use("/api/v1", api(context));
 
-    router.use(express.static(path.join(process.cwd(), "public")));
-
-    // Server everything else using the content router
+    // This is the router for rendering the frontend
     router.use(content(context));
+
+    // Serve everything else from the static file directory
+    router.use(express.static(path.join(process.cwd(), "public")));
 
     router.use((req, res) => {
         // Not found handler

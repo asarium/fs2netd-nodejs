@@ -31,7 +31,8 @@ gulp.task("deploy", ["tsc"], () => {
         gulp.src("build/src/**/*.js").pipe(gulp.dest("deploy/src")),
         gulp.src("config/**/*").pipe(gulp.dest("deploy/config")),
         gulp.src("public/**/*").pipe(gulp.dest("deploy/public")),
-        gulp.src("node_modules/**/*").pipe(gulp.dest("deploy/node_modules"))
+        gulp.src("node_modules/**/*").pipe(gulp.dest("deploy/node_modules")),
+        gulp.src("views/**/*").pipe(gulp.dest("deploy/views"))
     ];
 });
 

@@ -16,6 +16,8 @@ web:
   jwt: # Options for REST API JWT tokens
     secret: 'my secret' # Replace with proper secret in production
     expires_in: '7d' # Specifies when a JWT expires, accepts strings for https://github.com/rauchg/ms.js
+  session: # Options for web interface session management
+    secret: 'super secret' # The secret for the session encryption
   # tls:
     # key: file.key # Specify TLS key file here
     # cert: file.cert # Specify TLS certificate file here

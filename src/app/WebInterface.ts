@@ -2,10 +2,11 @@ import * as Promise from "bluebird";
 import * as config from "config";
 import * as express from "express";
 import {Express} from "express";
+import * as exphbs from "express-handlebars";
 import * as fs from "fs";
 import * as http from "http";
-import {ServerOptions} from "https";
 import * as https from "https";
+import {ServerOptions} from "https";
 import * as winston from "winston";
 import {Database} from "../db/Database";
 import {ApiFunctions} from "./ApiFunctions";
@@ -25,6 +26,7 @@ export class WebInterface {
     private _server: http.Server | https.Server;
     private _db: Database;
     private _app: Express;
+    private _hbs: Exphbs;
     private _options: IWebOptions;
 
     constructor(db: Database, options: IWebOptions) {
@@ -78,6 +80,21 @@ export class WebInterface {
 
     private initializeExpress(): Express {
         const app = express();
+        this._hbs = exphbs.create({
+                                      defaultLayout: "main",
+                                      layoutsDir:    process.cwd() + "/views/layouts",
+                                      partialsDir:   process.cwd() + "/views/partials",
+                                      extname:       ".hb",
+                                  });
+
+        app.engine("hb", this._hbs.engine);
+        app.set("views", process.cwd() + "/views");
+        app.set("view engine", "hb");
+
+        if (process.env.NODE_ENV !== "development") {
+            // Enable view caching if we are not in development
+            app.enable("view cache");
+        }
 
         if (this._options.logging) {
             app.use(require("morgan")("dev"));
