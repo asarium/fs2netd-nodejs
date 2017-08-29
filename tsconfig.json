@@ -4,12 +4,12 @@
     "target": "es6",
     "sourceMap": true,
     "outDir": "build",
-    "typeRoots": [ "node_modules/@types" ]
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-  "exclude": [
-    "node_modules",
-    "public",
-    "build",
-    "deploy"
+  "include": [
+    "./src/**/*.*",
+    "./test/**/*.*"
   ]
 }
