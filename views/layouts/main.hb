@@ -4,10 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    {{#if redirect}}
-        <meta http-equiv="refresh" content="5; url={{redirect}}"/>
-    {{/if}}
-
     <title>fs2netd</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -25,16 +21,20 @@
 <body>
 {{> navbar}}
 
-{{#if error_message}}
-    <div class="alert alert-danger">
-        <strong>Error!</strong> {{error_message}}
-    </div>
+{{#if errors}}
+    {{#each errors}}
+        <div class="alert alert-danger">
+            <strong>Error!</strong> {{this}}
+        </div>
+    {{/each}}
 {{/if}}
 
-{{#if success_message}}
-    <div class="alert alert-success">
-        <strong>Success!</strong> {{success_message}}
-    </div>
+{{#if success}}
+    {{#each success}}
+        <div class="alert alert-success">
+            <strong>Success!</strong> {{this}}
+        </div>
+    {{/each}}
 {{/if}}
 
 {{{body}}}
@@ -51,6 +51,5 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
-<script src="/scripts/bootbox.min.js"></script>
 </body>
 </html>

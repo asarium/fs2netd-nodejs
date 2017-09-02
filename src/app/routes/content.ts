@@ -1,9 +1,9 @@
 import * as bodyParser from "body-parser";
 import session = require("client-sessions");
 import * as config from "config";
+import flash = require("connect-flash");
 import {Router} from "express";
 import * as promiseRouter from "express-promise-router";
-import * as winston from "winston";
 import {setPassword} from "../../util/Authentication";
 import {IRouterContext} from "../WebInterface";
 
@@ -21,7 +21,16 @@ export = (context: IRouterContext): Router => {
                                secure:   config.has("web.tls.key"),
                            },
                        }));
+
     router.use(bodyParser.urlencoded({extended: true}));
+
+    router.use(flash());
+    // Make error and success messages available in views
+    router.use((req, res, next) => {
+        res.locals.success = req.flash("success");
+        res.locals.errors = req.flash("error");
+        next();
+    });
 
     router.use(async (req, res, next) => {
         if (req.session && req.session.user_id) {
@@ -47,12 +56,14 @@ export = (context: IRouterContext): Router => {
         res.render("index", {servers});
     });
 
+    router.get("/register", async (req, res) => {
+        res.render("register");
+    });
+
     router.post("/register", async (req, res) => {
         if (req.session && req.session.user_id) {
-            res.render("index", {
-                success_message: "You need to log out before registering a new user!",
-                redirect:        "/",
-            });
+            req.flash("error", "You need to log out before registering a new user!");
+            res.redirect("/");
             return;
         }
 
@@ -61,10 +72,8 @@ export = (context: IRouterContext): Router => {
 
         if (existing !== null) {
             // User already exists
-            res.render("index", {
-                error_message: "A user with that name already exists!",
-                redirect:      "/",
-            });
+            req.flash("error", "A user with that name already exists!");
+            res.render("register");
             return;
         }
 
@@ -73,10 +82,14 @@ export = (context: IRouterContext): Router => {
 
         if (password !== confirm) {
             // Because relying on client side validation is stupid.
-            res.render("index", {
-                error_message: "The two password fields did not match!",
-                redirect:      "/",
-            });
+            req.flash("error", "The two password fields did not match!");
+            res.render("register");
+            return;
+        }
+
+        if (password.length === 0) {
+            req.flash("error", "The password may not be empty!");
+            res.render("register");
             return;
         }
 
@@ -87,11 +100,8 @@ export = (context: IRouterContext): Router => {
         // Registration successful. Automatically log in as this user
         req.session.user_id = user.id;
 
-        res.render("index", {
-            success_message: "The user \"" + user.Username + "\" has been successfully registered!",
-            redirect:        "/",
-            user,
-        });
+        req.flash("success", "The user \"" + user.Username + "\" has been successfully registered!");
+        res.redirect("/");
     });
 
     router.post("/login", async (req, res) => {
@@ -102,16 +112,11 @@ export = (context: IRouterContext): Router => {
 
             req.session.user_id = user.id;
 
-            res.render("index", {
-                success_message: "Successfully logged in as " + user.Username,
-                redirect:        "/",
-                user,
-            });
+            req.flash("success", "Successfully logged in as " + user.Username);
+            res.redirect("/");
         } catch (err) {
-            res.render("index", {
-                error_message: "Could not log in user!",
-                redirect:      "/",
-            });
+            req.flash("error", "Invalid username or password!");
+            res.redirect("/");
         }
     });
 
@@ -121,15 +126,12 @@ export = (context: IRouterContext): Router => {
 
             // Remove the user that was previously set from the session
             delete res.locals.user;
-            res.render("index", {
-                success_message: "You have been logged out!",
-                redirect:        "/",
-            });
+
+            req.flash("success", "You have been logged out!");
+            res.redirect("/");
         } else {
-            res.render("index", {
-                error_message: "You were not logged in!",
-                redirect:      "/",
-            });
+            req.flash("error", "You were not logged in!");
+            res.redirect("/");
         }
     });
 
