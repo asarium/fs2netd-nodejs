@@ -39,33 +39,32 @@ export class GameServer implements IGameServer {
         return this._serverList;
     }
 
-    public start(): Promise<void> {
-        return this._db.initialize().then(() => {
-            return this._db.clearOnlineUsers();
-        }).then(() => {
-            return this._db.clearServers();
-        }).then(() => {
-            return this._serverList.initialize();
-        }).then(() => {
-            this._server = net.createServer((s) => {
-                const gameClient = new GameClient(this, s);
-                winston.info(util.format("Client '%s' connected!", gameClient.toString()));
-                gameClient.Disconnected.on(() => this.clientDisconnected(gameClient));
+    public async start(): Promise<void> {
+        await this._db.initialize();
 
-                this._gameClients.push(gameClient);
-            });
+        await this._db.clearOnlineUsers();
 
-            return new Promise<void>((done) => {
-                this._server.listen(config.get<number>("game_server.port"), () => {
-                    winston.info("Server listening on port %d", config.get<number>("game_server.port"));
+        await this._db.clearServers();
 
-                    done();
-                });
-            }).then(() => {
-                // Server is initialized
-                this._intervalHandle = setInterval(() => this.intervalCallback(), PERIODIC_INTERVAL);
+        await this._serverList.initialize();
+
+        this._server = net.createServer((s) => {
+            const gameClient = new GameClient(this, s);
+            winston.info(util.format("Client '%s' connected!", gameClient.toString()));
+            gameClient.Disconnected.on(() => this.clientDisconnected(gameClient));
+
+            this._gameClients.push(gameClient);
+        });
+
+        await new Promise<void>((done) => {
+            this._server.listen(config.get<number>("game_server.port"), () => {
+                winston.info("Server listening on port %d", config.get<number>("game_server.port"));
+
+                done();
             });
         });
+
+        this._intervalHandle = setInterval(() => this.intervalCallback(), PERIODIC_INTERVAL);
     }
 
     public getClientFromPilot(pilot: string): GameClient {
