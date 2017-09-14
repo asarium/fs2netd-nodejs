@@ -32,8 +32,4 @@
             </tbody>
         </table>
     </div>
-
-    <footer>
-        <p>&copy; Hard Light Productions 2017</p>
-    </footer>
 </div> <!-- /container -->

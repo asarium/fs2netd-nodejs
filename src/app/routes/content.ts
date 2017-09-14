@@ -135,5 +135,10 @@ export = (context: IRouterContext): Router => {
         }
     });
 
+    router.use((req, res) => {
+        // Not found handler
+        res.type("txt").status(404).send("Not found");
+    });
+
     return router;
 };
